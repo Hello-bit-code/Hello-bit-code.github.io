@@ -12,6 +12,7 @@
             height: 100vh;
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
+            transition: background-color 1s; /* 배경색 변경 시 서서히 변화 */
         }
         h1 {
             font-size: 2em;
@@ -68,7 +69,18 @@
             document.getElementById('safetyWord').innerText = words[randomIndex];
         }
 
-        window.onload = getRandomWord;
+        function getRandomColor() {
+            const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+            document.body.style.backgroundColor = randomColor;
+        }
+
+        window.onload = function() {
+            getRandomWord();
+            getRandomColor();
+            setInterval(() => {
+                getRandomColor();
+            }, 10000); // 10초마다 색상 변경
+        };
     </script>
 </body>
 </html>

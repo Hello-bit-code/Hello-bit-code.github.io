@@ -3,86 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오늘 하루도 안전하게!</title>
+    <title>자재 요청</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            transition: background-color 1s; /* 배경색 변경 시 서서히 변화 */
-        }
-        h1 {
-            font-size: 2em;
-            color: #333;
-            text-shadow: 2px 2px 0px white, -2px -2px 0px white, 
-                         2px -2px 0px white, -2px 2px 0px white; /* 흰 테두리 효과 */
-        }
+        body { font-family: Arial, sans-serif; }
+        .form-container { display: flex; }
+        .form-container div { flex: 1; padding: 10px; }
+        input, select { width: 100%; margin: 10px 0; padding: 10px; }
+        #completed { display: none; }
+        #instructions { margin-left: 20px; }
+        #submitButton { margin-top: 20px; }
     </style>
 </head>
 <body>
-    <h1 id="safetyWord">안전 단어</h1>
-    <script>
-        const words = [
-            '안전은 성공의 열쇠입니다',
-            '안전은 발명이 아닌 태도입니다.',
-            '안전은 자연스럽게 일어나는 것이 아니라 노력을 기울여 만들어진 것이다.',
-            '안전은 자유를 가져다 줍니다.',
-            '안전은 모든 자유 중 가장 중요한 것이다.',
-            '안전은 행복으로 가는 첫 번째 발걸음입니다.',
-            '안전은 운의 문제가 아니라 예방의 문제입니다.',
-            '안전은 지혜의 기초입니다.',
-            '안전은 성공의 기초입니다.',
-            '안전은 먼저 올바른 것들을 우선순위에 두는 것입니다.',
-            '안전은 불필요한 공포로부터의 자유입니다.',
-            '안전은 이상주의가 아닌 조각들의 문제입니다.',
-            '안전은 세심한 주의의 결과입니다.',
-            '안전은 항상 당신의 손에 있습니다.',
-            '내가 알고 실천해야 동료들을 지킬 수 있습니다.',
-            '기술에 베테랑은 있지만 안전에 베테랑은 없다.',
-            '나는 동료의 생명지킴이! 동료는 나의 생명지킴이!',
-            '일에는 스승이 되고 안전에는 부모가 되자!',
-            '안전작업 확인하GO!! 행복하GO!!',
-            '뛰어가는 Nun 지옥으로 Run',
-            '가볍게 생각말고 나부터 솔선수범 다같이 실천하자! (가나다)',
-            'P(피하지말고) S(Safety하게) M(만들자)',
-            '내가 지킨 현장 안전 우리 가족 행복 안전',
-            '이렇게 작업하는 걸 집에서는 알고 계십니까?',
-            '안전수칙 준수 나를 지키는 보디가드',
-            '나의 안전 회사 안전 나라 안전',
-            '안전 수칙 준수로 가족의 근심걱정을 덜자',
-            '생각에서 머문 안전 손끝으로 실천하자',
-            '할 수 있다 무재해! 가족들과 나를 위해',
-            '눈 감으면 평생후회 지적하면 가족사랑',
-            '안전의 또 다른 이름 배려 신뢰 소통',
-            '안전수칙 준수하면 나의 행복 보장된다.',
-            '안전 선택이 아닌 당연한 의무입니다.',
-            '실수는 돌이킬 수 있지만, 안전은 돌이킬 수 없다.',
-            '사고의 주인공이 될 용기라면, 로또에 도전하세요.',
-            '입으로만 안전 No 행동으로 안전 Yes',
-            '내 일터의 안전의식 그 시작은 안전밸트',
-            '아차하는 사고순간 내 가족은 평생 운다.'
-        ];
 
-        function getRandomWord() {
-            const randomIndex = Math.floor(Math.random() * words.length);
-            document.getElementById('safetyWord').innerText = words[randomIndex];
+<h1>자재 요청 양식</h1>
+<form id="requestForm">
+    <div class="form-container">
+        <div>
+            <label for="name">이름</label>
+            <input type="text" id="name" required>
+
+            <label for="materialName">자재명</label>
+            <input type="text" id="materialName" required>
+
+            <label for="spec">규격</label>
+            <input type="text" id="spec" required>
+
+            <label for="quantity">수량</label>
+            <input type="number" id="quantity" required>
+
+            <label for="location">사용 위치</label>
+            <input type="text" id="location" required>
+
+            <label for="type">공종</label>
+            <select id="type" required>
+                <option value="">공종 선택</option>
+                <option value="전기">전기</option>
+                <option value="소방">소방</option>
+                <option value="통신">통신</option>
+            </select>
+        </div>
+        <div id="instructions">
+            <h2>입력 안내</h2>
+            <p>각 항목에 필요한 정보를 입력하세요.</p>
+            <ul>
+                <li>이름: 요청자의 이름을 입력합니다.</li>
+                <li>자재명: 요청하는 자재의 이름을 입력합니다.</li>
+                <li>규격: 자재의 규격을 입력합니다.</li>
+                <li>수량: 요청하는 자재의 수량을 입력합니다.</li>
+                <li>사용 위치: 자재를 사용할 위치를 입력합니다.</li>
+                <li>공종: 해당 자재의 공종을 선택합니다.</li>
+            </ul>
+        </div>
+    </div>
+    <button type="submit" id="submitButton">제출</button>
+</form>
+
+<div id="completed">
+    <h2>완료 페이지</h2>
+    <p id="summary"></p>
+    <button id="copyButton">내용 복사</button>
+    <button id="shareButton">텍스트 공유</button>
+    <button id="rewriteButton">다시 작성하기</button>
+</div>
+
+<script>
+    document.getElementById('requestForm').onsubmit = function(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const materialName = document.getElementById('materialName').value;
+        const spec = document.getElementById('spec').value;
+        const quantity = document.getElementById('quantity').value;
+        const location = document.getElementById('location').value;
+        const type = document.getElementById('type').value;
+
+        const summary = `
+            이름: ${name}
+            자재명: ${materialName}
+            규격: ${spec}
+            수량: ${quantity}
+            사용 위치: ${location}
+            공종: ${type}
+        `;
+
+        document.getElementById('summary').innerText = summary.trim();
+        document.getElementById('completed').style.display = 'block';
+        document.getElementById('requestForm').style.display = 'none';
+    };
+
+    document.getElementById('copyButton').onclick = function() {
+        const textToCopy = document.getElementById('summary').innerText;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            alert('내용이 복사되었습니다!');
+        });
+    };
+
+    document.getElementById('shareButton').onclick = function() {
+        const textToShare = document.getElementById('summary').innerText;
+        if (navigator.share) {
+            navigator.share({
+                title: '자재 요청 내용',
+                text: textToShare,
+            }).then(() => {
+                console.log('공유 성공');
+            }).catch((error) => {
+                console.error('공유 실패', error);
+            });
+        } else {
+            alert('이 브라우저는 공유 기능을 지원하지 않습니다.');
         }
+    };
 
-        function getRandomColor() {
-            const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
-            document.body.style.backgroundColor = randomColor;
-        }
+    document.getElementById('rewriteButton').onclick = function() {
+        document.getElementById('completed').style.display = 'none';
+        document.getElementById('requestForm').reset();
+        document.getElementById('requestForm').style.display = 'flex';
+    };
+</script>
 
-        window.onload = function() {
-            getRandomWord();
-            getRandomColor();
-            setInterval(() => {
-                getRandomColor();
-            }, 10000); // 10초마다 색상 변경
-        };
-    </script>
 </body>
 </html>

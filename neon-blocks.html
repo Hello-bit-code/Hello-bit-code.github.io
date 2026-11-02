@@ -56,6 +56,23 @@
 @media(max-width:390px){.mobile .gamepad{padding:6px 3px;gap:4px}.mobile .actionpad{gap:5px}.mobile .round{width:39px;height:39px;font-size:14px}.mobile .round small{font-size:7px}.mobile .dpad{grid-template:repeat(3,34px)/repeat(3,34px)}}
 @media(min-width:391px) and (max-width:700px){.mobile .dpad{grid-template:repeat(3,40px)/repeat(3,40px)}}
 @media(min-width:701px){.pc-pad-toggle{display:block;margin:12px auto 0;background:#183042;border:1px solid #3e596f;border-radius:9px;padding:9px 15px;font-size:12px}.mobile.show-pc-pad{display:block!important;max-width:640px;margin:12px auto 0;grid-column:1/-1;background:linear-gradient(150deg,#1a2a40,#101b2d);border:1px solid #39526b;border-radius:19px;padding:12px}.mobile.show-pc-pad .mobile-top{display:flex;justify-content:space-between}.mobile.show-pc-pad .mobile-bottom{display:flex;justify-content:center;gap:8px}.mobile.show-pc-pad .dpad{display:grid;grid-template:repeat(3,43px)/repeat(3,43px)}.mobile.show-pc-pad .pad{border:0;border-radius:5px;background:#2a3c50;color:#e8f1fc}.mobile.show-pc-pad .round{border-radius:50%;border:2px solid #547388;background:#603857;color:white;font-weight:900}.mobile.show-pc-pad .round.h{background:#24555a}.mobile.show-pc-pad .mobile-bottom button{border:1px solid #4c6074;border-radius:30px;background:#1a2c3c;padding:8px 12px}.mobile.show-pc-pad .pad-settings{display:block}}
+
+/* Fit gameplay and controller to the available smartphone viewport. Preserve original renderers. */
+@media (pointer:coarse), (max-width:700px){
+ html,body{width:100%;max-width:100%;overflow-x:hidden}
+ .shell{width:100%;max-width:720px;min-width:0;margin:auto}
+ .layout{min-width:0}
+ .board-column,.stage,.right,.left{min-width:0}
+ .stage{height:var(--fit-stage-height, min(51svh,620px));min-height:140px;max-height:none;aspect-ratio:auto}
+ .mobile{width:100%;min-width:0}
+ .mobile .gamepad{min-height:0;padding-block:5px}
+ .mobile .pad-settings:not([open]){padding:0;margin:4px 8px 0}
+ .mobile .pad-settings:not([open]) summary{padding:6px 8px}
+ .actionpad{min-width:0}
+}
+@media(max-width:700px) and (orientation:landscape){
+ .stage{height:var(--fit-stage-height, min(64svh,500px))}
+}
 </style>
 </head>
 <body>
@@ -208,6 +225,34 @@ if(new URLSearchParams(location.search).has('test'))window.__game={game,audio,re
  apply();
  document.getElementById('padReset').addEventListener('click',()=>{for(const [id,prop,def] of params)document.getElementById(id).value=def;apply();try{localStorage.removeItem('neon-pad-settings')}catch{}});
  if(pcToggle)pcToggle.addEventListener('click',()=>{const open=pad.classList.toggle('show-pc-pad');pcToggle.textContent=open?'터치 조작부 숨기기':'터치 조작부 표시';pcToggle.setAttribute('aria-pressed',String(open));});
+})();
+</script><script>
+(function(){
+ const vv=window.visualViewport,root=document.documentElement;
+ const compact=()=>matchMedia('(pointer:coarse), (max-width:700px)').matches;
+ function fit(){
+  if(!compact()){root.style.removeProperty('--fit-stage-height');return;}
+  root.style.removeProperty('--fit-stage-height');
+  const viewport=vv?vv.height:window.innerHeight;
+  const stage=document.getElementById('stage');
+  const header=document.querySelector('.top'),upper=document.querySelector('.left'),meta=document.querySelector('.board-meta');
+  const mobile=document.querySelector('.mobile'),toolbar=document.querySelector('.toolbar');
+  if(!stage||!mobile)return;
+  const top=stage.getBoundingClientRect().top;
+  const baseline=stage.getBoundingClientRect().height;
+  const mobileHeight=mobile.getBoundingClientRect().height;
+  const toolbarHeight=toolbar.getBoundingClientRect().height;
+  const safeBottom=20;
+  const available=Math.floor(viewport-top-mobileHeight-toolbarHeight-28-safeBottom);
+  const desired=Math.max(140,Math.min(baseline,available));
+  root.style.setProperty('--fit-stage-height',desired+'px');
+ }
+ let pending=false;function schedule(){if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;fit();});}
+ addEventListener('resize',schedule);addEventListener('orientationchange',schedule);
+ vv?.addEventListener('resize',schedule);
+ document.querySelector('#padSettings')?.addEventListener('toggle',schedule);
+ addEventListener('load',schedule,{once:true});
+ schedule();
 })();
 </script></body>
 </html>

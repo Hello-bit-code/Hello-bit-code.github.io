@@ -73,6 +73,71 @@
 @media(max-width:700px) and (orientation:landscape){
  .stage{height:var(--fit-stage-height, min(64svh,500px))}
 }
+
+/* Sketch-matched full-screen smartphone layout: board / right HUD / bottom pad */
+@media (pointer:coarse){
+ html,body{height:100%;width:100%;max-width:100%;overflow:hidden;overscroll-behavior:none}
+ body{min-height:100svh}
+ .shell{width:100%;max-width:none;height:100svh;height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding:max(4px,env(safe-area-inset-top)) max(5px,env(safe-area-inset-right)) max(4px,env(safe-area-inset-bottom)) max(5px,env(safe-area-inset-left))}
+ .top,.foot,.pc-pad-toggle{display:none!important}
+ .layout{flex:1 1 auto;min-height:0;width:100%;max-width:none!important;margin:0!important;display:grid!important;grid-template-columns:minmax(0,1fr) clamp(90px,23vw,164px);grid-template-rows:repeat(4,min-content) minmax(0,1fr) auto;gap:4px 6px;align-items:stretch;justify-content:stretch}
+ .left,.right{display:contents!important}
+ .board-column{grid-column:1;grid-row:1/6;width:100%;height:100%;min-height:0;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+ .board-meta{flex:0 0 auto;height:16px;min-height:16px;padding:0 2px;margin:0 0 3px;font-size:9px;letter-spacing:0}
+ .stage{flex:1 1 0;width:100%;height:0!important;min-height:0!important;max-height:none!important;aspect-ratio:auto!important;border-radius:11px;margin:0;overflow:hidden}
+ .toolbar{flex:0 0 auto;margin:4px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:3px}
+ .toolbar .tool{font-size:clamp(8px,2.1vw,11px);padding:7px 1px;min-height:28px;border-radius:6px}
+ .left>.scorecard{grid-column:2;grid-row:1;display:block!important;width:100%!important;margin:0;padding:7px 6px!important}
+ .scorecard>.caption{display:flex!important;font-size:9px;gap:4px;letter-spacing:0}
+ .scorecard .score{margin:4px 0 3px;font-size:clamp(17px,4.2vw,25px);line-height:1.1}
+ .scorecard .record,.scorecard .meter,.scorecard .time{display:none!important}
+ .scorecard .twins{display:grid!important;grid-template-columns:1fr 1fr;gap:4px;border:0;padding:0;margin:4px 0 0}
+ .scorecard .twins .caption{font-size:8px}
+ .scorecard .metric{font-size:clamp(12px,3vw,18px);margin:1px 0 0}
+ .right>.card:first-child{grid-column:2;grid-row:2;width:100%!important;padding:7px 4px!important;min-width:0;margin:0}
+ .right>.card:first-child .caption{font-size:8px;letter-spacing:0}
+ .right>.card:first-child .caption em{font-size:7px}
+ .right>.card:first-child .nextcanvas{width:100%;height:clamp(108px,22svh,235px)!important}
+ .right>.card:first-child .small{font-size:8px}
+ .right>.controlcard,.right>.settings{display:none!important}
+ .left>.holdcard{grid-column:2;grid-row:3;width:100%!important;padding:6px 4px!important;margin:0}
+ .holdcard .caption{font-size:8px}.holdcard .preview{width:100%!important;height:35px!important}.holdcard .holdhint{display:none}
+ .left>.combocard{grid-column:2;grid-row:4;width:100%!important;padding:6px 4px!important;margin:0}
+ .combocard .caption{font-size:8px}.combocard .combo-number{font-size:clamp(15px,3vw,20px)}
+ .combocard .log{max-height:30px;min-height:0;overflow:hidden;margin:2px 0 0;line-height:1.25;font-size:8px}
+ .mobile{grid-column:1/-1;grid-row:6;width:100%;height:clamp(170px,29dvh,280px);max-height:36dvh;min-height:0;min-width:0;display:flex!important;flex-direction:column;justify-content:space-between;padding:7px 9px!important;margin:0!important;background:linear-gradient(155deg,#19283c,#0c1928);border-radius:18px;border:1px solid #39526b;overflow:visible;position:relative}
+ .mobile .mobile-top{display:flex;flex:0 0 auto;justify-content:space-between;gap:8px}
+ .mobile .mobile-brand,.mobile .mobile-hint{font-size:9px}
+ .mobile .gamepad{flex:1 1 auto;display:flex;align-items:center;justify-content:space-between;min-height:0!important;padding:2px min(2.5vw,18px)!important;gap:6px}
+ .mobile .dpad{--cell:clamp(34px,min(10.8vw,6.6dvh),58px);display:grid;grid-template:repeat(3,var(--cell))/repeat(3,var(--cell))!important;flex:0 0 auto;transform:translateX(var(--pad-shift,0px))}
+ .mobile .pad{font-size:clamp(15px,4vw,22px);border-radius:5px}
+ .mobile .actionpad{display:flex!important;flex:0 0 auto;align-items:center;gap:clamp(3px,var(--pad-gap,10px),18px)!important;transform:translateX(calc(-1 * var(--pad-shift,0px)))!important}
+ .mobile .round{width:clamp(38px,min(12.2vw,7.8dvh),68px)!important;height:clamp(38px,min(12.2vw,7.8dvh),68px)!important;border-radius:50%;font-size:clamp(14px,4vw,19px)}
+ .mobile .round small{font-size:clamp(7px,1.8vw,9px)}
+ .mobile .pad-settings{margin:3px 3px 0;flex:0 0 auto;padding:0!important;position:relative}
+ .mobile .pad-settings>summary{font-size:10px!important;padding:3px 7px!important}
+ .mobile .pad-settings[open]{position:absolute;left:9px;right:9px;bottom:35px;z-index:30;max-height:min(340px,65dvh);overflow-y:auto;background:#13273a;border:1px solid #4b6b82;border-radius:12px;padding:9px!important;box-shadow:0 10px 32px #000b}
+ .mobile .pad-settings[open] label,.mobile .pad-settings[open] button{margin:7px 4px}
+ .mobile .mobile-bottom{flex:0 0 auto;margin:2px 0 0;gap:7px}
+ .mobile .mobile-bottom button{padding:5px 10px;font-size:10px}
+}
+@media (pointer:coarse) and (max-width:360px){
+ .layout{grid-template-columns:minmax(0,1fr) 88px;column-gap:4px}
+ .mobile{padding-inline:5px!important}
+ .mobile .gamepad{padding-inline:3px!important}
+ .mobile .actionpad{gap:4px!important}
+ .mobile .dpad{--cell:34px}
+ .mobile .round{width:38px!important;height:38px!important}
+}
+@media (pointer:coarse) and (orientation:landscape) and (max-height:550px){
+ .mobile{height:clamp(112px,34dvh,154px);padding-block:4px!important}
+ .mobile .mobile-top{display:none}
+ .mobile .dpad{--cell:clamp(28px,9dvh,40px)}
+ .mobile .round{width:clamp(34px,11dvh,46px)!important;height:clamp(34px,11dvh,46px)!important}
+ .mobile .mobile-bottom button{padding:3px 9px}
+ .right>.card:first-child .nextcanvas{height:clamp(72px,23dvh,120px)!important}
+ .left>.holdcard,.left>.combocard{display:none}
+}
 </style>
 </head>
 <body>
@@ -225,34 +290,6 @@ if(new URLSearchParams(location.search).has('test'))window.__game={game,audio,re
  apply();
  document.getElementById('padReset').addEventListener('click',()=>{for(const [id,prop,def] of params)document.getElementById(id).value=def;apply();try{localStorage.removeItem('neon-pad-settings')}catch{}});
  if(pcToggle)pcToggle.addEventListener('click',()=>{const open=pad.classList.toggle('show-pc-pad');pcToggle.textContent=open?'터치 조작부 숨기기':'터치 조작부 표시';pcToggle.setAttribute('aria-pressed',String(open));});
-})();
-</script><script>
-(function(){
- const vv=window.visualViewport,root=document.documentElement;
- const compact=()=>matchMedia('(pointer:coarse), (max-width:700px)').matches;
- function fit(){
-  if(!compact()){root.style.removeProperty('--fit-stage-height');return;}
-  root.style.removeProperty('--fit-stage-height');
-  const viewport=vv?vv.height:window.innerHeight;
-  const stage=document.getElementById('stage');
-  const header=document.querySelector('.top'),upper=document.querySelector('.left'),meta=document.querySelector('.board-meta');
-  const mobile=document.querySelector('.mobile'),toolbar=document.querySelector('.toolbar');
-  if(!stage||!mobile)return;
-  const top=stage.getBoundingClientRect().top;
-  const baseline=stage.getBoundingClientRect().height;
-  const mobileHeight=mobile.getBoundingClientRect().height;
-  const toolbarHeight=toolbar.getBoundingClientRect().height;
-  const safeBottom=20;
-  const available=Math.floor(viewport-top-mobileHeight-toolbarHeight-28-safeBottom);
-  const desired=Math.max(140,Math.min(baseline,available));
-  root.style.setProperty('--fit-stage-height',desired+'px');
- }
- let pending=false;function schedule(){if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;fit();});}
- addEventListener('resize',schedule);addEventListener('orientationchange',schedule);
- vv?.addEventListener('resize',schedule);
- document.querySelector('#padSettings')?.addEventListener('toggle',schedule);
- addEventListener('load',schedule,{once:true});
- schedule();
 })();
 </script></body>
 </html>

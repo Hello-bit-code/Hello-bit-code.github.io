@@ -154,7 +154,18 @@
 .training-hud button{border:1px solid #3e6d69;border-radius:6px;background:#183b3c;padding:5px 7px;color:#d8f6ec;font-size:10px}
 .training-hint{width:100%;margin:3px 0 1px;color:#b9e9d3;font-size:10px;line-height:1.5}
 @media(pointer:coarse){.training-hud{font-size:9px;padding:4px;gap:3px}.training-hud strong{font-size:9px;min-width:60px}.training-hud select{max-width:94px;min-width:65px;font-size:9px}.training-hud button{font-size:9px;padding:4px}.training-hint{font-size:9px}}
-.training-hud[hidden]{display:none!important}.training-hud{align-items:center;gap:4px;flex-wrap:wrap}.training-hud strong{font-size:10px;min-width:52px;flex:0 0 auto}.training-hud select{flex:1 1 100px;max-width:none;min-width:75px}.training-hud .training-hint{flex-basis:100%;margin:0;font-size:10px;line-height:1.4;color:#b9e9d3}@media(pointer:coarse){.training-hud{padding:4px}.training-hud strong{font-size:9px}.training-hud select{max-width:none;min-width:75px;flex:1 1 80px}.training-hud .training-hint{font-size:9px;max-height:3em;overflow:hidden}}</style>
+.training-hud[hidden]{display:none!important}.training-hud{align-items:center;gap:4px;flex-wrap:wrap}.training-hud strong{font-size:10px;min-width:52px;flex:0 0 auto}.training-hud select{flex:1 1 100px;max-width:none;min-width:75px}.training-hud .training-hint{flex-basis:100%;margin:0;font-size:10px;line-height:1.4;color:#b9e9d3}@media(pointer:coarse){.training-hud{padding:4px}.training-hud strong{font-size:9px}.training-hud select{max-width:none;min-width:75px;flex:1 1 80px}.training-hud .training-hint{font-size:9px;max-height:3em;overflow:hidden}}
+/* Training coach: compact selectable buttons, no recommendation text panel */
+.training-hud{display:grid!important;grid-template-columns:minmax(0,1fr);gap:4px;padding:6px 7px;margin-bottom:4px}
+.training-hud[hidden]{display:none!important}
+.training-hud .coach-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
+.training-hud .coach-toolbar strong{flex:0 1 auto;min-width:0;font-size:10px;color:#83f2c9}
+.training-hud .coach-toolbar #coachToggle{flex:0 0 auto;border-radius:5px;padding:3px 8px;font-size:10px;min-height:24px}
+.training-hud .coach-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;min-width:0}
+.training-hud .coach-tabs .coach-tab{width:100%;min-width:0;max-width:none;padding:7px 3px;font-size:10px;line-height:1.15;white-space:normal;overflow-wrap:break-word;border:1px solid #385c63;border-radius:7px;background:#142d39;color:#b9d7df;font-weight:600}
+.training-hud .coach-tabs .coach-tab.active{background:#234a44;border-color:#7de5bc;color:#bcffdf;box-shadow:inset 0 0 0 1px #7de5bc33}
+@media(pointer:coarse){.training-hud{padding:4px;gap:3px}.training-hud .coach-toolbar strong{font-size:9px}.training-hud .coach-toolbar #coachToggle{font-size:9px;min-height:20px;padding:2px 6px}.training-hud .coach-tabs{gap:3px}.training-hud .coach-tabs .coach-tab{font-size:clamp(8px,2.2vw,10px);padding:7px 1px;border-radius:5px}}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -165,7 +176,7 @@
 <section class="card holdcard"><div class="caption">HOLD <em>C / SHIFT</em></div><canvas class="preview" id="hold" width="340" height="130" aria-label="보관한 블록"></canvas><div class="holdhint" id="holdhint">블록을 보관해 두세요</div></section>
 <section class="card combocard"><div class="combo-row"><div class="caption">COMBO</div><div class="combo-number" id="combo">—</div></div><div class="log" id="eventText">첫 줄 제거 후 배치 간격에 따라 콤보</div></section>
 </aside>
-<section class="board-column"><div class="board-meta"><span id="status" class="live">READY TO PLAY</span><span id="rendererLabel">3D VIEW</span></div><div class="training-hud" id="trainingHud" hidden><strong id="trainingTitle">실전 코치</strong><select id="coachFocus" aria-label="훈련 중점"><option value="balanced">균형 쌓기</option><option value="tetris">4줄 테트리스</option><option value="combo">콤보 이어가기</option></select><button type="button" id="coachToggle">추천 표시 중</button><p class="training-hint" id="coachHint">현재 블록의 추천 위치를 계산합니다.</p></div><div class="stage" id="stage"><canvas id="board" aria-label="10열 20행 테트리스 게임판"></canvas><canvas id="fx" aria-hidden="true"></canvas><div class="toast" id="toast"></div><div class="overlay" id="overlay"><div style="width:100%;max-width:280px"><div class="intro-icon" id="overlayIcon" aria-hidden="true">▦</div><div class="overline" id="overline">THE NEXT DIMENSION</div><h1 id="title">한 수 앞을<br>쌓아보세요.</h1><p id="description">입체 블록, 익숙한 멜로디.<br>나만의 리듬으로 기록을 높여보세요.</p><select id="mode" aria-label="게임 모드"><option value="marathon">마라톤 · 10줄마다 속도 상승</option><option value="sprint">40줄 도전 · 최단 시간 도전</option><option value="zen">프리 모드 · 일정한 속도</option><option value="blitz">블리츠 · 2분 점수 대결</option><option value="survival">서바이벌 · 빠르게 가속</option><option value="training">실전 훈련소 · 자유 배치 코치</option></select><button id="start" class="primary">게임 시작 →</button><button id="restart" class="secondary" hidden>새 게임</button><p class="note" id="overlayNote">시작하면 음악이 재생됩니다 · M 소리 켜기/끄기</p></div></div></div><div class="toolbar"><button class="tool" id="pause">Ⅱ 일시정지</button><button class="tool active" id="sound" aria-pressed="true">♫ 소리 켜짐</button><button class="tool active" id="view" aria-pressed="true">◇ 입체 보기</button><button class="tool" id="fullscreen">⛶ 전체화면</button></div></section>
+<section class="board-column"><div class="board-meta"><span id="status" class="live">READY TO PLAY</span><span id="rendererLabel">3D VIEW</span></div><div class="training-hud" id="trainingHud" hidden><div class="coach-toolbar"><strong id="trainingTitle">실전 코치</strong><button type="button" id="coachToggle" aria-pressed="true">추천 ON</button></div><div class="coach-tabs" role="group" aria-label="훈련 중점 선택"><button type="button" class="coach-tab active" data-coach-focus="balanced" aria-pressed="true">균형 쌓기</button><button type="button" class="coach-tab" data-coach-focus="tetris" aria-pressed="false">4줄 테트리스</button><button type="button" class="coach-tab" data-coach-focus="combo" aria-pressed="false">콤보</button></div></div><div class="stage" id="stage"><canvas id="board" aria-label="10열 20행 테트리스 게임판"></canvas><canvas id="fx" aria-hidden="true"></canvas><div class="toast" id="toast"></div><div class="overlay" id="overlay"><div style="width:100%;max-width:280px"><div class="intro-icon" id="overlayIcon" aria-hidden="true">▦</div><div class="overline" id="overline">THE NEXT DIMENSION</div><h1 id="title">한 수 앞을<br>쌓아보세요.</h1><p id="description">입체 블록, 익숙한 멜로디.<br>나만의 리듬으로 기록을 높여보세요.</p><select id="mode" aria-label="게임 모드"><option value="marathon">마라톤 · 10줄마다 속도 상승</option><option value="sprint">40줄 도전 · 최단 시간 도전</option><option value="zen">프리 모드 · 일정한 속도</option><option value="blitz">블리츠 · 2분 점수 대결</option><option value="survival">서바이벌 · 빠르게 가속</option><option value="training">실전 훈련소 · 자유 배치 코치</option></select><button id="start" class="primary">게임 시작 →</button><button id="restart" class="secondary" hidden>새 게임</button><p class="note" id="overlayNote">시작하면 음악이 재생됩니다 · M 소리 켜기/끄기</p></div></div></div><div class="toolbar"><button class="tool" id="pause">Ⅱ 일시정지</button><button class="tool active" id="sound" aria-pressed="true">♫ 소리 켜짐</button><button class="tool active" id="view" aria-pressed="true">◇ 입체 보기</button><button class="tool" id="fullscreen">⛶ 전체화면</button></div></section>
 <aside class="rail right"><section class="card"><div class="caption">NEXT <em>5 BLOCKS</em></div><canvas id="next" class="preview nextcanvas" width="300" height="560" aria-label="다음 블록 5개"></canvas><div class="small" style="text-align:center">7종 균등 셔플</div></section><section class="card controlcard"><div class="caption">HOW TO PLAY</div><div class="controls"><span>좌우 이동</span><span><kbd>←</kbd> <kbd>→</kbd></span><span>빠르게 내리기</span><kbd>↓</kbd><span>오른쪽 회전</span><span><kbd>↑</kbd> <kbd>X</kbd></span><span>왼쪽 회전</span><kbd>Z</kbd><span>즉시 낙하</span><kbd>SPACE</kbd><span>홀드</span><kbd>C / SHIFT</kbd><span>일시정지</span><kbd>ESC / P</kbd></div></section><details class="card settings"><summary>조작 · 소리 설정</summary><label>낙하 재입력 대기 <output id="delayValue">260ms</output><input id="delay" aria-label="낙하 재입력 대기시간" type="range" min="180" max="500" step="20" value="260"></label><label>배경음 <output id="musicValue">35%</output><input id="musicVolume" aria-label="배경음 볼륨" type="range" min="0" max="100" value="35"></label><label>효과음 <output id="sfxValue">65%</output><input id="sfxVolume" aria-label="효과음 볼륨" type="range" min="0" max="100" value="65"></label><p class="small">스페이스바를 놓아야 다시 낙하합니다. 착지 후 0.5초 동안 위치를 조정할 수 있습니다.</p></details></aside>
 <div class="mobile" aria-label="게임보이 스타일 터치 조작">
  <div class="mobile-top"><span class="mobile-brand">NEON · POCKET CONSOLE</span><span class="mobile-hint">길게 누르면 연속 이동</span></div>
@@ -278,14 +289,14 @@ function showOverlay(kind){delete $('restart').dataset.confirm;$('overlay').hidd
 
 
 let coachFocus='balanced',coachVisible=true,coachPiece=null,coachSuggestion=null,coachReason='',coachKey='';
-const coachSelect=$('coachFocus'),coachHint=$('coachHint'),coachToggle=$('coachToggle');
+const coachButtons=[...document.querySelectorAll('[data-coach-focus]')],coachToggle=$('coachToggle');
 try{const saved=localStorage.getItem('neon3d-coach-focus');if(['balanced','tetris','combo'].includes(saved))coachFocus=saved;}catch{}
-coachSelect.value=coachFocus;
+
 try{coachVisible=localStorage.getItem('neon3d-coach-visible')!=='false';}catch{}
 function refreshTrainingHUD(){
  const active=game.mode==='training'&&game.state!=='ready';
  $('trainingHud').hidden=!active;
- if(active){$('trainingTitle').textContent='실전 코치';coachToggle.textContent=coachVisible?'추천 표시 중':'추천 숨김';}
+ if(active){$('trainingTitle').textContent='실전 코치';coachToggle.textContent=coachVisible?'추천 ON':'추천 OFF';coachToggle.setAttribute('aria-pressed',String(coachVisible));for(const btn of coachButtons){const selected=btn.dataset.coachFocus===coachFocus;btn.classList.toggle('active',selected);btn.setAttribute('aria-pressed',String(selected));}}
 }
 function rotateCoach(m){
  const n=m.length,r=Array.from({length:n},()=>Array(n).fill(0));
@@ -375,8 +386,7 @@ function trainingUpdate(){
  if(game.mode!=='training'){coachPiece=null;coachSuggestion=null;return;}
  if(game.state!=='running'||!game.piece)return;
  if(coachPiece!==game.piece||coachKey!==coachFocus){
-  coachPiece=game.piece;coachKey=coachFocus;coachSuggestion=coachRecommend();coachReason=coachExplain(coachSuggestion);
-  coachHint.textContent=coachVisible?'추천 예시: '+coachReason:'추천 표시를 켜면 블록 배치 예시가 나타납니다.';
+  coachPiece=game.piece;coachKey=coachFocus;coachSuggestion=coachRecommend();
  }
 }
 function drawTrainingGuide(){
@@ -391,8 +401,8 @@ function drawTrainingGuide(){
  }
  fctx.restore();
 }
-coachSelect.onchange=()=>{coachFocus=coachSelect.value;coachPiece=null;coachKey='';try{localStorage.setItem('neon3d-coach-focus',coachFocus)}catch{}trainingUpdate();};
-coachToggle.onclick=()=>{coachVisible=!coachVisible;try{localStorage.setItem('neon3d-coach-visible',String(coachVisible))}catch{}refreshTrainingHUD();coachHint.textContent=coachVisible?'추천 예시: '+coachReason:'추천 표시를 켜면 블록 배치 예시가 나타납니다.';};
+for(const btn of coachButtons)btn.onclick=()=>{if(!['balanced','tetris','combo'].includes(btn.dataset.coachFocus))return;coachFocus=btn.dataset.coachFocus;coachPiece=null;coachKey='';try{localStorage.setItem('neon3d-coach-focus',coachFocus)}catch{}refreshTrainingHUD();trainingUpdate();};
+coachToggle.onclick=()=>{coachVisible=!coachVisible;try{localStorage.setItem('neon3d-coach-visible',String(coachVisible))}catch{}refreshTrainingHUD();};
 
 function start(){if(mobileDevice()&&document.documentElement.requestFullscreen&&!document.fullscreenElement){document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{});}audio.init();audio.stop();audio.index=0;clearInput();particles=[];toastLeft=0;$('toast').classList.remove('show');endSaved=false;game.reset($('mode').value);$('overlay').hidden=true;$('pause').textContent='Ⅱ 일시정지';$('eventText').textContent='줄 제거마다 PERFECT → GREAT → GOOD · 이후 초기화';lastFrame=performance.now();lastUI='';audio.play('level');coachPiece=null;coachSuggestion=null;refreshTrainingHUD();trainingUpdate();}
 function togglePause(){if(game.state==='paused'){audio.init();game.resume();$('pause').textContent='Ⅱ 일시정지';}else game.pause();}

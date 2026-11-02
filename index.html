@@ -141,6 +141,13 @@
  .right>.card:first-child .nextcanvas{height:clamp(72px,23dvh,120px)!important}
  .left>.holdcard,.left>.combocard{display:none}
 }
+
+/* Configurable actions and horizontal order (mobile / optional PC controller) */
+.mobile .pad-map-config{display:grid;gap:3px;margin:7px 1px}
+.mobile .pad-settings .pad-map-config label{display:grid;grid-template-columns:72px minmax(0,1fr);align-items:center;margin:5px 0;gap:6px;color:#d6e5f3;font-size:11px}
+.mobile .pad-map-config select{display:block;width:100%;min-width:0;font-size:12px;color:#f1f8ff;background:#1d3549;border:1px solid #49647a;border-radius:8px;padding:8px 6px;outline-offset:2px}
+.mobile .pad-help{font-size:10px;line-height:1.45;color:#9db8c8;margin:4px 2px}
+.mobile .actionpad{min-width:0}
 </style>
 </head>
 <body>
@@ -158,9 +165,15 @@
  <div class="mobile-top"><span class="mobile-brand">NEON · POCKET CONSOLE</span><span class="mobile-hint">길게 누르면 연속 이동</span></div>
  <div class="gamepad">
   <div class="dpad" aria-label="방향키"><button data-action="rotate" class="pad up" aria-label="회전">▲</button><button data-action="left" class="pad leftkey" aria-label="왼쪽">◀</button><span class="pad-center" aria-hidden="true"></span><button data-action="right" class="pad rightkey" aria-label="오른쪽">▶</button><button data-action="down" class="pad downkey" aria-label="빠른 하강">▼</button></div>
-  <div class="actionpad"><button class="round a" data-action="drop" aria-label="즉시 낙하">A<small>DROP</small></button><button class="round b" data-action="ccw" aria-label="반시계 회전">B<small>회전</small></button><button class="round h" data-action="hold" aria-label="홀드">H<small>HOLD</small></button></div>
+  <div class="actionpad"><button class="round a" data-action="rotate" aria-label="A 버튼: 오른쪽 회전">A<small>TURN</small></button><button class="round b" data-action="drop" aria-label="B 버튼: 즉시 낙하">B<small>DROP</small></button><button class="round h" data-action="hold" aria-label="홀드">H<small>HOLD</small></button></div>
  </div>
- <details class="pad-settings" id="padSettings"><summary>⚙ 조작키 위치·간격 설정</summary><label>가장자리 여백 <input id="padInset" type="range" min="0" max="28" step="2" value="14"><output id="padInsetValue">14px</output></label><label>키 좌우 이동 <input id="padShift" type="range" min="-16" max="16" step="2" value="0"><output id="padShiftValue">0px</output></label><label>키 간격 <input id="padGap" type="range" min="4" max="18" step="2" value="10"><output id="padGapValue">10px</output></label><button type="button" id="padReset">기본 위치 복원</button></details><div class="mobile-bottom"><button id="touchPause">Ⅱ 일시정지</button><button id="touchSound">♫ 사운드</button><button id="touchFullscreen">⛶ 전체화면</button></div>
+ <details class="pad-settings" id="padSettings"><summary>⚙ 조작키 기능·배열·위치 설정</summary><label>가장자리 여백 <input id="padInset" type="range" min="0" max="28" step="2" value="14"><output id="padInsetValue">14px</output></label><label>키 좌우 이동 <input id="padShift" type="range" min="-16" max="16" step="2" value="0"><output id="padShiftValue">0px</output></label><label>키 간격 <input id="padGap" type="range" min="4" max="18" step="2" value="10"><output id="padGapValue">10px</output></label><div class="pad-map-config">
+ <label for="padKeyA">A 버튼 <select id="padKeyA" aria-label="A 버튼 기능"><option value="rotate">오른쪽 회전</option><option value="ccw">왼쪽 회전</option><option value="drop">즉시 낙하</option><option value="hold">홀드</option></select></label>
+ <label for="padKeyB">B 버튼 <select id="padKeyB" aria-label="B 버튼 기능"><option value="rotate">오른쪽 회전</option><option value="ccw">왼쪽 회전</option><option value="drop">즉시 낙하</option><option value="hold">홀드</option></select></label>
+ <label for="padKeyH">H 버튼 <select id="padKeyH" aria-label="H 버튼 기능"><option value="rotate">오른쪽 회전</option><option value="ccw">왼쪽 회전</option><option value="drop">즉시 낙하</option><option value="hold">홀드</option></select></label>
+ <label for="padOrder">버튼 배열 <select id="padOrder" aria-label="액션 버튼 배열"><option value="abh">A · B · H</option><option value="ahb">A · H · B</option><option value="bah">B · A · H</option><option value="bha">B · H · A</option><option value="hab">H · A · B</option><option value="hba">H · B · A</option></select></label>
+ <p class="pad-help">중복된 기능을 선택하면 다른 버튼과 기능이 교환됩니다. 키보드 조작은 그대로 유지됩니다.</p>
+</div><button type="button" id="padReset">기본 위치 복원</button></details><div class="mobile-bottom"><button id="touchPause">Ⅱ 일시정지</button><button id="touchSound">♫ 사운드</button><button id="touchFullscreen">⛶ 전체화면</button></div>
 </div>
 <button class="pc-pad-toggle" id="pcPadToggle" type="button" aria-pressed="false">터치 조작부 표시</button></main><footer class="foot"><span>HOLD → PLAN → DROP<br>줄 제거 콤보: PERFECT → GREAT → GOOD → 초기화</span><span>테마 선율 직접 합성 · 외부 다운로드 없음<br>ESC 일시정지 / 창을 벗어나면 자동 정지</span></footer>
 <div class="sr" id="announce" aria-live="polite"></div>
@@ -285,14 +298,74 @@ if(new URLSearchParams(location.search).has('test'))window.__game={game,audio,re
 </script>
 <script>
 (function(){
+ 'use strict';
  const pad=document.querySelector('.mobile'),pcToggle=document.getElementById('pcPadToggle');
+ if(!pad)return;
  const params=[['padInset','--pad-inset',14,0,28],['padShift','--pad-shift',0,-16,16],['padGap','--pad-gap',10,4,18]];
- function apply(){for(const [id,prop] of params){const el=document.getElementById(id);pad.style.setProperty(prop,el.value+'px');document.getElementById(id+'Value').textContent=el.value+'px';}}
- let stored={};try{stored=JSON.parse(localStorage.getItem('neon-pad-settings')||'{}')}catch{}
- for(const [id,prop,def,min,max] of params){const el=document.getElementById(id);el.value=Math.min(max,Math.max(min,Number(stored[id]??def)||0));el.addEventListener('input',()=>{apply();const obj={};for(const [name] of params)obj[name]=Number(document.getElementById(name).value);try{localStorage.setItem('neon-pad-settings',JSON.stringify(obj))}catch{}});}
- apply();
- document.getElementById('padReset').addEventListener('click',()=>{for(const [id,prop,def] of params)document.getElementById(id).value=def;apply();try{localStorage.removeItem('neon-pad-settings')}catch{}});
- if(pcToggle)pcToggle.addEventListener('click',()=>{const open=pad.classList.toggle('show-pc-pad');pcToggle.textContent=open?'터치 조작부 숨기기':'터치 조작부 표시';pcToggle.setAttribute('aria-pressed',String(open));});
+ const keys=['a','b','h'],actions=['rotate','ccw','drop','hold'];
+ const names={rotate:'오른쪽 회전',ccw:'왼쪽 회전',drop:'즉시 낙하',hold:'홀드'};
+ const short={rotate:'TURN',ccw:'CCW',drop:'DROP',hold:'HOLD'};
+ const defaults={a:'rotate',b:'drop',h:'hold'};
+ const buttonElements=Object.fromEntries(keys.map(k=>[k,pad.querySelector('.actionpad .'+k)]));
+ const padRow=pad.querySelector('.actionpad');
+ let stored={};
+ try{const value=JSON.parse(localStorage.getItem('neon-pad-settings')||'{}');if(value&&typeof value==='object')stored=value;}catch{}
+ const assignments={...defaults};
+ const initial=keys.map(k=>stored['key'+k.toUpperCase()]);
+ if(initial.every(v=>actions.includes(v))&&new Set(initial).size===keys.length)keys.forEach((k,i)=>assignments[k]=initial[i]);
+ const orderChoices=['abh','ahb','bah','bha','hab','hba'];
+ const orderControl=document.getElementById('padOrder');
+ orderControl.value=orderChoices.includes(stored.padOrder)?stored.padOrder:'abh';
+ function save(){
+  const settings={};
+  for(const [id] of params)settings[id]=Number(document.getElementById(id).value);
+  for(const k of keys)settings['key'+k.toUpperCase()]=assignments[k];
+  settings.padOrder=orderControl.value;
+  try{localStorage.setItem('neon-pad-settings',JSON.stringify(settings));}catch{}
+ }
+ function apply(){
+  for(const [id,prop] of params){
+   const el=document.getElementById(id);
+   pad.style.setProperty(prop,el.value+'px');
+   document.getElementById(id+'Value').textContent=el.value+'px';
+  }
+ }
+ function renderActions(){
+  for(const k of keys){
+   const action=assignments[k],btn=buttonElements[k];
+   btn.dataset.action=action;
+   btn.setAttribute('aria-label',k.toUpperCase()+' 버튼: '+names[action]);
+   const label=btn.querySelector('small');if(label)label.textContent=short[action];
+   document.getElementById('padKey'+k.toUpperCase()).value=action;
+  }
+ }
+ function renderOrder(){for(const k of orderControl.value)padRow.appendChild(buttonElements[k]);}
+ for(const [id,prop,def,min,max] of params){
+  const el=document.getElementById(id);
+  const value=Number(stored[id]);
+  el.value=Number.isFinite(value)&&stored[id]!==undefined?Math.min(max,Math.max(min,value)):def;
+  el.addEventListener('input',()=>{apply();save();});
+ }
+ for(const k of keys)document.getElementById('padKey'+k.toUpperCase()).addEventListener('change',e=>{
+  const next=e.target.value,prev=assignments[k];
+  if(!actions.includes(next)||prev===next)return;
+  const other=keys.find(otherKey=>otherKey!==k&&assignments[otherKey]===next);
+  assignments[k]=next;
+  if(other)assignments[other]=prev;
+  renderActions();save();
+ });
+ orderControl.addEventListener('change',()=>{renderOrder();save();});
+ document.getElementById('padReset').addEventListener('click',()=>{
+  for(const [id,prop,def] of params)document.getElementById(id).value=def;
+  Object.assign(assignments,defaults);orderControl.value='abh';
+  apply();renderActions();renderOrder();save();
+ });
+ apply();renderActions();renderOrder();
+ if(pcToggle)pcToggle.addEventListener('click',()=>{
+  const open=pad.classList.toggle('show-pc-pad');
+  pcToggle.textContent=open?'터치 조작부 숨기기':'터치 조작부 표시';
+  pcToggle.setAttribute('aria-pressed',String(open));
+ });
 })();
 </script></body>
 </html>

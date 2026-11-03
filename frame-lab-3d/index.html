@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#09121f" />
+  <meta name="theme-color" content="#f5f3ef" />
   <meta name="description" content="브랜드별 렌즈와 센서·화각·조리개를 3D 장면 및 모바일 카메라에서 비교하는 렌즈 시뮬레이터 시제품" />
   <title>FRAME LAB 3D — 인터랙티브 렌즈 시뮬레이터</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-  <style>:root{--bg:#0a121e;--bg2:#0e1928;--panel:#101c2d;--line:#263548;--line2:#1e2b3d;--mint:#6fe7c9;--mint2:#3bbf9e;--text:#f0f6fa;--muted:#9badbd;--sub:#647b90;--amber:#f7c06c;--shadow:0 12px 40px #0003;font-family:Inter,SUIT,Pretendard,"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;color-scheme:dark}
+  <style>
+:root{--bg:#0a121e;--bg2:#0e1928;--panel:#101c2d;--line:#263548;--line2:#1e2b3d;--mint:#6fe7c9;--mint2:#3bbf9e;--text:#f0f6fa;--muted:#9badbd;--sub:#647b90;--amber:#f7c06c;--shadow:0 12px 40px #0003;font-family:Inter,SUIT,Pretendard,"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;color-scheme:dark}
 *{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 65% -20%,#1a3144 0,transparent 39%),var(--bg);color:var(--text);font-size:14px;letter-spacing:-.025em}button,select,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--mint);outline-offset:2px}button,select{transition:background .15s,border-color .15s,color .15s}button:hover{filter:brightness(1.1)}.app-shell{max-width:1610px;margin:auto;padding:0 36px}.topbar{height:91px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line2);gap:20px}.brand{display:flex;gap:13px;align-items:center;flex-shrink:0}.brand-mark{width:39px;height:39px;border:2px solid var(--mint);border-radius:10px;display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:8px;transform:rotate(8deg)}.brand-mark span{border:1.5px solid var(--mint);border-radius:2px}.brand strong{display:block;font-size:22px;letter-spacing:-.065em;font-weight:880}.brand strong span{color:var(--mint)}.brand small{display:block;font-size:8.5px;letter-spacing:.19em;color:var(--muted);margin-top:2px;font-weight:700}.brand small b{color:var(--mint)}.top-mid{font-size:10px;letter-spacing:.13em;color:var(--sub);font-weight:800;white-space:nowrap}.top-divider{margin:0 14px;border-left:1px solid var(--line);height:10px}.online-dot,.status-dot{width:7px;height:7px;background:var(--mint);border-radius:50%;display:inline-block;margin-right:8px;box-shadow:0 0 9px #6fe7c957}.top-actions{display:flex;gap:10px}.ghost-btn,.primary-btn{height:39px;border-radius:7px;padding:0 17px;font-size:12px;font-weight:750}.ghost-btn{color:#c8d6e2;background:#172438;border:1px solid #2d4055}.ghost-btn span{font-size:17px;color:var(--mint);vertical-align:-1px;margin-right:3px}.primary-btn{background:var(--mint);color:#0b2530;border:1px solid var(--mint)}.intro{padding:39px 1px 27px;display:flex;justify-content:space-between;align-items:end;gap:12px}.eyebrow{color:var(--mint);font-size:10px;letter-spacing:.20em;font-weight:850}.eyebrow span{font-size:8px;vertical-align:1px;margin-right:7px}.intro h1{font-weight:825;font-size:clamp(26px,2.35vw,38px);margin:12px 0 10px;letter-spacing:-.065em}.intro h1 em{font-style:normal;color:var(--mint)}.intro p{margin:0;color:#94a7b6;font-size:12px;line-height:1.75;max-width:700px}.intro-index{text-align:right;flex-shrink:0;padding-bottom:2px}.intro-index strong{font-size:22px;font-weight:550;letter-spacing:.06em}.intro-index strong span{color:#557087}.intro-index small{display:block;color:#718ba0;font-size:9px;letter-spacing:.16em;margin-top:8px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 345px;gap:18px;align-items:start}.viewer-col{min-width:0}.viewer-top{height:53px;padding:7px 13px;background:#111f30;border:1px solid var(--line);border-radius:11px 11px 0 0;display:flex;justify-content:space-between;align-items:center}.view-modes{display:flex;gap:6px}.view-modes button{color:#99afc2;background:transparent;border:1px solid transparent;border-radius:6px;font-size:11px;font-weight:800;padding:9px 13px}.view-modes button.selected{background:#253b4b;color:var(--mint);border-color:#365d65}.camera-status{font-size:9px;letter-spacing:.14em;color:#c1d5df;font-weight:850;white-space:nowrap}.camera-status .status-dot{width:6px;height:6px}.viewport{position:relative;width:100%;aspect-ratio:3/2;overflow:hidden;background:radial-gradient(ellipse at 50% 30%,#2d5262,#20384a 60%,#1b2637);touch-action:pan-y;isolation:isolate}.viewport:has(.mobile-move){touch-action:none}#webglMount,#liveVideo{position:absolute;inset:0;width:100%;height:100%}#webglMount canvas{display:block;width:100%;height:100%}#liveVideo{display:none;object-fit:cover;transform-origin:center;pointer-events:none}.viewport.live #webglMount{display:none}.viewport.live #liveVideo{display:block}.viewport.live #mobileMove{display:none}.scene-loading{position:absolute;inset:0;background:linear-gradient(145deg,#1d3c4d,#0c1b2b);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;text-align:center;z-index:4}.scene-loading strong{font-size:14px}.scene-loading small{font-size:11px;color:var(--muted)}.loading-ring{height:32px;width:32px;border:3px solid #3a5663;border-top-color:var(--mint);border-radius:50%;animation:turn 1s linear infinite}@keyframes turn{to{transform:rotate(360deg)}}.scene-loading.hidden{display:none}.exposure-layer,.vignette-layer,.flare-layer,.grid-layer{position:absolute;inset:0;pointer-events:none}.exposure-layer{z-index:1}.vignette-layer{z-index:2;background:radial-gradient(ellipse at center,transparent 37%,#03101b67 100%)}.flare-layer{z-index:3;opacity:0;background:radial-gradient(circle at var(--flare-x,73%) var(--flare-y,25%),#fff6b7bb 0%,#ffdea953 4%,#e6a56816 14%,transparent 32%),linear-gradient(128deg,transparent 25%,#e6c4a718 46%,transparent 55%);mix-blend-mode:screen}.grid-layer{z-index:4;opacity:.72}.grid-layer.thirds{background:linear-gradient(90deg,transparent calc(33.333% - .6px),#ffffff90 33.333%,transparent calc(33.333% + .6px),transparent calc(66.667% - .6px),#ffffff90 66.667%,transparent calc(66.667% + .6px)),linear-gradient(0deg,transparent calc(33.333% - .6px),#ffffff90 33.333%,transparent calc(33.333% + .6px),transparent calc(66.667% - .6px),#ffffff90 66.667%,transparent calc(66.667% + .6px))}.grid-layer.golden{background:linear-gradient(90deg,transparent calc(38.2% - .6px),#fff8 38.2%,transparent calc(38.2% + .6px),transparent calc(61.8% - .6px),#fff8 61.8%,transparent calc(61.8% + .6px)),linear-gradient(0deg,transparent calc(38.2% - .6px),#fff8 38.2%,transparent calc(38.2% + .6px),transparent calc(61.8% - .6px),#fff8 61.8%,transparent calc(61.8% + .6px))}.grid-layer.center{background:linear-gradient(90deg,transparent calc(50% - .5px),#fffa 50%,transparent calc(50% + .5px)),linear-gradient(0deg,transparent calc(50% - .5px),#fffa 50%,transparent calc(50% + .5px))}.grid-layer.diagonal{background:linear-gradient(to top right,transparent calc(50% - .5px),#fffa 50%,transparent calc(50% + .5px)),linear-gradient(to top left,transparent calc(50% - .5px),#fffa 50%,transparent calc(50% + .5px))}.grid-layer.none{display:none}.corner-mark{position:absolute;z-index:5;width:21px;height:21px;opacity:.9;pointer-events:none}.tl{top:16px;left:17px;border-top:2px solid #fff9;border-left:2px solid #fff9}.tr{top:16px;right:17px;border-top:2px solid #fff9;border-right:2px solid #fff9}.bl{bottom:17px;left:17px;border-bottom:2px solid #fff9;border-left:2px solid #fff9}.br{bottom:17px;right:17px;border-bottom:2px solid #fff9;border-right:2px solid #fff9}.view-hud,.view-bottom-left,.view-bottom-right,.virtual-guide,.focus-reticle{position:absolute;z-index:6;pointer-events:none;text-shadow:0 2px 8px #000b}.view-hud.top-left{top:38px;left:36px;display:flex;flex-direction:column;gap:5px}.tiny-label{font-size:9px;color:#dcf1f3bf;letter-spacing:.15em;font-weight:800}.view-hud.top-left strong{font-size:16px;max-width:400px;line-height:1.35}.view-hud.top-left span{font-size:11px;color:#e3f0f1}.view-hud.top-right{top:42px;right:36px;font-size:10px;letter-spacing:.09em;font-weight:850}.rec-dot{color:#f29a74;vertical-align:1px;margin-right:3px}.focus-reticle{left:50%;top:50%;transform:translate(-50%,-50%);font-size:27px;color:#fffbe0;opacity:.78;font-weight:200}.view-bottom-left{bottom:37px;left:36px;display:flex;align-items:baseline;gap:11px}.view-bottom-left strong{font-size:35px;line-height:1;font-variant-numeric:tabular-nums}.view-bottom-left strong span{font-size:12px;margin-left:3px}.view-bottom-left>span{font-size:10px;letter-spacing:.04em;color:#e7f6f5}.view-bottom-right{bottom:39px;right:36px;text-align:right;font-size:10px;letter-spacing:.07em;font-weight:850;line-height:1.9}.virtual-guide{bottom:12px;width:100%;text-align:center;color:#eef8f6b4;font-size:10px;font-weight:650}.virtual-guide span{padding:0 6px}.mobile-move{display:none;position:absolute;z-index:9;bottom:44px;left:15px;align-items:center;flex-direction:column;gap:2px}.mobile-move>div{display:flex;gap:3px}.mobile-move button{border:1px solid #fff5;background:#0617259c;color:white;border-radius:6px;width:33px;height:31px;font-size:17px;touch-action:none}.scene-toolbar{background:#112034;border:1px solid var(--line);border-top:0;border-radius:0 0 9px 9px;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 14px}.toolbar-group{display:flex;gap:8px;align-items:center}.toolbar-caption{font-size:9px;letter-spacing:.12em;color:#69829a;font-weight:900;margin-right:3px}.segmented{display:flex;gap:4px}.segmented button{background:#1b2b3d;border:1px solid #2a4156;color:#aabccb;font-size:11px;padding:7px 11px;border-radius:5px;font-weight:750}.segmented button.active{background:#284e50;border-color:#37766b;color:#a9ffdd}.scene-toolbar select,.scene-toolbar .icon-button{background:#1b2b3d;color:#d9e8ef;border:1px solid #2a4156;border-radius:5px;height:31px;padding:0 8px;font-size:11px}.scene-toolbar .icon-button{font-size:16px;font-weight:800;width:32px}.reset-btn{background:transparent;border:none;color:#849bae;font-size:11px;white-space:nowrap}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:14px;gap:1px;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--line)}.metric{background:#112033;min-height:110px;padding:19px 20px 13px}.metric>span{display:block;font-size:9px;letter-spacing:.12em;color:#8299ad;font-weight:900;white-space:nowrap}.metric strong{display:block;margin-top:10px;font-size:25px;font-weight:760;line-height:1.1;letter-spacing:-.055em;white-space:nowrap}.metric small{font-size:12px;font-weight:600;color:#9db0c0;margin-left:3px}.metric-caption{margin-top:9px;font-size:10px;color:#617a91}.notice{margin-top:13px;padding:15px 17px;display:flex;gap:11px;border:1px solid #365061;border-radius:8px;background:#132638;font-size:11px;color:#a3bdcb;line-height:1.7}.notice-icon{font-size:16px;color:var(--mint);line-height:1.2}.controls{background:#111d2d;border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);overflow:hidden}.control-head{padding:22px 21px 18px;display:flex;align-items:center;justify-content:space-between}.control-head .eyebrow{font-size:9px}.control-head h2{font-size:23px;letter-spacing:-.06em;margin:7px 0 0}.control-head h2 span{color:#7295a1;font-size:18px;font-weight:400}.control-head button{border:1px solid #294157;background:#1a2a3d;color:#aac0d0;border-radius:6px;padding:8px 10px;font-size:10px}.control-section{border-top:1px solid var(--line);padding:17px 20px 20px}.section-caption{display:flex;gap:9px;align-items:center;margin-bottom:18px;font-weight:850;font-size:12px}.section-caption .num{font-size:10px;color:var(--mint);font-weight:800;letter-spacing:.08em}.section-trail{margin-left:auto;font-size:9px;letter-spacing:.12em;color:#5f758a;font-weight:850}.control-section label:not(.switch-line){font-size:10px;letter-spacing:.04em;color:#a6bac9;display:block;font-weight:750;margin:13px 0 7px}.control-section select,.control-section input[type=search]{width:100%;height:37px;border:1px solid #30465a;border-radius:6px;background:#1b2b3e;color:#e3edf4;outline:none;padding:0 11px;font-size:12px;min-width:0}.control-section input[type=search]::placeholder{color:#688399}.control-section select option{background:#1b2b3e;color:#eaf3fa}.lens-detail{background:#182b3b;border:1px solid #274458;border-radius:7px;display:flex;align-items:center;gap:11px;margin-top:12px;padding:11px}.lens-icon{color:var(--mint);font-size:26px;line-height:1}.lens-detail strong,.lens-detail span:not(.lens-icon){display:block}.lens-detail strong{font-size:11px;line-height:1.4}.lens-detail div>span{font-size:10px;color:#7899af;margin-top:4px}.helper{font-size:10px;line-height:1.6;color:#7e98aa;margin-top:7px}.two-col{display:grid;grid-template-columns:1fr auto;gap:8px}.read-only-chip{background:#1b3d3d;border:1px solid #386d63;color:#8bdfc3;padding:10px;border-radius:6px;font-size:10px;font-weight:850;min-width:87px;text-align:center;white-space:nowrap}.param-heading{display:flex;align-items:baseline;justify-content:space-between;gap:5px}.param-heading label{margin:2px 0 11px!important}.param-heading output{color:var(--mint);font-size:16px;font-weight:850;letter-spacing:-.03em}input[type=range]{width:100%;accent-color:var(--mint);cursor:pointer;height:19px;margin:3px 0 0}.range-ends{display:flex;justify-content:space-between;color:#637d93;font-size:10px;margin:2px 0 14px}.quick-focals{border:1px solid #293b50;background:#152535;border-radius:7px;padding:11px}.quick-focals>span{display:block;font-size:10px;color:#b4c8d5;font-weight:800;margin-bottom:9px}.quick-focals>div{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}.quick-focals button{background:#223549;color:#bacdda;border:1px solid #30495f;border-radius:5px;padding:7px 0;font-size:11px;font-weight:800}.quick-focals button.active{background:#285b54;border-color:#488c79;color:#adffe2}.quick-focals small{display:block;color:#6c8b9f;font-size:9px;line-height:1.6;margin-top:8px}.pad-top{padding-top:17px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.switch-line{position:relative;display:flex;align-items:center;justify-content:space-between;gap:9px;padding:13px 0 0;cursor:pointer}.switch-line>span:first-child{font-size:11px;color:#d4e1e9;font-weight:750;line-height:1.3}.switch-line small{display:block;color:#728da0;font-size:10px;margin-top:5px;font-weight:450}.switch-line input{position:absolute;opacity:0;width:1px;height:1px}.switch-ui{width:34px;height:19px;background:#2b3d4f;border-radius:20px;border:1px solid #456074;flex-shrink:0;position:relative}.switch-ui:before{content:'';width:13px;height:13px;border-radius:50%;position:absolute;top:2px;left:3px;background:#8fa4b2;transition:transform .15s}.switch-line input:checked+.switch-ui{background:#266553;border-color:#389475}.switch-line input:checked+.switch-ui:before{transform:translateX(14px);background:#bbffe7}.switch-line.compact{border-top:1px solid #243548;margin-top:10px;padding-top:13px}.switch-line.compact:first-of-type{margin-top:15px}.live-settings.hidden{display:none}.live-note{margin:13px 0 11px;line-height:1.7;font-size:11px;color:#a6c0ce;background:#18344a;padding:12px;border-left:2px solid var(--mint)}.stop-camera{width:100%;height:34px;border-radius:6px;background:#442d38;color:#ffd7d8;border:1px solid #7c4853;font-size:11px;font-weight:700}.toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,12px);background:#e9fff5;color:#102b2d;border-radius:8px;padding:12px 18px;font-size:12px;font-weight:750;opacity:0;pointer-events:none;z-index:50;transition:all .2s;box-shadow:var(--shadow);max-width:90vw;text-align:center}.toast.show{transform:translate(-50%,0);opacity:1}footer{border-top:1px solid var(--line2);display:flex;justify-content:space-between;padding:21px 2px 27px;margin-top:27px;gap:10px;color:#6d8194;font-size:9px;letter-spacing:.1em;font-weight:800}footer span{color:var(--mint)}
 @media(max-width:1280px){.app-shell{padding:0 22px}.workspace{grid-template-columns:minmax(0,1fr) 322px;gap:13px}.metric{padding:17px 11px}.metric>span{font-size:8px}.scene-toolbar{flex-wrap:wrap}.reset-btn{margin-left:auto}.intro-index{display:none}}
 @media(max-width:990px){.workspace{grid-template-columns:minmax(0,1fr)}.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;align-items:start}.control-head{grid-column:1/-1}.control-section{min-width:0}.control-section:nth-child(odd){border-left:1px solid var(--line)}.intro{padding:30px 0 22px}.top-mid{display:none}.viewer-top{height:55px}.control-section:last-child{grid-column:1/-1}.scene-toolbar{flex-wrap:nowrap}}
@@ -17,6 +18,121 @@
 .quick-focals>div{grid-template-columns:repeat(6,minmax(0,1fr))}
 @media(max-width:650px){.mobile-move{left:auto;right:12px;bottom:72px}}
 @media(max-width:390px){.mobile-move{left:auto;right:8px;bottom:64px}}
+
+/* v0.4 — Camera Studio: warm neutral interface, no neon */
+:root {--bg:#f4f2ee;--bg2:#ece9e3;--panel:#fffefa;--line:#e3dfd7;--line2:#e9e6df;--mint:#aa6951;--mint2:#87543e;--text:#292c31;--muted:#77756f;--sub:#8c8b86;--amber:#c49b75;--shadow:0 12px 40px #34312a0b;color-scheme:light}
+html{background:#f4f2ee}body{background:linear-gradient(130deg,#faf8f4,#f2f0ec 55%,#eee9e1);color:var(--text)}
+.app-shell{max-width:1580px;padding:0 26px}
+.topbar{height:77px;border-color:var(--line)}
+.brand-mark{border-color:#98765e;transform:none;border-radius:10px;background:#f1e7df}
+.brand-mark span{border-color:#9b735b}.brand strong{font-weight:850;color:#292827}.brand strong span{color:#a1644c}.brand small,.brand small b{color:#8b7b70}
+.top-mid{color:#92857b}.top-divider{border-color:#ddd4ca}
+.online-dot,.status-dot{background:#8a9984;box-shadow:none}
+.ghost-btn,.primary-btn{border-radius:9px;font-weight:750}
+.ghost-btn{color:#5b534c;background:#fffdfa;border:1px solid #ddd8d0}.ghost-btn span{color:#a1644c}
+.primary-btn{background:#353c3d;color:white;border:1px solid #353c3d}
+.intro{padding:30px 2px 22px}.eyebrow,.eyebrow span{color:#a56b53}.intro h1{color:#2b2a28;font-size:clamp(26px,2.5vw,36px)}.intro h1 em{color:#af6b51}.intro p{color:#7f7b73;font-size:13px}
+.intro-index strong{color:#544840}.intro-index strong span,.intro-index small{color:#aaa199}
+.workspace{gap:18px;grid-template-columns:minmax(0,1fr) 333px}
+.viewer-top{background:#fffefa;border:1px solid var(--line);height:51px}
+.view-modes button{color:#7e7770;border-radius:8px;font-size:12px}.view-modes button.selected{background:#ebe6de;color:#3a3c3d;border-color:#e0d5ca}
+.camera-status{color:#82796f;font-size:10px}
+.viewport{background:linear-gradient(#9fc2d1,#d7d5ae);touch-action:none}
+.scene-loading{background:linear-gradient(140deg,#afcbd6,#d8cfb2);color:#363934}.scene-loading small{color:#59635e}.loading-ring{border-color:#ffffff9c;border-top-color:#a56b53}
+.vignette-layer{background:radial-gradient(ellipse at center,transparent 49%,#27221b32 100%)}
+.flare-layer{background:radial-gradient(circle at var(--flare-x,72%) var(--flare-y,19%),#fff4d9bf 0%,#f6d9ac52 6%,#ead3ad12 15%,transparent 34%);mix-blend-mode:screen}
+.grid-layer{opacity:.34}.corner-mark{opacity:.68}
+.view-hud.top-left{top:25px;left:24px}.view-hud.top-left .tiny-label{font-size:8px;color:#fffdf5df}
+.view-hud.top-left strong{font-size:15px;color:#fffefa;max-width:250px}.view-hud.top-left>span{color:#fffcf6e0}
+.view-hud.top-right{top:96px;right:22px;color:#fff9edc0;font-size:9px}
+.view-bottom-left{bottom:21px;left:24px}.view-bottom-left strong{font-size:33px;color:#fff}.view-bottom-left span{color:#fff}
+.view-bottom-right{bottom:23px;right:22px;color:#fff}
+.focus-reticle{font-size:0;width:38px;height:38px;border:2px solid #f7f5d9;border-radius:10px;color:#fefbe7;opacity:.9;transition:left .13s linear,top .13s linear,background .2s;text-shadow:0 2px 3px #000a}
+.focus-reticle:before,.focus-reticle:after{content:'';position:absolute;background:#f8f6e3}
+.focus-reticle:before{width:2px;height:12px;left:calc(50% - 1px);top:calc(50% - 6px)}
+.focus-reticle:after{height:2px;width:12px;top:calc(50% - 1px);left:calc(50% - 6px)}
+.focus-reticle.manual{border-color:#eac6a8}.focus-reticle.manual:before,.focus-reticle.manual:after{background:#eac6a8}
+.focus-reticle small{position:absolute;display:block;top:100%;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;white-space:nowrap;margin-top:5px;color:white}
+.focus-badge{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;color:#fffdf7bb;z-index:7;white-space:nowrap;text-shadow:0 2px 4px #000a}
+.virtual-guide{bottom:11px;display:none}
+.view-overlays{position:absolute;top:10px;right:11px;display:flex;gap:6px;z-index:10}
+.view-gear{background:#24292cba;border:1px solid #ffffff53;border-radius:9px;padding:8px 10px;font-size:11px;color:#fffefa;font-weight:800;backdrop-filter:blur(9px)}
+.view-gear:hover{background:#252e2df0}
+.quick-selector,.camera-permission{position:absolute;inset:auto 12px 12px auto;z-index:20;width:min(340px,calc(100% - 24px));background:#fffdf9;border:1px solid #dbd3c9;border-radius:14px;box-shadow:0 18px 70px #161f2175;padding:20px;color:#30302d;max-height:calc(100% - 18px);overflow:auto}
+.quick-selector.hidden,.camera-permission.hidden{display:none}
+.quick-select-top{display:flex;justify-content:space-between;align-items:center;font-size:16px;margin-bottom:10px}.quick-select-top button{border:none;background:transparent;font-size:18px;color:#5d5d59}
+.quick-selector label{display:block;font-weight:750;color:#68645f;font-size:11px;margin-top:12px}
+.quick-selector select{display:block;width:100%;margin-top:5px;color:#292a29;border:1px solid #ddd8cf;background:#f6f4ef;border-radius:8px;padding:9px;font-size:12px;min-height:40px}
+.quick-apply,.permission-actions button:first-child{width:100%;margin-top:18px;background:#a8694d;color:white;border:0;border-radius:8px;padding:12px 10px;font-size:12px;font-weight:800}
+.camera-permission{top:50%;left:50%;right:auto;bottom:auto;transform:translate(-50%,-50%);text-align:center;width:min(410px,calc(100% - 30px))}
+.permission-symbol{width:45px;height:45px;border-radius:50%;background:#efe3d8;color:#ab7157;display:grid;place-items:center;font-size:26px;margin:0 auto 10px}.camera-permission strong{font-size:18px}.camera-permission p{font-size:12px;line-height:1.7;color:#77746c;margin:10px 0}.camera-permission small{font-size:10px;color:#aaa097}
+.permission-actions{display:flex;gap:7px;align-items:center}.permission-actions button:first-child{margin-top:0;flex:1}.permission-actions button:last-child{border:1px solid #dcd7ce;border-radius:8px;color:#625c56;background:#f4f1eb;padding:12px 14px}
+.manual-deck{background:#fffdfa;border:1px solid var(--line);border-top:0;padding:15px 16px 14px;display:grid;gap:12px}
+.manual-main-row{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap}
+.manual-title{display:flex;align-items:center;gap:9px;min-width:150px}
+.manual-tag{background:#333d3e;color:#fff;border-radius:7px;font-weight:900;font-size:17px;padding:6px 12px}
+.manual-title strong{font-size:12px;color:#313432;display:block}.manual-title small{display:block;color:#9c958d;font-size:10px;margin-top:2px}
+.manual-focals{display:flex;gap:5px;flex-wrap:wrap}
+.manual-focals button,.fisheye-shortcut{border:1px solid #ddd7cf;background:#f9f6f0;color:#5c5751;border-radius:7px;padding:8px 11px;font-size:11px;font-weight:800}
+.manual-focals button.active,.fisheye-shortcut.active{background:#3c4444;border-color:#3c4444;color:white}
+.fisheye-shortcut{color:#9b6349;background:#f4eae1;border-color:#e7d6c9}
+.manual-focal-row{display:grid;grid-template-columns:138px 1fr;align-items:center;gap:15px}
+.manual-focal-row label{font-size:11px;font-weight:750;color:#67635c}.manual-focal-row strong{color:#a15d46;display:block;font-size:16px;margin-top:3px}
+.manual-deck input[type=range]{accent-color:#a86a50;margin:0;height:26px}
+.manual-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(135px,1.5fr);gap:8px;align-items:end}
+.manual-fields>label,.manual-focus-box>span{display:block;font-size:10px;font-weight:800;color:#837b73;letter-spacing:.02em}
+.manual-fields select{margin-top:5px;width:100%;border:1px solid #dedbd4;border-radius:8px;background:#f8f6f1;color:#373737;padding:9px 7px;height:39px;font-size:12px;font-weight:800}
+.focus-choices{display:flex;margin-top:5px;gap:4px}.focus-choices button{height:39px;flex:1;background:#f8f6f1;color:#685f56;border:1px solid #ddd9d1;border-radius:8px;font-weight:800;font-size:12px}
+.focus-choices button.active{background:#3c4444;color:#fff;border-color:#3c4444}
+.manual-mf{display:grid;grid-template-columns:138px minmax(120px,1fr) 2fr;gap:14px;align-items:center;border-top:1px solid #eae7e1;padding-top:10px}
+.manual-mf label{font-size:10px;color:#80786e;font-weight:800}.manual-mf label strong{display:block;color:#a5644a;margin-top:3px;font-size:14px}
+.manual-mf span{font-size:10px;color:#989086;line-height:1.4}
+.manual-mf input[type=range]:disabled{opacity:.32}
+.scene-toolbar{background:#fcfaf6;border:1px solid #e2ded8;border-radius:0 0 10px 10px;padding:10px 14px}
+.toolbar-caption{color:#96897d}.segmented button,.scene-toolbar select,.scene-toolbar .icon-button{background:#f3f0e9;color:#58554e;border:1px solid #ded9d0;border-radius:7px}
+.segmented button.active{background:#e4ded4;border-color:#d2c9ba;color:#463a31}
+.reset-btn{color:#897e73}
+.walk-toggle{border:1px solid #dbd5cc;border-radius:7px;background:#f3ece2;color:#805f4a;padding:7px 9px;font-size:10px;font-weight:800;white-space:nowrap}
+.walk-toggle[aria-pressed=false]{color:#7c7870;background:#eeece7}
+.metrics{border-color:var(--line);background:var(--line);margin-top:12px}.metric{background:#fffdfa;min-height:96px;padding:16px}.metric>span{color:#89837b}.metric strong{color:#393a37;font-size:24px}.metric small,.metric-caption{color:#938b82}
+.notice{background:#f8f5f0;border:1px solid #e8e0d5;color:#8b837a;padding:12px 13px}.notice-icon{color:#ac7355}
+.controls{background:#fffdfa;border:1px solid #e4dfd7;box-shadow:none}
+.control-head{padding:18px 17px 14px}.control-head h2{color:#312d2a;font-size:21px}.control-head h2 span{color:#aaa095}.control-head button{border:1px solid #ddd5cb;background:#f5f1eb;color:#7a6b5f}
+.control-section{border-color:#eae6df;padding:16px 17px 19px}.section-caption{color:#383a37;margin-bottom:12px}.section-caption .num{color:#ae7359}.section-trail{color:#aaa197}
+.control-section label:not(.switch-line){color:#807a71}
+.control-section select,.control-section input[type=search]{border:1px solid #ddd8ce;background:#f8f6f1;color:#3d3e3a;height:38px;border-radius:8px}
+.control-section select option{background:#fffdfa;color:#343331}.control-section input[type=search]::placeholder{color:#a7a198}
+.lens-detail{background:#f3eee7;border:1px solid #e3ddd2}.lens-icon{color:#b4775e}.lens-detail strong{color:#47443e}.lens-detail div>span,.helper{color:#928a7d}
+.read-only-chip{background:#f5ece3;border:1px solid #e5d5c5;color:#9a6c52}
+.param-heading output{color:#a5664d}.range-ends{color:#a09a8e}
+.quick-focals{background:#f7f4ee;border:1px solid #e3ddd4}.quick-focals>span{color:#6d685e}.quick-focals button{background:#fffdfa;border:1px solid #e0d8cd;color:#68635c}
+.quick-focals button.active{background:#484a46;border-color:#484a46;color:white}.quick-focals small{color:#a49d92}
+.switch-line>span:first-child{color:#555049}.switch-line small{color:#988e83}.switch-line.compact{border-top-color:#ebe7df}
+.switch-ui{background:#ddd9d1;border-color:#d4cec5}.switch-ui:before{background:#fff}.switch-line input:checked+.switch-ui{background:#ad7d63;border-color:#ad7d63}.switch-line input:checked+.switch-ui:before{background:#fff}
+.flare-intensity{margin:8px 0 5px;padding:10px 12px;background:#f8f4ee;border-radius:8px}.flare-intensity label{display:flex!important;align-items:center;justify-content:space-between;margin:0!important;font-size:10px!important}.flare-intensity output{color:#a96e51}
+.live-note{background:#f5eee5;border-left-color:#c58a69;color:#77695c}.stop-camera{background:#faf1ee;border:1px solid #d6b6aa;color:#a45c4f}
+.toast{background:#303532;color:#fefbf6;box-shadow:0 8px 24px #25262222}
+footer{border-color:var(--line);color:#aaa096}footer span{color:#a76b50}
+.mobile-move button{background:#252a2bc9;color:#fff;border:1px solid #ffffff79;border-radius:9px;backdrop-filter:blur(7px)}
+@media(max-width:1100px){.workspace{grid-template-columns:minmax(0,1fr)}.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.control-head{grid-column:1/-1}.control-section{min-width:0}}
+@media(max-width:650px){
+ .app-shell{padding:0 10px}.topbar{height:62px}.top-actions{gap:5px}.ghost-btn,.primary-btn{height:34px;font-size:9px;padding:0 8px}.intro{padding:17px 2px 14px}.intro h1{font-size:24px}.intro h1 em{display:inline}.intro p{font-size:11px}
+ .viewer-top{height:45px;padding:5px 7px}.view-modes button{font-size:10px;padding:7px}.camera-status{font-size:8px}
+ .viewport{aspect-ratio:4/3!important;min-height:245px}.view-overlays{top:7px;right:6px;gap:4px}.view-gear{padding:6px;font-size:9px}.live-shortcut{display:none}
+ .view-hud.top-left{top:44px;left:16px}.view-hud.top-left strong{max-width:170px;font-size:11px}.view-hud.top-left span{font-size:9px}
+ .view-hud.top-right{top:48px;right:12px;font-size:7px}.view-bottom-left{bottom:19px;left:15px}.view-bottom-left strong{font-size:26px}.view-bottom-right{display:none}.focus-badge{bottom:13px;font-size:9px}
+ .mobile-move{display:flex;right:8px;left:auto;bottom:57px;transform:scale(.86);transform-origin:bottom right}
+ .manual-deck{padding:12px 10px 13px;gap:9px;position:sticky;bottom:0;z-index:12;box-shadow:0 -10px 24px #3e362a15;border-radius:0 0 12px 12px}
+ .manual-main-row{gap:6px}.manual-title{min-width:auto}.manual-title strong{font-size:11px}.manual-title small{display:none}.manual-tag{font-size:13px;padding:5px 10px}
+ .manual-focals{gap:3px}.manual-focals button,.fisheye-shortcut{padding:6px 8px;font-size:10px}.manual-focal-row{grid-template-columns:93px 1fr;gap:8px}.manual-focal-row label{font-size:9px}.manual-focal-row strong{font-size:14px}
+ .manual-fields{grid-template-columns:repeat(3,minmax(0,1fr)) 1.1fr;gap:5px}.manual-fields select{padding:6px 2px;height:35px;font-size:10px}.manual-fields>label,.manual-focus-box>span{font-size:9px}.focus-choices{gap:2px}.focus-choices button{height:35px;font-size:10px}
+ .manual-mf{grid-template-columns:95px minmax(90px,1fr);gap:8px}.manual-mf span{grid-column:1/-1;font-size:9px}.manual-mf label{font-size:9px}.manual-mf label strong{font-size:12px}
+ .scene-toolbar{padding:10px 7px;gap:9px}.toolbar-caption{display:none}.segmented button{font-size:10px;padding:6px 8px}.scene-toolbar select{max-width:115px}.walk-toggle{font-size:9px;padding:7px 6px}
+ .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.controls{display:block}.metric{min-height:88px}
+ .quick-selector{top:5px;bottom:5px;max-height:calc(100% - 10px)}.camera-permission{padding:14px}.camera-permission strong{font-size:15px}.camera-permission p{font-size:10px;line-height:1.5}
+}
+@media(max-width:375px){.manual-focals button{padding:5px 6px}.fisheye-shortcut{padding:5px 6px}.manual-title strong{display:none}.view-gear{font-size:8px}.top-actions .ghost-btn{display:none}.scene-toolbar .toolbar-group:nth-child(2){order:unset}}
+
 </style>
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}
@@ -25,16 +141,16 @@
 <body>
   <div class="app-shell">
     <header class="topbar">
-      <div class="brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div><strong>FRAME<span>LAB</span></strong><small>INTERACTIVE LENS STUDIO <b>03</b></small></div></div>
-      <div class="top-mid"><span class="online-dot"></span> PHOTOGRAPHY PLAYGROUND <span class="top-divider"></span> <span id="top-count">51</span> LENS PROFILES</div>
+      <div class="brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div><strong>FRAME<span>LAB</span></strong><small>CAMERA & LENS SIMULATOR <b>04</b></small></div></div>
+      <div class="top-mid"><span class="online-dot"></span> VIRTUAL CAMERA STUDIO <span class="top-divider"></span> <span id="top-count">51</span> LENS PROFILES</div>
       <div class="top-actions"><button id="shareBtn" class="ghost-btn" type="button" title="현재 설정을 URL로 공유"><span>↗</span> 설정 공유</button><button id="snapshotBtn" class="primary-btn" type="button">◉ &nbsp;프레임 저장</button></div>
     </header>
 
-    <section class="intro"><div><div class="eyebrow"><span>●</span> VIRTUAL PHOTOGRAPHY LAB</div><h1>렌즈를 사기 전에, <em>먼저 촬영해보세요.</em></h1><p>장면 속을 직접 걸어 다니며 브랜드별 렌즈, 화각, 조리개와 구도를 실험하세요. 모바일에서는 실제 카메라 화면에 화각을 대조할 수 있습니다.</p></div><div class="intro-index"><strong>01 <span>/ 03</span></strong><small>EXPLORE · COMPARE · CAPTURE</small></div></section>
+    <section class="intro"><div><div class="eyebrow"><span>●</span> VIRTUAL PHOTOGRAPHY STUDIO</div><h1>당신의 구도, <em>렌즈를 바꾸며 찾아보세요.</em></h1><p>장면 속을 직접 걸어 다니며 브랜드별 렌즈, 화각, 조리개와 구도를 실험하세요. 모바일 카메라와 3D 공간에서 구도, 초점거리, AF/MF까지 직접 비교할 수 있습니다.</p></div><div class="intro-index"><strong>01 <span>/ 03</span></strong><small>EXPLORE · COMPARE · CAPTURE</small></div></section>
 
     <main class="workspace">
       <section class="viewer-col" aria-label="렌즈 시뮬레이션 뷰어">
-        <div class="viewer-top"><div class="view-modes" role="tablist" aria-label="화면 모드"><button id="mode3d" class="selected" role="tab" aria-selected="true">◈ &nbsp;3D 가상 촬영</button><button id="modeLive" role="tab" aria-selected="false">◎ &nbsp;실시간 카메라</button></div><div class="camera-status" id="cameraStatus"><span class="status-dot"></span> 3D SCENE LIVE</div></div>
+        <div class="viewer-top"><div class="view-modes" role="tablist" aria-label="화면 모드"><button id="mode3d" class="selected" role="tab" aria-selected="true">◈ &nbsp;3D 가상 촬영</button><button id="modeLive" role="tab" aria-selected="false">◎ &nbsp;내 카메라 연결</button></div><div class="camera-status" id="cameraStatus"><span class="status-dot"></span> 3D SCENE LIVE</div></div>
         <div class="viewport" id="viewport">
           <div id="webglMount" aria-label="가상 3D 촬영 공간"></div>
           <video id="liveVideo" autoplay muted playsinline aria-label="실시간 카메라 미리보기"></video>
@@ -44,15 +160,36 @@
           <div id="flareLayer" class="flare-layer"></div>
           <div id="gridLayer" class="grid-layer thirds" aria-hidden="true"></div>
           <div class="corner-mark tl"></div><div class="corner-mark tr"></div><div class="corner-mark bl"></div><div class="corner-mark br"></div>
+          <div class="view-overlays"><button id="quickGearBtn" class="view-gear" type="button">▣ &nbsp; 카메라 · 렌즈 변경</button><button id="liveShortcutBtn" class="view-gear live-shortcut" type="button">◎ 내 카메라</button></div>
           <div class="view-hud top-left"><div class="tiny-label">ACTIVE LENS</div><strong id="hudLens">24–70mm F2.8 GM II</strong><span id="hudSpec">50mm · f/2.8 · ISO 100</span></div>
           <div class="view-hud top-right"><span class="rec-dot">●</span> <span id="hudScene">PARK / DAYLIGHT</span></div>
-          <div id="focusReticle" class="focus-reticle">⌖</div>
+          <div id="focusReticle" class="focus-reticle" aria-hidden="true"><span></span><small id="focusReticleLabel">AF-C</small></div>
+          <div id="focusBadge" class="focus-badge">AF-C · 피사체 추적</div>
           <div class="view-bottom-left"><strong id="hudFocal">50<span>mm</span></strong><span id="hudEquivalent">50mm eq.</span></div>
           <div class="view-bottom-right"><div id="hudAngle">HFOV 39.6°</div><div id="hudSettings">f/2.8 &nbsp; 1/125 &nbsp; ISO 100</div></div>
-          <div id="virtualGuide" class="virtual-guide">드래그: 시선 이동 <span>·</span> W A S D: 이동 <span>·</span> 피사체 클릭: 초점</div>
+          <div id="virtualGuide" class="virtual-guide">드래그: 시선 이동 <span>·</span> 두 손가락: 줌 <span>·</span> 화면 터치: 피사체 초점</div>
           <div class="mobile-move" id="mobileMove" aria-label="이동 조작"><button data-move="forward" aria-label="앞으로">↑</button><div><button data-move="left" aria-label="왼쪽">←</button><button data-move="backward" aria-label="뒤로">↓</button><button data-move="right" aria-label="오른쪽">→</button></div></div>
+                  <div id="quickSelector" class="quick-selector hidden" role="dialog" aria-label="화면에서 카메라와 렌즈 변경">
+            <div class="quick-select-top"><strong>카메라 · 렌즈</strong><button id="closeQuick" type="button" aria-label="닫기">✕</button></div>
+            <label>카메라 센서 <select id="quickSensor"></select></label>
+            <label>렌즈 제조사 <select id="quickBrand"></select></label>
+            <label>렌즈 모델 <select id="quickLens"></select></label>
+            <button id="quickApply" class="quick-apply" type="button">적용하기</button>
+          </div>
+          <div id="cameraPermission" class="camera-permission hidden" role="dialog" aria-label="실시간 카메라 사용 허가">
+            <div class="permission-symbol">◎</div><strong>내 기기로 화각 비교하기</strong>
+            <p>카메라를 켜면 브라우저에서 사용 권한을 요청합니다. 영상은 서버로 전송하지 않고 이 기기에서만 표시합니다.</p>
+            <div class="permission-actions"><button id="confirmCameraBtn" type="button">카메라 권한 허용하고 시작</button><button id="cancelCameraBtn" type="button">취소</button></div>
+            <small>iOS Safari · Android Chrome 등 HTTPS와 권한 허용 필요</small>
+          </div>
         </div>
-        <div class="scene-toolbar"><div class="toolbar-group"><span class="toolbar-caption">SCENE</span><div class="segmented scene-tabs"><button data-scene="park" class="active">🌿 공원</button><button data-scene="city">▤ 거리</button><button data-scene="studio">◈ 스튜디오</button></div></div><div class="toolbar-group"><span class="toolbar-caption">SUBJECT</span><select id="targetSelect" aria-label="피사체 선택"><option value="person">인물</option><option value="car">차량</option><option value="animal">동물</option><option value="flower">꽃</option><option value="tree">나무</option></select><button id="lookAtBtn" class="icon-button" title="피사체를 화면 중앙으로">⌖</button></div><button id="resetView" class="reset-btn" title="시점 초기화">↺ <span>시점 초기화</span></button></div>
+        <section class="manual-deck" aria-label="매뉴얼 촬영 퀵 컨트롤">
+          <div class="manual-main-row"><div class="manual-title"><span class="manual-tag">M</span><div><strong>촬영 컨트롤</strong><small>실시간 조작</small></div></div><div class="manual-focals"><button data-eq="16">16</button><button data-eq="24">24</button><button data-eq="35">35</button><button data-eq="50">50</button><button data-eq="85">85</button><button data-eq="135">135</button></div><button id="quickFisheyeBtn" class="fisheye-shortcut" type="button">◎ 어안</button></div>
+          <div class="manual-focal-row"><label for="bottomFocal">초점거리 <strong id="bottomFocalVal">50mm</strong></label><input id="bottomFocal" type="range" min="8" max="600" step="1" value="50" /></div>
+          <div class="manual-fields"><label>조리개 <select id="bottomAperture"></select></label><label>셔터 <select id="bottomShutter"></select></label><label>ISO <select id="bottomIso"></select></label><div class="manual-focus-box"><span>초점 방식</span><div class="focus-choices"><button id="afBtn" type="button" class="active" aria-pressed="true">AF-C</button><button id="mfBtn" type="button" aria-pressed="false">MF</button></div></div></div>
+          <div class="manual-mf" id="manualMf"><label for="manualFocusDistance">수동 초점 거리 <strong id="focusDistanceValue">3.0 m</strong></label><input id="manualFocusDistance" type="range" min="0.25" max="80" step="0.05" value="3" disabled /><span id="manualFocusHint">AF-C: 카메라 이동·피사체 변화에 따라 자동으로 초점을 갱신합니다.</span></div>
+        </section>
+        <div class="scene-toolbar"><div class="toolbar-group"><span class="toolbar-caption">SCENE</span><div class="segmented scene-tabs"><button data-scene="park" class="active">🌿 공원</button><button data-scene="city">▤ 거리</button><button data-scene="studio">◈ 스튜디오</button></div></div><div class="toolbar-group"><span class="toolbar-caption">피사체</span><select id="targetSelect" aria-label="피사체 선택"><option value="person">인물</option><option value="car">차량</option><option value="animal">동물</option><option value="flower">꽃</option><option value="tree">나무</option></select><button id="lookAtBtn" class="icon-button" title="선택 피사체로 시선을 이동">⌖</button><button id="walkToggle" class="walk-toggle" type="button" aria-pressed="true">인물 걷기 ON</button></div><button id="resetView" class="reset-btn" title="시점 초기화">↺ <span>시점 초기화</span></button></div>
         <div class="metrics">
           <div class="metric"><span>HORIZONTAL FOV</span><strong id="metricHFov">39.6<small>°</small></strong><div class="metric-caption">수평 화각</div></div>
           <div class="metric"><span>35MM EQUIVALENT</span><strong id="metricEq">50<small>mm</small></strong><div class="metric-caption">풀프레임 환산</div></div>
@@ -84,9 +221,11 @@
         </section>
         <section class="control-section"><div class="section-caption"><span class="num">04</span><span>구도 및 렌즈 효과</span><span class="section-trail">COMPOSITION</span></div>
           <label for="gridSelect">구도 격자</label><select id="gridSelect"><option value="thirds">3분할 격자</option><option value="center">중앙 십자선</option><option value="golden">황금비 격자</option><option value="diagonal">대각선 구도</option><option value="none">격자 없음</option></select>
+          <label for="projectionSelect">투영 방식 · 어안 렌즈</label><select id="projectionSelect"><option value="rect">일반 직선 투영</option><option value="fishdiag">대각 어안 · 180° 연출</option><option value="fishcircle">원형 어안 · 180° 연출</option></select>
           <label class="switch-line compact"><span>심도 / 배경 흐림<small>3D 화면에서 거리 기반 근사</small></span><input id="dofToggle" type="checkbox" checked role="switch" /><span class="switch-ui"></span></label>
           <label class="switch-line compact"><span>비네팅<small>주변부 밝기 감소 연출</small></span><input id="vignetteToggle" type="checkbox" checked role="switch" /><span class="switch-ui"></span></label>
-          <label class="switch-line compact"><span>렌즈 플레어<small>빛 번짐 연출</small></span><input id="flareToggle" type="checkbox" role="switch" /><span class="switch-ui"></span></label>
+          <label class="switch-line compact"><span>플레어 연출<small>기본 OFF · 낮은 강도</small></span><input id="flareToggle" type="checkbox" role="switch" /><span class="switch-ui"></span></label>
+          <div class="flare-intensity"><label for="flareStrength">플레어 강도 <output id="flareStrengthValue">10%</output></label><input id="flareStrength" type="range" min="0" max="0.5" step="0.02" value="0.1" /></div>
           <label class="switch-line compact"><span>배럴 왜곡<small>효과 예시 (렌즈 실측 아님)</small></span><input id="distortionToggle" type="checkbox" role="switch" /><span class="switch-ui"></span></label>
         </section>
         <section id="liveSettings" class="control-section live-settings hidden"><div class="section-caption"><span class="num">05</span><span>실시간 카메라 보정</span><span class="section-trail">MOBILE</span></div>
@@ -101,6 +240,8 @@
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script type="module">
+
+// bundled offline-capable local modules
 /**
  * FRAME LAB 3D · curated sample catalogue
  * Each entry is a reference *specification*, not a calibrated optical profile.
@@ -128,6 +269,7 @@ const rows = [
   ['Canon','RF 85mm F1.2 L USM','FF','Canon RF',85,85,1.2,1.2],
   ['Canon','RF 70-200mm F2.8 L IS USM','FF','Canon RF',70,200,2.8,2.8],
   ['Canon','RF 100-500mm F4.5-7.1 L IS USM','FF','Canon RF',100,500,4.5,7.1],
+  ['Nikon','AF-S Fisheye NIKKOR 8-15mm f/3.5-4.5E ED','FF','Nikon F',8,15,3.5,4.5],
   ['Nikon','NIKKOR Z 14-24mm f/2.8 S','FF','Nikon Z',14,24,2.8,2.8],
   ['Nikon','NIKKOR Z 24-70mm f/2.8 S','FF','Nikon Z',24,70,2.8,2.8],
   ['Nikon','NIKKOR Z 24-120mm f/4 S','FF','Nikon Z',24,120,4,4],
@@ -136,6 +278,7 @@ const rows = [
   ['Nikon','NIKKOR Z 85mm f/1.2 S','FF','Nikon Z',85,85,1.2,1.2],
   ['Nikon','NIKKOR Z 70-200mm f/2.8 VR S','FF','Nikon Z',70,200,2.8,2.8],
   ['Nikon','NIKKOR Z 180-600mm f/5.6-6.3 VR','FF','Nikon Z',180,600,5.6,6.3],
+  ['Sigma','15mm F1.4 DG DN DIAGONAL FISHEYE | Art','FF','Sony E · L',15,15,1.4,1.4],
   ['Sigma','14-24mm F2.8 DG DN | Art','FF','Sony E · L',14,24,2.8,2.8],
   ['Sigma','24-70mm F2.8 DG DN II | Art','FF','Sony E · L',24,70,2.8,2.8],
   ['Sigma','28-45mm F1.8 DG DN | Art','FF','Sony E · L',28,45,1.8,1.8],
@@ -164,7 +307,7 @@ const rows = [
   ['Leica','APO-SUMMICRON-M 35mm f/2 ASPH.','FF','Leica M',35,35,2,2],
 ];
 const LENSES = rows.map(([brand,name,format,mounts,min,max,maxA,maxT],i)=>({
-  id:`l${i}`,brand,name,format,mounts,min,max,maxA,maxT
+  id:`l${i}`,brand,name,format,mounts,min,max,maxA,maxT, fisheye:/fisheye/i.test(name)
 }));
 const SENSORS = {
  FF:{label:'풀프레임 · 36 × 24 mm',w:36,h:24,description:'35mm 풀프레임'},
@@ -193,10 +336,10 @@ function makeFallback(mount, getState, getAngles, onFrame){
  const canvas=document.createElement('canvas');canvas.className='canvas-fallback';mount.appendChild(canvas);
  const ctx=canvas.getContext('2d',{alpha:false});
  const camera={x:0,y:1.75,z:12,yaw:0,pitch:0};
- let W=800,H=520,px=1,alive=true,frameId=0,last=0;
+ let W=800,H=520,px=1,alive=true,frameId=0,last=0,lastFish=0;
  const RAD=Math.PI/180;
- function resize(){const r=mount.getBoundingClientRect();W=Math.max(1,Math.round(r.width));H=Math.max(1,Math.round(r.height));px=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(W*px);canvas.height=Math.round(H*px);canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(px,0,0,px,0,0);}
- function position(key){let p=WORLD[getState().scene]?.[key]||WORLD.park.person;return {x:p[0],z:p[1],y:p[2]};}
+ function resize(){const r=mount.getBoundingClientRect();W=Math.max(1,Math.round(r.width));H=Math.max(1,Math.round(r.height));px=Math.min(1.2,window.devicePixelRatio||1);canvas.width=Math.round(W*px);canvas.height=Math.round(H*px);canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(px,0,0,px,0,0);}
+ function position(key){let p=WORLD[getState().scene]?.[key]||WORLD.park.person;return {x:p[0]+(key==='person'&&getState().walking?Math.sin(performance.now()*.0012)*1.1:0),z:p[1],y:p[2]};}
  function focusDistance(){const p=position(getState().target);return Math.hypot(camera.x-p.x,camera.y-p.y,camera.z-p.z);}
  function lookAt(key){const p=position(key);const dx=p.x-camera.x,dy=p.y-camera.y,dz=p.z-camera.z;camera.yaw=Math.atan2(-dx,-dz);camera.pitch=Math.atan2(dy,Math.hypot(dx,dz));}
  function reset(){camera.x=0;camera.y=1.75;camera.z=12;lookAt(getState().target);}
@@ -232,17 +375,34 @@ function makeFallback(mount, getState, getAngles, onFrame){
  function shadow(x,z,r){const p=projected(x,.025,z);if(!p)return;ellipse(p.x,p.y,r*p.s*.8,r*p.s*.21,'#081c2540');}
  function tree(x,z,s=1){const p=projected(x,0,z);if(!p)return;shadow(x,z,1.3*s);cube(x,0,z,.32*s,2*s,.34*s,['#78624a','#604b3a','#988067']);dot(x,2.1*s,z,1.12*s,'#3a7653',.8);dot(x-.44*s,2.45*s,z+.15*s,.9*s,'#458964',.74);dot(x+.48*s,2.45*s,z,.95*s,'#4f956b',.78);dot(x,2.9*s,z,.88*s,'#5b9f74',.8);}
  function flower(x,z,s=1,color='#ffbad4'){const p=projected(x,.7*s,z);if(!p)return;shadow(x,z,.18*s);line3([x,.04,z],[x,.78*s,z],'#3c794f',Math.max(1,p.s*.038));for(let i=0;i<7;i++){const a=i*Math.PI*2/7;ellipse(p.x+Math.cos(a)*.13*p.s*s,p.y+Math.sin(a)*.13*p.s*s,.115*p.s*s,.085*p.s*s,color,a);}ellipse(p.x,p.y,.09*p.s*s,.09*p.s*s,'#ffd16f');}
- function person(x,z,s=1,color='#dd987e'){
-   const p=projected(x,1.15*s,z);if(!p)return;shadow(x,z,.52*s);
-   const scale=p.s*s;
-   const point=(xx,yy)=>projected(x+xx*s,yy*s,z);
-   const L=point(-.15,.06),R=point(.15,.06),kL=point(-.15,.87),kR=point(.15,.87);
-   if(!L||!R||!kL||!kR)return;
-   ctx.lineWidth=Math.max(2,scale*.15);ctx.lineCap='round';ctx.strokeStyle='#354c61';for(const [a,b] of [[L,kL],[R,kR]]){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
-   ctx.lineWidth=Math.max(2,scale*.11);ctx.strokeStyle=color;
-   for(const side of [-1,1]){let a=point(side*.27,1.5),b=point(side*.38,1.04);if(a&&b){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}
-   const center=point(0,1.38);if(center){ellipse(center.x,center.y,scale*.28,scale*.43,color);}
-   const face=point(0,1.97);if(face){ellipse(face.x,face.y,scale*.235,scale*.25,'#f1cbaa');ellipse(face.x,face.y-scale*.17,scale*.22,scale*.08,'#352b35');}
+ function person(x,z,s=1,color='#ae8d77'){
+   const center=projected(x,1.25*s,z);if(!center)return;shadow(x,z,.54*s);
+   const sc=center.s*s, P=(xx,yy)=>projected(x+xx*s,yy*s,z);
+   const stroke=(a,b,col,w)=>{const p=P(...a),q=P(...b);if(!p||!q)return;ctx.lineCap='round';ctx.lineWidth=Math.max(1,sc*w);ctx.strokeStyle=col;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();};
+   const gait=getState().walking?Math.sin(performance.now()*.0042)*.17:0;
+   for(let side of [-1,1]){
+    stroke([side*.15,.83],[side*(.15+gait*.35),.08],'#475a6d',.18);
+    stroke([side*.32,1.46],[side*.38-gait*.1,1.08],color,.14);
+    const hand=P(side*.38-gait*.1,1.03);if(hand)ellipse(hand.x,hand.y,sc*.065,sc*.08,'#f4cfb3');
+    const shoe=P(side*(.15+gait*.35),.08);if(shoe)ellipse(shoe.x,shoe.y+sc*.01,sc*.16,sc*.057,'#e4dacd');
+   }
+   const trunk=P(0,1.3);if(trunk){ellipse(trunk.x,trunk.y,sc*.29,sc*.41,color);ellipse(trunk.x,trunk.y-sc*.08,sc*.04,sc*.17,'#e9dfce');}
+   const face=P(0,1.92);if(face){
+     ellipse(face.x,face.y-sc*.11,sc*.260,sc*.32,'#312b27');
+     ellipse(face.x,face.y,sc*.224,sc*.265,'#f4ceb0');
+     // Full, layered dark hair wrapping the crown and forehead.
+     ellipse(face.x,face.y-sc*.21,sc*.245,sc*.15,'#302821');
+     for(let j=0;j<6;j++){let dx=(j-2.5)*sc*.073;
+       ellipse(face.x+dx,face.y-sc*(.23-(j%3)*.015),sc*.059,sc*.12,j%3?'#322921':'#4b3c2e',-.13);
+     }
+     for(let side of [-1,1]){
+       ellipse(face.x+side*sc*.202,face.y-sc*.10,sc*.063,sc*.13,'#322921');
+       ellipse(face.x+side*sc*.086,face.y+sc*.012,sc*.024,sc*.018,'#39302a');
+       const brow=face.x+side*sc*.09;ctx.beginPath();ctx.moveTo(brow-sc*.033,face.y-sc*.035);ctx.lineTo(brow+sc*.033,face.y-sc*.04);ctx.strokeStyle='#47362e';ctx.lineWidth=Math.max(1,sc*.02);ctx.stroke();
+     }
+     ellipse(face.x,face.y+sc*.07,sc*.024,sc*.044,'#e4ae90');
+     ctx.beginPath();ctx.moveTo(face.x-sc*.045,face.y+sc*.14);ctx.quadraticCurveTo(face.x,face.y+sc*.165,face.x+sc*.045,face.y+sc*.14);ctx.strokeStyle='#ac7066';ctx.lineWidth=Math.max(1,sc*.015);ctx.stroke();
+   }
  }
  function dog(x,z,s=1){const p=projected(x,.55*s,z);if(!p)return;shadow(x,z,.58*s);
   dot(x,.56*s,z,.43*s,'#b58b60',.57);dot(x+.42*s,.76*s,z,.31*s,'#c49a70',.86);
@@ -263,11 +423,21 @@ function makeFallback(mount, getState, getAngles, onFrame){
   }
  }
  function background(){const theme=getState().scene;
-  const sky=ctx.createLinearGradient(0,0,0,H);if(theme==='park'){sky.addColorStop(0,'#83b3c6');sky.addColorStop(.54,'#b6d7d0');sky.addColorStop(1,'#9fb593');}else if(theme==='city'){sky.addColorStop(0,'#8d96b7');sky.addColorStop(.55,'#dfb5a2');sky.addColorStop(1,'#84949a');}else{sky.addColorStop(0,'#7d909f');sky.addColorStop(1,'#aeb6b9');}
+  const sky=ctx.createLinearGradient(0,0,0,H);
+  if(theme==='park'){sky.addColorStop(0,'#74a9c5');sky.addColorStop(.55,'#cce0da');sky.addColorStop(1,'#f6e6c7');}
+  else if(theme==='city'){sky.addColorStop(0,'#8aa2c5');sky.addColorStop(.65,'#eed0ba');sky.addColorStop(1,'#f6e6cf');}
+  else{sky.addColorStop(0,'#ddd3c5');sky.addColorStop(1,'#c8beaf');}
   ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
-  const sun=projected(-18,24,-30);if(sun&&theme!=='studio'){const g=ctx.createRadialGradient(sun.x,sun.y,0,sun.x,sun.y,W*.28);g.addColorStop(0,'#fff5cbb2');g.addColorStop(.10,'#ffe2bd55');g.addColorStop(1,'#fff1d000');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
-  if(theme==='studio'){drawPoly([[-80,0,-18],[80,0,-18],[80,0,60],[-80,0,60]],'#9aa8b0');drawPoly([[-80,0,-18],[80,0,-18],[80,60,-18],[-80,60,-18]],'#8495a0');}
-  else drawPoly([[-180,-.04,-180],[180,-.04,-180],[180,-.04,160],[-180,-.04,160]],theme==='park'?'#759f78':'#677782');
+  if(theme!=='studio'){
+   // Layered distance haze and gentle hill horizon.
+   const hills=[['#a8bdb3',.54,.018],['#8fac91',.62,.029],['#729276',.72,.041]];
+   hills.forEach(([col,level,amp],n)=>{ctx.beginPath();ctx.moveTo(0,H);ctx.lineTo(0,H*level);for(let x=0;x<=W;x+=8){let v=Math.sin(x/W*9.4+n*1.9)*amp+Math.sin(x/W*25.2+n*2.1)*amp*.29;ctx.lineTo(x,H*(level+v));}ctx.lineTo(W,H);ctx.closePath();ctx.fillStyle=col;ctx.fill();});
+   for(let i=0;i<7;i++){let x=W*(.12+(i*.137)%1),y=H*(.12+(i%3)*.095),r=W*(.042+(i%3)*.02);ellipse(x,y,r,r*.15,'#f6f5eb66');ellipse(x+r*.6,y-r*.04,r*.75,r*.12,'#fffdf4a0');}
+  }
+  if(theme==='studio'){
+   const wall=ctx.createLinearGradient(0,0,W,H);wall.addColorStop(0,'#e3dbcf');wall.addColorStop(1,'#b8ae9f');ctx.fillStyle=wall;ctx.fillRect(0,0,W,H);
+   drawPoly([[-80,0,-18],[80,0,-18],[80,60,-18],[-80,60,-18]],'#c0b5a7');
+  }else drawPoly([[-180,-.04,-180],[180,-.04,-180],[180,-.04,160],[-180,-.04,160]],theme==='park'?'#7c9b72':'#8a8e90');
  }
  function ground(){const theme=getState().scene;
   if(theme==='park'){drawPoly([[-2.3,.0,-60],[2.3,0,-60],[3.0,.0,60],[-3,.0,60]],'#d5c6a4');
@@ -293,7 +463,7 @@ function makeFallback(mount, getState, getAngles, onFrame){
    }else{
       for(let x of [-7,7])add('softbox',x,-2,1);
    }
-   const P=WORLD[scene];add('person',P.person[0],P.person[1],1,scene==='city'?'#8ba6b8':'#d6947a');add('car',P.car[0],P.car[1],1,scene==='city'?'#68afb2':'#c56b5a');add('dog',P.animal[0],P.animal[1]);add('flower',P.flower[0],P.flower[1],1.45,'#ffafd2');add('tree',P.tree[0],P.tree[1],1.1);
+   const P=WORLD[scene];add('person',position('person').x,P.person[1],1,scene==='city'?'#8f8a83':'#a88e77');add('car',P.car[0],P.car[1],1,scene==='city'?'#68afb2':'#c56b5a');add('dog',P.animal[0],P.animal[1]);add('flower',P.flower[0],P.flower[1],1.45,'#ffafd2');add('tree',P.tree[0],P.tree[1],1.1);
    items.sort((a,b)=>b.depth-a.depth);
    for(const o of items){
       if(o.kind==='tree')tree(o.x,o.z,o.s);
@@ -313,14 +483,52 @@ function makeFallback(mount, getState, getAngles, onFrame){
    }
    // Fallback optical effect: mild screen-space defocus, not lens-specific blur.
    if(getState().dof&&getState().aperture<=2){ctx.fillStyle='#e7f9e904';ctx.fillRect(0,0,W,H);}
-   if(getState().distortion){ctx.strokeStyle='#ffffff1b';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(W/2,H/2,W*.48,H*.48,0,0,2*Math.PI);ctx.stroke();}
-   if(getState().flare){const g=ctx.createRadialGradient(W*.78,H*.22,0,W*.78,H*.22,W*.32);g.addColorStop(0,'#fff5c588');g.addColorStop(1,'#fff4b900');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+   if(getState().distortion){ctx.strokeStyle='#ffffff12';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(W/2,H/2,W*.48,H*.48,0,0,2*Math.PI);ctx.stroke();}
+   if(getState().projection!=='rect')warpFisheye();
+   if(getState().flare){const g=ctx.createRadialGradient(W*.78,H*.22,0,W*.78,H*.22,W*.32);g.addColorStop(0,`rgba(255,245,197,${getState().flareStrength*.16})`);g.addColorStop(1,'#fff4b900');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
  }
- function animate(t){if(!alive)return;let elapsed=Math.min(.05,(t-last)/1000||0);last=t;onFrame(elapsed);draw();frameId=requestAnimationFrame(animate);}
+ let cachedWarp=null,cachedWarpKey='';
+ function warpFisheye(){
+  const w=canvas.width,h=canvas.height;
+  const circ=getState().projection==='fishcircle',R=circ?Math.min(w,h)*.48:Math.hypot(w,h)*.5;
+  const maxPx=w*h;if(maxPx>1250000)return;
+  // In the dependency-free renderer this is a radial distortion preview only.
+  const source=ctx.getImageData(0,0,w,h),out=ctx.createImageData(w,h),src=source.data,dst=out.data;
+  const midx=w*.5,midy=h*.5;
+  const key=`${w}:${h}:${circ}`;
+  if(!cachedWarp||cachedWarpKey!==key){
+   cachedWarp=new Int32Array(maxPx);cachedWarpKey=key;
+   for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const xx=x-midx,yy=y-midy,r=Math.hypot(xx,yy);const k=y*w+x;
+    if(r>R){cachedWarp[k]=-1;continue;}
+    const nr=r/R,scale=1+.48*nr*nr;const sx=Math.round(midx+xx*scale),sy=Math.round(midy+yy*scale);
+    cachedWarp[k]=sx>=0&&sx<w&&sy>=0&&sy<h?sy*w+sx:-1;
+   }
+  }
+  for(let i=0;i<maxPx;i++){
+   const idx=cachedWarp[i],di=i*4;
+   if(idx<0){dst[di]=19;dst[di+1]=22;dst[di+2]=26;dst[di+3]=255;}
+   else {const si=idx*4;dst[di]=src[si];dst[di+1]=src[si+1];dst[di+2]=src[si+2];dst[di+3]=255;}
+  }
+  ctx.putImageData(out,0,0);
+ }
+ function pick(px,py){
+  const scene=getState().scene;let best=null;
+  for(const key of ['person','car','animal','flower','tree']){
+   const pos=position(key),center=projected(pos.x,pos.y,pos.z);if(!center)continue;
+   const base={person:[.30,1.05],car:[2.3,.68],animal:[.65,.48],flower:[.3,.35],tree:[1.6,2.1]}[key];
+   const rX=Math.max(12,center.s*base[0]),rY=Math.max(16,center.s*base[1]);
+   const d=Math.hypot((px-center.x)/rX,(py-center.y)/rY);
+   if(d>1.12)continue;
+   if(!best||center.d<best.depth)best={key,depth:center.d};
+  }
+  return best?.key||null;
+ }
+ function animate(t){if(!alive)return;let elapsed=Math.min(.05,(t-last)/1000||0);last=t;onFrame(elapsed);if(getState().projection==='rect'||!lastFish||t-lastFish>62){draw();lastFish=t;}frameId=requestAnimationFrame(animate);}
  function setOrientation(dx,dy){camera.yaw-=dx*.004;camera.pitch=Math.max(-1.4,Math.min(1.4,camera.pitch-dy*.004));}
  reset();resize();requestAnimationFrame(animate);
  const observer=new ResizeObserver(resize);observer.observe(mount);
- return {canvas,camera,reset,lookAt,move,position,focusDistance,setOrientation,draw,destroy(){alive=false;cancelAnimationFrame(frameId);observer.disconnect();canvas.remove();}};
+ return {canvas,camera,reset,lookAt,move,position,focusDistance,setOrientation,draw,project:projected,pick,destroy(){alive=false;cancelAnimationFrame(frameId);observer.disconnect();canvas.remove();}};
 }
 
 
@@ -340,10 +548,12 @@ const state = {
   sensor:'FF', ratio:'3:2', focal:50, aperture:2.8, iso:100, shutter:'1/125',
   grid:'thirds', dof:true, vignette:true, flare:false, distortion:false,
   sizeLock:false, nativeEq:26, cameraId:'',
+  focusMode:'AF',manualFocus:3,afDistance:9,focusLocked:false, walking:true, projection:'rect',flareStrength:.1,
 };
 let cameraStream=null, videoTrack=null, renderer=null, camera=null, scene=null, sun=null, fallback=null;
-let renderTarget=null, postScene=null, postCamera=null, shader=null;
+let renderTarget=null, postScene=null, postCamera=null, shader=null, fishTarget=null, fishCamera=null, fishScene=null, fishShader=null;
 let pointerStart=null, dragPointerId=null, dragging=false;
+const activePointers=new Map();let pinchDistance=0, pinchFocal=0, lastAfCheck=0;
 const heldKeys = new Set();
 let toastTimeout;
 const worlds={};
@@ -384,7 +594,57 @@ function getSelectedPosition(){
   const item=targets[state.scene]?.[state.target];
   return item?item.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0,item.userData.focusY||0,0)):new THREE.Vector3(0,1.4,1);
 }
-function focusDistance(){return fallback?fallback.focusDistance():camera?camera.position.distanceTo(getSelectedPosition()):10;}
+function focusDistance(){
+ if(state.focusMode==='MF')return state.manualFocus;
+ if(state.focusLocked){return fallback?fallback.focusDistance():camera?camera.position.distanceTo(getSelectedPosition()):10;}
+ return state.afDistance||9;
+}
+function isFisheye(){return state.projection==='fishdiag'||state.projection==='fishcircle';}
+function updateTrackingReticle(){
+ const ret=$('focusReticle');if(!ret)return;
+ let x=.5,y=.5;
+ if(state.mode==='3d'&&state.focusLocked){
+  const p=getSelectedPosition();let v=null;
+  if(fallback){v=fallback.project?.(p.x,p.y,p.z);if(v){x=v.x/Math.max(1,$('viewport').clientWidth);y=v.y/Math.max(1,$('viewport').clientHeight);}}
+  else if(camera){const a=p.clone().project(camera);if(a.z>-1&&a.z<1){x=(a.x+1)*.5;y=(1-a.y)*.5;}}
+ }
+ ret.style.left=`${clamp(x*100,3,97)}%`;ret.style.top=`${clamp(y*100,6,94)}%`;
+ ret.classList.toggle('manual',state.focusMode==='MF');
+ $('focusReticleLabel').textContent=state.focusMode==='AF'?'AF-C':'MF';
+}
+function updateAutoFocus(){
+ if(state.focusMode!=='AF'||state.mode!=='3d')return;
+ if(state.focusLocked){state.afDistance=fallback?fallback.focusDistance():camera?camera.position.distanceTo(getSelectedPosition()):state.afDistance;return;}
+ if(fallback){state.afDistance=fallback.focusDistance();return;}
+ if(!camera||!worlds[state.scene])return;
+ const ray=new THREE.Raycaster();ray.setFromCamera(new THREE.Vector2(0,0),camera);
+ const hits=ray.intersectObjects(worlds[state.scene].children,true);
+ const visible=hits.find(h=>h.object.userData.subject && h.distance>.1);
+ state.afDistance=visible?.distance??camera.position.distanceTo(getSelectedPosition());
+}
+function setFocusMode(mode){
+ state.focusMode=mode;
+ $('afBtn').classList.toggle('active',mode==='AF');$('mfBtn').classList.toggle('active',mode==='MF');
+ $('afBtn').setAttribute('aria-pressed',String(mode==='AF'));$('mfBtn').setAttribute('aria-pressed',String(mode==='MF'));
+ $('manualFocusDistance').disabled=mode!=='MF';
+ $('manualFocusHint').textContent=mode==='MF'?'MF: 거리 슬라이더로 초점을 수동 고정합니다.':'AF-C: 움직이는 피사체와 카메라 이동에 따라 초점을 계속 갱신합니다.';
+ $('focusBadge').textContent=mode==='AF'?'AF-C · 자동 추적':'MF · 수동 거리 고정';
+ if(mode==='MF')state.manualFocus=clamp(focusDistance(),.25,80);
+ $('manualFocusDistance').value=String(state.manualFocus);
+ updateTrackingReticle();updateMetrics();
+ if(state.mode==='live')applyDeviceFocus();
+}
+async function applyDeviceFocus(){
+ const track=videoTrack;if(!track?.getCapabilities||!track.applyConstraints)return;
+ try{const cap=track.getCapabilities(),modes=cap.focusMode||[];
+  if(state.focusMode==='AF'&&modes.includes('continuous'))await track.applyConstraints({advanced:[{focusMode:'continuous'}]});
+  else if(state.focusMode==='MF'&&modes.includes('manual')&&cap.focusDistance){
+   const distance=clamp(state.manualFocus,cap.focusDistance.min,cap.focusDistance.max);
+   await track.applyConstraints({advanced:[{focusMode:'manual',focusDistance:distance}]});
+  }
+ }catch(err){console.info('Hardware focus control unavailable',err);}
+}
+
 function depthOfField(){
   const sensor=getSensor(),f=state.focal,N=state.aperture,s=focusDistance()*1000;
   const coc=.03*(Math.hypot(sensor.w,sensor.h)/fullFrameDiagonal);
@@ -395,14 +655,14 @@ function depthOfField(){
 }
 function updateMetrics(){
   const {horiz,vert,h}=focalAngles(),cf=cropFactor(),dof=depthOfField();
-  if(camera){camera.aspect=$('viewport').clientWidth/Math.max(1,$('viewport').clientHeight);camera.fov=vert;camera.updateProjectionMatrix();}
+  if(camera){camera.aspect=$('viewport').clientWidth/Math.max(1,$('viewport').clientHeight);camera.fov=isFisheye()?110:vert;camera.updateProjectionMatrix();}
   $('hudLens').textContent=getLens()?.name||'자유 가상 렌즈 · FREE FOCAL';
   $('hudSpec').textContent=`${fmt(state.focal)}mm · f/${fmt(state.aperture)} · ISO ${state.iso}`;
   $('hudFocal').innerHTML=`${fmt(state.focal)}<span>mm</span>`;
   $('hudEquivalent').textContent=`${fmt(equiv())}mm eq.`;
-  $('hudAngle').textContent=`HFOV ${horiz.toFixed(1)}° · VFOV ${vert.toFixed(1)}°`;
+  $('hudAngle').textContent=isFisheye()?`FISHEYE 180° ${state.projection==='fishcircle'?'CIRCULAR':'DIAGONAL'} · 연출`:`HFOV ${horiz.toFixed(1)}° · VFOV ${vert.toFixed(1)}°`;
   $('hudSettings').textContent=`f/${fmt(state.aperture)}     ${state.shutter}     ISO ${state.iso}`;
-  $('metricHFov').innerHTML=`${horiz.toFixed(1)}<small>°</small>`;
+  $('metricHFov').innerHTML=isFisheye()?'180<small>° 어안</small>':`${horiz.toFixed(1)}<small>°</small>`;
   $('metricEq').innerHTML=`${fmt(Math.round(equiv()*10)/10)}<small>mm</small>`;
   $('metricDof').textContent=state.mode==='live'?'참고값':(!Number.isFinite(dof.range)?'∞':`${dof.range<1?dof.range.toFixed(2):dof.range.toFixed(1)} m`);
   $('metricDistance').textContent=state.mode==='live'?'미측정':`${focusDistance().toFixed(1)} m`;
@@ -410,6 +670,11 @@ function updateMetrics(){
   $('focalValue').textContent=`${fmt(state.focal)} mm`;
   $('apertureValue').textContent=`f/${fmt(state.aperture)}`;
   $('focalRange').value=String(state.focal);
+  $('bottomFocal').value=String(state.focal);$('bottomFocalVal').textContent=`${fmt(state.focal)}mm`;
+  $('bottomAperture').value=String(state.aperture);$('bottomShutter').value=state.shutter;$('bottomIso').value=String(state.iso);
+  $('focusDistanceValue').textContent=`${focusDistance().toFixed(2)} m`;
+  $('projectionSelect').value=state.projection;
+  updateTrackingReticle();
   const nativeRange=equiv()/state.nativeEq;
   if(state.mode==='live'){
     $('hudScene').textContent=`LIVE CAMERA · ${nativeRange>=1?nativeRange.toFixed(2)+'× CROP':'NO WIDER FOV'}`;
@@ -424,7 +689,7 @@ function updateMetrics(){
   $('exposureLayer').style.background=state.mode==='live'?`rgba(${light>0?'255,246,215':'0,0,0'},${Math.max(dark,light)})`:'transparent';
   if(shader){shader.uniforms.uFocus.value=focusDistance();shader.uniforms.uFocal.value=state.focal;shader.uniforms.uAperture.value=state.aperture;shader.uniforms.uDof.value=state.dof?1:0;shader.uniforms.uDistort.value=state.distortion?1:0;}
   $('vignetteLayer').style.display=state.vignette?'block':'none';
-  $('flareLayer').style.opacity=state.flare?'0.85':'0';
+  $('flareLayer').style.opacity=state.flare?String(state.flareStrength*.35):'0';
   $('gridLayer').className=`grid-layer ${state.grid}`;
   $('coverageChip').textContent=getSensor().isCropped?'화각 크롭':'센서 커버';
   const compatibleNotes=getSensor().isCropped?'선택한 렌즈의 이미지 서클이 센서 전체를 덮지 못해 유효 영역을 크롭합니다. ':' ';
@@ -447,14 +712,49 @@ function ball(r,ma,x,y,z,parent){return shape(new THREE.SphereGeometry(r,12,9),m
 function cylinder(rt,rb,h,ma,x,y,z,parent){return shape(new THREE.CylinderGeometry(rt,rb,h,10),ma,x,y,z,parent);}
 function cone(r,h,ma,x,y,z,parent){return shape(new THREE.ConeGeometry(r,h,9),ma,x,y,z,parent);}
 function groupAt(parent,x,z){const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);return g;}
-function person(parent,x,z,top='#cb8a61'){
- const g=groupAt(parent,x,z);const coat=mat(top),pants=MAT.jeans;
- cylinder(.26,.3,.76,coat,0,1.32,0,g);
- ball(.245,MAT.skin,0,1.95,0,g);
- const hair=ball(.25,MAT.hair,0,2.07,-.035,g);hair.scale.set(1,.48,1.02);
- [-1,1].forEach(side=>{const arm=cylinder(.09,.085,.73,coat,side*.36,1.31,.02,g);arm.rotation.z=side*.19; cylinder(.115,.095,.89,pants,side*.16,.55,0,g);box(.2,.11,.39,MAT.shoe,side*.16,.075,.12,g);});
- ball(.035,MAT.black,-.085,1.96,.215,g);ball(.035,MAT.black,.085,1.96,.215,g);
- g.userData.focusY=1.58;return g;
+function person(parent,x,z,top='#c1aa91'){
+ const g=groupAt(parent,x,z);const jacket=mat(top),pants=mat('#405468'),skin=mat('#f1c9aa'),hair=mat('#302820'),hairHi=mat('#45372d');
+ // Human scale ~1.85m. Shapes are stylized geometry, not photogrammetry.
+ cylinder(.115,.12,.22,skin,0,1.55,0,g);
+ const torso=cylinder(.26,.30,.72,jacket,0,1.25,0,g);torso.rotation.x=-.03;
+ box(.1,.28,.04,mat('#faf6ed'),0,1.46,.265,g); // placket
+ for(const side of [-1,1]){
+  const lap=box(.12,.22,.045,mat('#e7d4ba'),side*.13,1.45,.267,g);lap.rotation.z=side*.28;
+  box(.09,.10,.028,mat('#8d6b52'),side*.16,1.16,.275,g);
+ }
+ // Arms are pivoted for natural walking motion.
+ const arms=[],legs=[];
+ for(const side of [-1,1]){
+  const armPivot=new THREE.Group();armPivot.position.set(side*.34,1.48,.015);g.add(armPivot);
+  cylinder(.09,.085,.69,jacket,0,-.33,0,armPivot);
+  ball(.087,skin,0,-.69,.01,armPivot);arms.push({pivot:armPivot,side});
+  const legPivot=new THREE.Group();legPivot.position.set(side*.145,.90,0);g.add(legPivot);
+  cylinder(.122,.105,.82,pants,0,-.42,0,legPivot);
+  box(.21,.12,.41,mat('#e4ddce'),0,-.85,.12,legPivot);legs.push({pivot:legPivot,side});
+ }
+ // Oval face with ears, shaped brows and visible facial features.
+ const head=ball(.255,skin,0,1.86,.01,g);head.scale.set(.89,1.09,.90);
+ for(const side of [-1,1]){
+  ball(.068,skin,side*.225,1.85,.015,g);
+  const eye=ball(.024,mat('#302923'),side*.091,1.88,.236,g);eye.scale.set(.85,.69,.45);
+  const brow=box(.084,.022,.022,hair,side*.093,1.943,.228,g);brow.rotation.z=-side*.09;
+ }
+ const nose=ball(.046,skin,0,1.825,.242,g);nose.scale.set(.66,1.3,.88);
+ const mouth=box(.086,.016,.022,mat('#aa766d'),0,1.747,.229,g);mouth.rotation.z=.03;
+ // Voluminous cap with sides/back and layered fringe, rather than a flat bald patch.
+ const back=ball(.266,hair,0,2.003,-.07,g);back.scale.set(.98,.87,1.04);
+ const crown=ball(.26,hair,0,2.073,-.005,g);crown.scale.set(1.02,.50,.97);
+ for(const side of [-1,1]){
+  const sideLock=ball(.081,hair,side*.204,1.992,.045,g);sideLock.scale.set(.85,1.6,1);
+ }
+ for(let j=0;j<7;j++){
+  const a=(j-3)*.42;
+  const lock=ball(.069,j%3===0?hairHi:hair,Math.sin(a)*.205,2.014, .17+Math.cos(a)*.035,g);
+  lock.scale.set(1.05,.61, .85);lock.rotation.z=.13;
+ }
+ const highlight=ball(.18,hairHi,-.038,2.121,-.05,g);highlight.scale.set(.78,.21,.81);
+ g.userData.focusY=1.72;g.userData.walkParts={arms,legs};g.userData.baseX=x;
+ return g;
 }
 function car(parent,x,z,paint='#b85851'){
  const g=groupAt(parent,x,z);const m=mat(paint,.38,.3);
@@ -507,16 +807,49 @@ function addFlowers(g,count,seed){for(let i=0;i<count;i++){
  if(Math.hypot(x,z-2)<2.7||Math.abs(x)<1.9&&z>-5)continue;
  flower(g,x,z,['#f5b9cb','#f9e4a4','#e6c4ef','#e8ecf2'][i%4],.4+.2*(i%3));
 }}
+function parkDetails(g){
+ const grassLight=mat('#7c9a66'),grassDark=mat('#487556');
+ for(let i=0;i<45;i++){
+  const x=Math.sin(i*11.13)*18,z=-40+Math.cos(i*16.4)*36;
+  if(Math.abs(x)<3.7&&z>-16&&z<16)continue;
+  const hill=ball(1.7+((i*13)%7)*.4,mat(['#6d9668','#799f6c','#5c8769'][i%3]),x,-.22,z,g);hill.scale.set(1,.3,1.4);hill.castShadow=false;
+ }
+ for(let i=0;i<110;i++){
+  const x=Math.sin(i*7.1)*24,z=-36+Math.cos(i*2.13)*47;
+  if(Math.abs(x)<2.3)continue;
+  const tuft=cone(.10+(i%3)*.045,.22, i%2?grassLight:grassDark,x,.12,z,g);
+  tuft.rotation.z=(i%4)*.12;tuft.castShadow=false;
+ }
+ // wooden lookout rail and tall decorative reeds
+ for(let i=0;i<8;i++){
+  const x=-16+i*4.3;const z=-20;
+  cylinder(.07,.09,1.05,mat('#a3815f'),x,.52,z,g);
+  if(i>0)box(4.3,.08,.10,mat('#b59c77'),x-2.14,.78,z,g);
+ }
+}
+function cityDetails(g){
+ const stone=mat('#c8beb1'),stripe=mat('#f0eae0'),rust=mat('#ab644b');
+ for(const side of [-1,1]){
+  box(8,.12,100,stone,side*8,.05,-12,g).castShadow=false;
+  for(let i=0;i<12;i++)box(4.2,.025,.07,mat('#b2a79a'),side*8,.126,-43+i*7,g);
+ }
+ for(let i=0;i<9;i++)box(3.6,.02,.58,stripe,-2.0+i*.49,.03,8,g);
+ for(let i=0;i<4;i++){
+  const shop=groupAt(g,i%2?9.1:-9.1,-24+i*10);
+  box(.1,1.7,3.7,mat('#e3cdb0'),0,1.2,0,shop);
+  box(.10,.27,3.9,mat(i%2?'#bc765c':'#5e8892'),0,2.05,0,shop);
+ }
+}
 function buildPark(){
- const key='park',g=new THREE.Group();scene.add(g);targets[key]={};setupGround(g,'#6b9072');
+ const key='park',g=new THREE.Group();scene.add(g);targets[key]={};setupGround(g,'#75956b');
  const path=box(3.4,.012,28,mat('#bea990'),0,-.023,1,g);path.receiveShadow=true;path.castShadow=false;
  const road=box(50,.014,5.0,mat('#525c62'),0,-.01,-9.5,g);road.castShadow=false;
  for(let i=-5;i<=5;i++)box(2.3,.022,.1,mat('#e6dfb8'),i*4,0,-9.5,g);
  for(let i=0;i<12;i++){const x=(i%2===0?-1:1)*(5.7+(i%4)*1.8),z=-13+Math.floor(i/2)*5;
  tree(g,x,z,.76+(i%3)*.18);}
  for(let i=0;i<4;i++){const b=groupAt(g,(i%2?-3.8:3.8),-1-i*3);box(1.45,.12,.55,mat('#8d6845'),0,.54,0,b);box(1.5,.45,.11,mat('#8d6845'),0,.88,-.19,b);}
- addFlowers(g,55,2);
- register(key,'person',person(g,0,2.5));
+ addFlowers(g,100,2);parkDetails(g);
+ register(key,'person',person(g,0,2.5,'#9e8169'));
  register(key,'car',car(g,4.2,-6,'#d1775b'));
  register(key,'animal',dog(g,2,2));
  register(key,'flower',flower(g,-2.3,3.5,'#ff9ac4',1.35));
@@ -537,7 +870,8 @@ function buildCity(){
  for(let i=0;i<5;i++){tree(g,-6.5,-12+i*4,.65);tree(g,6.5,-13+i*4,.65);}
  // street lights
  for(let i=0;i<3;i++){let x=-5.5+i*5; cylinder(.06,.08,4,mat('#31363d'),x,2,-4,g);ball(.22,mat('#fff0c2'),x,4.04,-4,g);}
- register(key,'person',person(g,0,2.4,'#6c99b0'));
+ cityDetails(g);
+ register(key,'person',person(g,0,2.4,'#857b75'));
  register(key,'car',car(g,4.5,-3,'#7bb2b6'));
  register(key,'animal',dog(g,2.1,1.5));
  register(key,'flower',flower(g,-2.2,3.3,'#e9bbec',1.45));
@@ -545,17 +879,17 @@ function buildCity(){
  return g;
 }
 function buildStudio(){
- const key='studio',g=new THREE.Group();scene.add(g);targets[key]={};setupGround(g,'#a6aeb0');
- box(90,25,.4,mat('#8c9da6'),0,12.5,-17,g);
- box(.4,25,70,mat('#84949c'),-30,12.5,-2,g);
- box(.4,25,70,mat('#84949c'),30,12.5,-2,g);
+ const key='studio',g=new THREE.Group();scene.add(g);targets[key]={};setupGround(g,'#c8c0b1');
+ box(90,25,.4,mat('#d1c6b6'),0,12.5,-17,g);
+ box(.4,25,70,mat('#b9ad9b'),-30,12.5,-2,g);
+ box(.4,25,70,mat('#b9ad9b'),30,12.5,-2,g);
  const riser=cylinder(5.0,5.0,.12,mat('#bbc1c3'),0,.06,0,g);riser.castShadow=false;
  const softbox=mat('#d9f3ff',.1,.28);
  for(const x of [-6,6]){const s=groupAt(g,x,-1);cylinder(.04,.04,4,mat('#333942'),0,2,0,s);const b=box(1.4,1.5,.15,softbox,0,4.0,0,s);b.rotation.y=x>0?-.3:.3;}
  for(let i=0;i<4;i++){
    const p=groupAt(g,(i-1.5)*5,-8);box(1.2,.8,1.2,mat('#8d7769'),0,.4,0,p);
  }
- register(key,'person',person(g,0,2.5,'#b484a1'));
+ register(key,'person',person(g,0,2.5,'#b6a28c'));
  register(key,'car',car(g,4.7,-3,'#c99e72'));
  register(key,'animal',dog(g,2.2,1.2));
  register(key,'flower',flower(g,-2.5,3.6,'#eea2b1',1.5));
@@ -566,7 +900,15 @@ function buildStudio(){
 // -------- Renderer, view movement, and approximate screen-space defocus --------
 function createRenderer(){
  const view=$('viewport');
- scene=new THREE.Scene();scene.background=new THREE.Color('#86b7c4');scene.fog=new THREE.Fog('#86b7c4',46,155);
+ scene=new THREE.Scene();scene.background=new THREE.Color('#bed7da');scene.fog=new THREE.Fog('#b6cbd0',75,190);
+ const skyGeo=new THREE.SphereGeometry(185,38,24);
+ const skyMat=new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,fog:false,uniforms:{uCity:{value:0},uStudio:{value:0}},vertexShader:'varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'varying vec3 vP;uniform float uCity;uniform float uStudio;void main(){float h=clamp(vP.y/185.0,0.0,1.0);vec3 lo=mix(vec3(.79,.87,.85),vec3(.98,.79,.66),uCity);vec3 hi=mix(vec3(.35,.59,.74),vec3(.50,.58,.75),uCity);vec3 c=mix(lo,hi,smoothstep(.00,.62,h));c=mix(c,mix(vec3(.89,.86,.80),vec3(.75,.73,.70),h),uStudio);gl_FragColor=vec4(c,1.);}' });
+ const sky=new THREE.Mesh(skyGeo,skyMat);sky.name='Atmosphere';scene.add(sky);scene.userData.sky=sky;
+ // distant gentle cloud banks, non-interactive
+ for(let i=0;i<21;i++){let x=Math.sin(i*7.25)*90,z=-72-Math.cos(i*1.9)*38,y=17+(i%5)*5;
+  const cloud=ball(4.3+((i%4)*1.4),new THREE.MeshBasicMaterial({color:'#f7f6ed',transparent:true,opacity:.32,depthWrite:false,fog:false}),x,y,z,scene);cloud.scale.set(2.2,.25,.7);cloud.castShadow=false;cloud.userData.decorative=true;
+ }
+
  camera=new THREE.PerspectiveCamera(35,1,.08,400);camera.rotation.order='YXZ';
  camera.position.set(0,1.75,12);scene.add(camera);
  scene.add(new THREE.HemisphereLight('#e1f2fb','#7d7159',2));
@@ -579,10 +921,10 @@ function createRenderer(){
  renderer.outputColorSpace=THREE.SRGBColorSpace;
  renderer.toneMapping=THREE.ACESFilmicToneMapping;
  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
- renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.65));
+ renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.4));
  view.querySelector('#webglMount').appendChild(renderer.domElement);
  worlds.park=buildPark();worlds.city=buildCity();worlds.studio=buildStudio();
- initPostProcessing();
+ initPostProcessing();initFisheyeRender();
  changeScene(state.scene,false);
  resize();
  new ResizeObserver(resize).observe(view);
@@ -630,6 +972,20 @@ function initPostProcessing(){
  postScene=new THREE.Scene();postCamera=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
  postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),shader));
 }
+function initFisheyeRender(){
+ fishTarget=new THREE.WebGLCubeRenderTarget(256,{generateMipmaps:false,minFilter:THREE.LinearFilter});
+ fishCamera=new THREE.CubeCamera(.1,250,fishTarget);scene.add(fishCamera);
+ const fragment=`precision highp float;uniform samplerCube tCube;uniform float uAspect;uniform float uCircle;uniform vec4 uQuat;varying vec2 vUv;
+ vec3 rot(vec3 v,vec4 q){return v+2.0*cross(q.xyz,cross(q.xyz,v)+q.w*v);}
+ void main(){vec2 p=(vUv-.5)*vec2(uAspect,1.);float r=length(p);float R=mix(.5*length(vec2(uAspect,1.)),.5,uCircle);
+ if(r>R){gl_FragColor=vec4(.025,.029,.032,1.);return;}
+ float a=min(1.,r/max(.0001,R))*1.5707963;vec2 radial=r>.0001?p/r:vec2(0.);
+ vec3 ray=vec3(radial*sin(a),-cos(a));vec3 world=rot(ray,uQuat);
+ gl_FragColor=textureCube(tCube,world);
+ }`;
+ fishShader=new THREE.ShaderMaterial({uniforms:{tCube:{value:fishTarget.texture},uAspect:{value:1.5},uCircle:{value:0},uQuat:{value:new THREE.Vector4(0,0,0,1)}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:fragment,depthTest:false,depthWrite:false});
+ fishScene=new THREE.Scene();fishScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),fishShader));
+}
 function resize(){
  if(fallback){fallback.draw();return;}
  if(!renderer||!camera)return;
@@ -642,7 +998,8 @@ function resize(){
  shader.uniforms.tColor.value=renderTarget.texture;
  shader.uniforms.tDepth.value=renderTarget.depthTexture;
  shader.uniforms.uResolution.value.set(size.x,size.y);
- camera.aspect=w/h;camera.fov=focalAngles().vert;camera.updateProjectionMatrix();
+ camera.aspect=w/h;camera.fov=isFisheye()?110:focalAngles().vert;camera.updateProjectionMatrix();
+ if(fishShader)fishShader.uniforms.uAspect.value=w/h;
 }
 function directionFromCamera(){
  const d=new THREE.Vector3(0,0,-1).applyQuaternion(camera.quaternion);d.y=0;return d.normalize();
@@ -676,7 +1033,7 @@ function changeScene(name,reset=true){
  state.scene=name;
  for(const [id,g] of Object.entries(worlds))g.visible=(id===name);
  document.querySelectorAll('[data-scene]').forEach(b=>b.classList.toggle('active',b.dataset.scene===name));
- if(scene){const hex=name==='park'?'#85b5c0':name==='city'?'#c5b2a0':'#9daeb8';scene.background=new THREE.Color(hex);scene.fog.color.set(hex);}
+ if(scene){const hex=name==='park'?'#b6cbd0':name==='city'?'#d9b8a8':'#d3c7b5';scene.background.set(hex);scene.fog.color.set(hex);scene.userData.sky.material.uniforms.uCity.value=name==='city'?1:0;scene.userData.sky.material.uniforms.uStudio.value=name==='studio'?1:0;}
  $('hudScene').textContent=names[name];
  if(reset)resetCamera();
  updateMetrics();
@@ -689,11 +1046,25 @@ function frame(){
   for(const [key,action] of [['w','forward'],['ArrowUp','forward'],['s','backward'],['ArrowDown','backward'],['a','left'],['ArrowLeft','left'],['d','right'],['ArrowRight','right'],['e','up'],['q','down']]){
     if(heldKeys.has(key))moveCamera(action,dt);
   }
-  if(renderTarget&&shader){renderer.setRenderTarget(renderTarget);renderer.render(scene,camera);renderer.setRenderTarget(null);renderer.render(postScene,postCamera);}
+  const walk=targets[state.scene]?.person;
+  if(walk){const phase=performance.now()*.0012;
+   walk.position.x=walk.userData.baseX+(state.walking?Math.sin(phase)*1.1:0);
+   const parts=walk.userData.walkParts;
+   if(parts){parts.arms.forEach(({pivot,side})=>pivot.rotation.x=state.walking?Math.sin(phase*3.5)*side*.28:0);
+    parts.legs.forEach(({pivot,side})=>pivot.rotation.x=state.walking?Math.sin(phase*3.5)*-side*.27:0);}
+  }
+  if(isFisheye()&&fishCamera&&fishShader){
+    fishCamera.position.copy(camera.position);fishCamera.update(renderer,scene);
+    fishShader.uniforms.uQuat.value.set(camera.quaternion.x,camera.quaternion.y,camera.quaternion.z,camera.quaternion.w);
+    fishShader.uniforms.uCircle.value=state.projection==='fishcircle'?1:0;
+    renderer.setRenderTarget(null);renderer.render(fishScene,postCamera);
+  }else if(renderTarget&&shader){renderer.setRenderTarget(renderTarget);renderer.render(scene,camera);renderer.setRenderTarget(null);renderer.render(postScene,postCamera);}
   else renderer.render(scene,camera);
+  if(performance.now()-lastAfCheck>140){lastAfCheck=performance.now();updateAutoFocus();}
+  updateTrackingReticle();
   if(state.flare){
    const p=sunPosition.clone().project(camera);const visible=p.z>-1&&p.z<1&&Math.abs(p.x)<1.4&&Math.abs(p.y)<1.4&&state.scene!=='studio';
-   $('flareLayer').style.opacity=visible?'.8':'0';
+   $('flareLayer').style.opacity=visible?String(state.flareStrength*.35):'0';
    $('flareLayer').style.setProperty('--flare-x',`${((p.x+1)*50).toFixed(1)}%`);
    $('flareLayer').style.setProperty('--flare-y',`${((1-p.y)*50).toFixed(1)}%`);
   }
@@ -725,7 +1096,7 @@ async function startCamera(){
   cameraStream=await navigator.mediaDevices.getUserMedia(constraints);
   videoTrack=cameraStream.getVideoTracks()[0];$('liveVideo').srcObject=cameraStream;
   await $('liveVideo').play();
-  await cameraDevices();
+  await cameraDevices();await applyDeviceFocus();
   return true;
  }catch(err){
   console.warn('Camera unavailable',err);
@@ -747,9 +1118,10 @@ async function changeMode(mode){
  $('mode3d').setAttribute('aria-selected',String(mode==='3d'));
  $('modeLive').setAttribute('aria-selected',String(mode==='live'));
  $('viewport').classList.toggle('live',mode==='live');
- $('liveSettings').classList.toggle('hidden',mode!=='live');
+  $('liveSettings').classList.toggle('hidden',mode!=='live');
+ $('cameraPermission').classList.add('hidden');
  $('cameraStatus').innerHTML=mode==='3d'?'<span class="status-dot"></span> 3D SCENE LIVE':'<span class="status-dot"></span> LOCAL CAMERA ACTIVE';
- $('virtualGuide').textContent=mode==='3d'?'드래그: 시선 이동 · W A S D: 이동 · 피사체 클릭: 초점':'카메라 실시간 미리보기 · 렌즈 환산 화각에 맞춘 크롭';
+ $('virtualGuide').textContent=mode==='3d'?'드래그: 시선 이동 · 두 손가락: 줌 · 피사체 터치: AF':'카메라 미리보기 · 두 손가락: 디지털 화각 비교';
  $('hudScene').textContent=mode==='3d'?names[state.scene]:'LIVE CAMERA';
  if(mode==='live')notice('실시간 카메라의 <b>화각 비교는 디지털 확대/크롭</b>입니다. 기준 카메라의 35mm 환산 초점거리를 반드시 보정하세요. 브라우저에서 렌즈의 실물 보케·플레어·조리개·ISO·셔터를 적용할 수 없습니다.');
  else notice('렌즈 모델명과 기본 사양은 참고용이며, 실물 렌즈의 측정된 보케·플레어·왜곡 데이터는 포함되어 있지 않습니다. 화각은 수학적 계산, 3D 심도와 효과는 근사 연출입니다.');
@@ -767,6 +1139,8 @@ function setupLibrary(){
  $('isoSelect').replaceChildren(...ISO_VALUES.map(n=>new Option(n.toLocaleString('ko-KR'),String(n))));
  $('shutterSelect').replaceChildren(...SHUTTER_VALUES.map(([label])=>new Option(label+' s',label)));
  $('isoSelect').value=String(state.iso);$('shutterSelect').value=state.shutter;
+ $('bottomIso').replaceChildren(...ISO_VALUES.map(n=>new Option('ISO '+n.toLocaleString('ko-KR'),String(n))));
+ $('bottomShutter').replaceChildren(...SHUTTER_VALUES.map(([label])=>new Option(label+' s',label))); 
  listLenses();fillApertures();
 }
 function listLenses(){
@@ -790,6 +1164,7 @@ function fillApertures(){
  const nearest=options.find(n=>n>=state.aperture-.0001)||options[0];
  state.aperture=nearest;sel.value=String(nearest);
  $('apertureValue').textContent=`f/${fmt(nearest)}`;
+  $('bottomAperture').replaceChildren(...options.map(n=>new Option('f/'+fmt(n),String(n))));$('bottomAperture').value=String(nearest);
 }
 function syncFocalRange(){
  const l=getLens(),min=l?.min??8,max=l?.max??600;
@@ -799,6 +1174,7 @@ function syncFocalRange(){
  $('focalMin').textContent=`${min}mm`;$('focalMax').textContent=`${max}mm`;
  state.focal=clamp(state.focal,min,max);
  range.value=String(state.focal);
+ const lower=$('bottomFocal');lower.min=String(min);lower.max=String(max);lower.step=range.step;lower.disabled=range.disabled;lower.value=String(state.focal);
 }
 function selectLens(id,preserveFocal=false){
  const l=LENSES.find(x=>x.id===id)||null;
@@ -812,6 +1188,7 @@ function selectLens(id,preserveFocal=false){
  if(l?.format==='APS-C'&&state.sensor==='FF')state.sensor='APSC';
  if(l?.format==='M43'&&state.sensor==='FF')state.sensor='M43';
  $('sensorSelect').value=state.sensor;
+ state.projection=l?.fisheye?(state.focal<=10?'fishcircle':'fishdiag'):'rect';
  syncFocalRange();listLenses();fillApertures();updateMetrics();
 }
 function preserveSubjectSize(next,previous){
@@ -826,13 +1203,14 @@ function preserveSubjectSize(next,previous){
 function adjustFocal(next){
  preserveSubjectSize(next,state.focal);
  state.focal=next;
+ if(getLens()?.fisheye)state.projection=next<=10?'fishcircle':'fishdiag';
  fillApertures();updateMetrics();
 }
 function selectEquivalent(targetEq){
  const newF=targetEq/cropFactor();const l=getLens();
  if(l&&(newF<l.min||newF>l.max)){
   $('brandSelect').value='전체 브랜드';state.brand='전체 브랜드';$('lensSearch').value='';
-  state.lensId='custom';preserveSubjectSize(newF,state.focal);state.focal=clamp(newF,8,600);
+  state.lensId='custom';state.projection='rect';preserveSubjectSize(newF,state.focal);state.focal=clamp(newF,8,600);
   listLenses();syncFocalRange();fillApertures();
   toast('선택 렌즈 범위를 벗어나 자유 가상 렌즈로 전환했습니다.');
  }else{
@@ -857,20 +1235,39 @@ function bindControls(){
  $('sensorSelect').addEventListener('change',()=>{state.sensor=$('sensorSelect').value;fillApertures();updateMetrics();});
  $('ratioSelect').addEventListener('change',changeRatio);
  $('focalRange').addEventListener('input',()=>adjustFocal(Number($('focalRange').value)));
+ $('bottomFocal').addEventListener('input',()=>adjustFocal(Number($('bottomFocal').value)));
  $('apertureSelect').addEventListener('change',()=>{state.aperture=Number($('apertureSelect').value);updateMetrics();});
+ $('bottomAperture').addEventListener('change',()=>{state.aperture=Number($('bottomAperture').value);$('apertureSelect').value=String(state.aperture);updateMetrics();});
+ $('bottomShutter').addEventListener('change',()=>{state.shutter=$('bottomShutter').value;$('shutterSelect').value=state.shutter;updateMetrics();});
+ $('bottomIso').addEventListener('change',()=>{state.iso=Number($('bottomIso').value);$('isoSelect').value=String(state.iso);updateMetrics();});
  $('isoSelect').addEventListener('change',()=>{state.iso=Number($('isoSelect').value);updateMetrics();});
  $('shutterSelect').addEventListener('change',()=>{state.shutter=$('shutterSelect').value;updateMetrics();});
  $('gridSelect').addEventListener('change',()=>{state.grid=$('gridSelect').value;updateMetrics();});
+ $('projectionSelect').addEventListener('change',()=>{state.projection=$('projectionSelect').value;updateMetrics();});
+ $('flareStrength').addEventListener('input',()=>{state.flareStrength=Number($('flareStrength').value);$('flareStrengthValue').textContent=Math.round(state.flareStrength*100)+'%';updateMetrics();});
+ $('afBtn').addEventListener('click',()=>setFocusMode('AF'));
+ $('mfBtn').addEventListener('click',()=>setFocusMode('MF'));
+ $('manualFocusDistance').addEventListener('input',()=>{state.manualFocus=Number($('manualFocusDistance').value);updateMetrics();if(state.mode==='live')applyDeviceFocus();});
+ $('walkToggle').addEventListener('click',()=>{state.walking=!state.walking;$('walkToggle').textContent=state.walking?'인물 걷기 ON':'인물 걷기 OFF';$('walkToggle').setAttribute('aria-pressed',String(state.walking));});
+ $('quickFisheyeBtn').addEventListener('click',()=>{state.projection=state.projection==='fishdiag'?'rect':'fishdiag';$('projectionSelect').value=state.projection;updateMetrics();});
+ $('quickGearBtn').addEventListener('click',openQuickSelector);
+ $('closeQuick').addEventListener('click',()=>$('quickSelector').classList.add('hidden'));
+ $('quickBrand').addEventListener('change',updateQuickLenses);
+ $('quickApply').addEventListener('click',()=>{const l=$('quickLens').value,sen=$('quickSensor').value;state.sensor=sen;$('sensorSelect').value=sen;state.brand=$('quickBrand').value;$('brandSelect').value=state.brand;selectLens(l);$('quickSelector').classList.add('hidden');toast('렌즈 및 센서가 적용되었습니다.');});
+ $('liveShortcutBtn').addEventListener('click',showCameraPermission);
+ $('confirmCameraBtn').addEventListener('click',()=>changeMode('live'));
+ $('cancelCameraBtn').addEventListener('click',()=>$('cameraPermission').classList.add('hidden'));
+
  for(const [id,key] of [['dofToggle','dof'],['vignetteToggle','vignette'],['flareToggle','flare'],['distortionToggle','distortion'],['sizeLock','sizeLock']]){
    $(id).addEventListener('change',()=>{state[key]=$(id).checked;updateMetrics();});
  }
  document.querySelectorAll('[data-eq]').forEach(b=>b.addEventListener('click',()=>selectEquivalent(Number(b.dataset.eq))));
  document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>changeScene(b.dataset.scene)));
- $('targetSelect').addEventListener('change',()=>{state.target=$('targetSelect').value;centerOnTarget();updateMetrics();});
+ $('targetSelect').addEventListener('change',()=>{state.target=$('targetSelect').value;state.focusLocked=true;centerOnTarget();updateMetrics();});
  $('lookAtBtn').addEventListener('click',()=>{centerOnTarget();updateMetrics();});
  $('resetView').addEventListener('click',resetCamera);
  $('mode3d').addEventListener('click',()=>changeMode('3d'));
- $('modeLive').addEventListener('click',()=>changeMode('live'));
+ $('modeLive').addEventListener('click',showCameraPermission);
  $('stopCameraBtn').addEventListener('click',()=>changeMode('3d'));
  $('nativeEq').addEventListener('input',()=>{state.nativeEq=Number($('nativeEq').value);$('nativeEqValue').textContent=`${state.nativeEq} mm`;updateMetrics();});
  $('deviceSelect').addEventListener('change',async()=>{
@@ -896,36 +1293,90 @@ function bindControls(){
  setupViewPointer();
  window.addEventListener('pagehide',()=>{if(cameraStream)cameraStream.getTracks().forEach(t=>t.stop());});
 }
+function showCameraPermission(){
+ if(state.mode==='live'){openQuickSelector();return;}
+ $('quickSelector').classList.add('hidden');$('cameraPermission').classList.remove('hidden');
+}
+function updateQuickLenses(){
+ const brand=$('quickBrand').value;
+ const matching=LENSES.filter(l=>brand==='전체 브랜드'||l.brand===brand);
+ $('quickLens').replaceChildren(new Option('자유 가상 렌즈','custom'),...matching.map(l=>new Option(l.name,l.id)));
+ $('quickLens').value=matching.some(l=>l.id===state.lensId)?state.lensId:'custom';
+}
+function openQuickSelector(){
+ $('cameraPermission').classList.add('hidden');
+ const b=$('quickBrand'),s=$('quickSensor');
+ b.replaceChildren(...[...$('brandSelect').options].map(o=>new Option(o.text,o.value)));
+ s.replaceChildren(...[...$('sensorSelect').options].map(o=>new Option(o.text,o.value)));
+ b.value=getLens()?.brand||'전체 브랜드';s.value=state.sensor;updateQuickLenses();
+ $('quickSelector').classList.remove('hidden');
+}
+function pickSubjectAt(clientX,clientY){
+ const view=$('viewport'),rect=view.getBoundingClientRect();
+ const nx=((clientX-rect.left)/rect.width)*2-1,ny=-((clientY-rect.top)/rect.height)*2+1;
+ if(fallback){const choice=fallback.pick?.(clientX-rect.left,clientY-rect.top);return choice||null;}
+ if(!camera||!worlds[state.scene])return null;
+ const ray=new THREE.Raycaster();ray.setFromCamera(new THREE.Vector2(nx,ny),camera);
+ const hits=ray.intersectObjects(worlds[state.scene].children,true);
+ // Respect real occlusion: do not select a hidden subject behind an untagged object.
+ if(!hits.length)return null;
+ const front=hits.find(h=>h.distance>.1);
+ return front?.object.userData.subject||null;
+}
+function tryFocusAt(x,y){
+ if(state.mode!=='3d')return;
+ const target=pickSubjectAt(x,y);
+ if(target){state.target=target;state.focusLocked=true;$('targetSelect').value=target;toast(`피사체 추적: ${$('targetSelect').selectedOptions[0]?.textContent||target}`);}
+ else{state.focusLocked=false;toast(state.focusMode==='AF'?'화면 중앙 연속 AF로 전환했습니다.':'수동 초점은 유지됩니다.');}
+ updateAutoFocus();updateMetrics();
+}
+function pinchZoom(distance){
+ if(!pinchDistance||!pinchFocal)return;
+ const scale=clamp(distance/pinchDistance,.35,3.5);
+ const next=clamp(pinchFocal*scale,8,600);
+ const l=getLens();
+ if(l&&(next<l.min-.01||next>l.max+.01)){
+  state.lensId='custom';state.brand='전체 브랜드';$('brandSelect').value=state.brand;$('lensSearch').value='';listLenses();syncFocalRange();
+ }
+ adjustFocal(clamp(next,Number($('focalRange').min),Number($('focalRange').max)));
+}
 function setupViewPointer(){
  const view=$('viewport');
  view.addEventListener('pointerdown',e=>{
-  if(state.mode!=='3d'||e.target.closest('button'))return;
+  if(e.target.closest('button,select,input,.quick-selector,.camera-permission,.mobile-move'))return;
   if(e.button!==0&&e.pointerType==='mouse')return;
-  view.setPointerCapture(e.pointerId);pointerStart={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY};
-  dragPointerId=e.pointerId;dragging=false;
+  if(state.mode!=='3d'&&state.mode!=='live')return;
+  activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  try{view.setPointerCapture(e.pointerId);}catch{}
+  if(activePointers.size===2){
+   const [a,b]=[...activePointers.values()];pinchDistance=Math.hypot(a.x-b.x,a.y-b.y);pinchFocal=state.focal;
+   dragging=true;pointerStart=null;return;
+  }
+  if(state.mode==='3d'){pointerStart={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY};dragPointerId=e.pointerId;dragging=false;}
  });
  view.addEventListener('pointermove',e=>{
+  if(!activePointers.has(e.pointerId))return;
+  activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(activePointers.size>=2){
+   const [a,b]=[...activePointers.values()];pinchZoom(Math.hypot(a.x-b.x,a.y-b.y));return;
+  }
   if(e.pointerId!==dragPointerId||!pointerStart||state.mode!=='3d'||(!camera&&!fallback))return;
   const dx=e.clientX-pointerStart.lastX,dy=e.clientY-pointerStart.lastY;
-  if(Math.hypot(e.clientX-pointerStart.x,e.clientY-pointerStart.y)>5)dragging=true;
+  if(Math.hypot(e.clientX-pointerStart.x,e.clientY-pointerStart.y)>6)dragging=true;
   if(dragging){if(fallback)fallback.setOrientation(dx,dy);else {camera.rotation.y-=dx*.004;camera.rotation.x=clamp(camera.rotation.x-dy*.004,-1.48,1.48);}}
   pointerStart.lastX=e.clientX;pointerStart.lastY=e.clientY;
  });
  view.addEventListener('pointerup',e=>{
-  if(e.pointerId!==dragPointerId||!pointerStart)return;
-  if(!dragging&&camera&&scene){
-   const rect=view.getBoundingClientRect(),x=((e.clientX-rect.left)/rect.width)*2-1,y=-((e.clientY-rect.top)/rect.height)*2+1;
-   const ray=new THREE.Raycaster();ray.setFromCamera(new THREE.Vector2(x,y),camera);
-   const group=worlds[state.scene];const hits=ray.intersectObjects(group.children,true);
-   const chosen=hits.find(h=>h.object.userData.subject);
-   if(chosen){state.target=chosen.object.userData.subject;$('targetSelect').value=state.target;centerOnTarget();toast(`초점 대상: ${$('targetSelect').selectedOptions[0]?.textContent}`);}
-  }
+  const twoOrMore=activePointers.size>=2;activePointers.delete(e.pointerId);
+  if(e.pointerId===dragPointerId&&pointerStart&&!dragging&&!twoOrMore)tryFocusAt(e.clientX,e.clientY);
+  if(activePointers.size<2){pinchDistance=0;pinchFocal=0;}
   dragPointerId=null;pointerStart=null;dragging=false;
  });
- view.addEventListener('pointercancel',()=>{pointerStart=null;dragPointerId=null;dragging=false;});
+ view.addEventListener('pointercancel',e=>{activePointers.delete(e.pointerId);pinchDistance=0;dragPointerId=null;pointerStart=null;dragging=false;});
  view.addEventListener('wheel',e=>{
    if(state.mode!=='3d'||(!camera&&!fallback))return;e.preventDefault();
-   moveCamera(e.deltaY<0?'forward':'backward',Math.min(.3,Math.abs(e.deltaY)*.002));
+   if(e.ctrlKey){const next=clamp(state.focal*(e.deltaY<0?1.06:.94),8,600);const l=getLens();if(l&&(next<l.min||next>l.max)){state.lensId='custom';state.brand='전체 브랜드';$('brandSelect').value=state.brand;listLenses();syncFocalRange();}adjustFocal(clamp(next,Number($('focalRange').min),Number($('focalRange').max)));}
+   else moveCamera(e.deltaY<0?'forward':'backward',Math.min(.3,Math.abs(e.deltaY)*.002));
  },{passive:false});
 }
 
@@ -964,7 +1415,7 @@ function saveSnapshot(){
  }
  if(state.flare){
   const grad=ctx.createRadialGradient(w*.76,h*.17,0,w*.76,h*.17,w*.28);
-  grad.addColorStop(0,'#fff4bf83');grad.addColorStop(.14,'#fbd9a527');grad.addColorStop(1,'#00000000');
+  grad.addColorStop(0,`rgba(255,244,191,${state.flareStrength*.25})`);grad.addColorStop(.14,`rgba(251,217,165,${state.flareStrength*.08})`);grad.addColorStop(1,'#00000000');
   ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
  }
  paintGrid(ctx,w,h,state.grid);
@@ -982,7 +1433,7 @@ function saveSnapshot(){
 }
 function shareSettings(){
  const url=new URL(location.href);url.search='';
- const keys=['scene','target','lensId','sensor','ratio','focal','aperture','iso','shutter','grid','dof','vignette','flare','distortion','sizeLock','nativeEq'];
+ const keys=['scene','target','lensId','sensor','ratio','focal','aperture','iso','shutter','grid','dof','vignette','flare','distortion','sizeLock','nativeEq','projection','focusMode','manualFocus','walking','flareStrength'];
  keys.forEach(k=>url.searchParams.set(k,String(state[k])));
  if(camera){url.searchParams.set('pos',camera.position.toArray().map(v=>v.toFixed(3)).join(','));
    url.searchParams.set('rot',[camera.rotation.x,camera.rotation.y].map(v=>v.toFixed(4)).join(','));}
@@ -993,16 +1444,19 @@ function shareSettings(){
 }
 function readSharedSettings(){
  const params=new URLSearchParams(location.search);
- const strings=['scene','target','lensId','sensor','ratio','shutter','grid'];
+ const strings=['scene','target','lensId','sensor','ratio','shutter','grid','projection','focusMode'];
  for(const k of strings)if(params.has(k))state[k]=params.get(k);
- const nums=['focal','aperture','iso','nativeEq'];for(const k of nums)if(params.has(k)&&Number.isFinite(Number(params.get(k))))state[k]=Number(params.get(k));
- const bools=['dof','vignette','flare','distortion','sizeLock'];for(const k of bools)if(params.has(k))state[k]=params.get(k)==='true';
+ const nums=['focal','aperture','iso','nativeEq','manualFocus','flareStrength'];for(const k of nums)if(params.has(k)&&Number.isFinite(Number(params.get(k))))state[k]=Number(params.get(k));
+ const bools=['dof','vignette','flare','distortion','sizeLock','walking'];for(const k of bools)if(params.has(k))state[k]=params.get(k)==='true';
  if(!LENSES.some(l=>l.id===state.lensId))state.lensId='custom';
  if(!SENSORS[state.sensor])state.sensor='FF';
  if(!worldNames.includes(state.scene))state.scene='park';
  if(!['person','car','animal','flower','tree'].includes(state.target))state.target='person';
  if(!['3:2','4:3','16:9','1:1'].includes(state.ratio))state.ratio='3:2';
  if(!['thirds','golden','center','diagonal','none'].includes(state.grid))state.grid='thirds';
+ if(!['rect','fishdiag','fishcircle'].includes(state.projection))state.projection='rect';
+ if(!['AF','MF'].includes(state.focusMode))state.focusMode='AF';
+ state.manualFocus=clamp(state.manualFocus,.25,80);state.flareStrength=clamp(state.flareStrength,0,.5);
  if(!SHUTTER_VALUES.some(s=>s[0]===state.shutter))state.shutter='1/125';
  if(!ISO_VALUES.includes(state.iso))state.iso=100;
  state.nativeEq=clamp(state.nativeEq,12,85);
@@ -1032,10 +1486,14 @@ function initialize(){
  $('isoSelect').value=String(state.iso);
  $('shutterSelect').value=state.shutter;
  $('nativeEq').value=String(state.nativeEq);$('nativeEqValue').textContent=`${state.nativeEq} mm`;
+ $('flareStrength').value=state.flareStrength;$('flareStrengthValue').textContent=Math.round(state.flareStrength*100)+'%';
+ $('projectionSelect').value=state.projection; $('manualFocusDistance').value=state.manualFocus;
+ $('walkToggle').textContent=state.walking?'인물 걷기 ON':'인물 걷기 OFF';
  for(const [id,k] of [['dofToggle','dof'],['vignetteToggle','vignette'],['flareToggle','flare'],['distortionToggle','distortion'],['sizeLock','sizeLock']])$(id).checked=state[k];
  syncFocalRange();fillApertures();
  changeRatio();
  bindControls();
+ setFocusMode(state.focusMode);
  try{
   if(THREE){createRenderer();}else{activateFallback();}
   resetCamera();

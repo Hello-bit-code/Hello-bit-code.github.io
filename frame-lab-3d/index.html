@@ -552,7 +552,7 @@ const state = {
 };
 let cameraStream=null, videoTrack=null, renderer=null, camera=null, scene=null, sun=null, fallback=null;
 let renderTarget=null, postScene=null, postCamera=null, shader=null, fishTarget=null, fishCamera=null, fishScene=null, fishShader=null;
-let pointerStart=null, dragPointerId=null, dragging=false;
+let pointerStart=null, dragPointerId=null, dragging=false;let lastFishCapture=0;
 const activePointers=new Map();let pinchDistance=0, pinchFocal=0, lastAfCheck=0;
 const heldKeys = new Set();
 let toastTimeout;
@@ -674,6 +674,7 @@ function updateMetrics(){
   $('bottomAperture').value=String(state.aperture);$('bottomShutter').value=state.shutter;$('bottomIso').value=String(state.iso);
   $('focusDistanceValue').textContent=`${focusDistance().toFixed(2)} m`;
   $('projectionSelect').value=state.projection;
+  $('quickFisheyeBtn').classList.toggle('active',isFisheye());
   updateTrackingReticle();
   const nativeRange=equiv()/state.nativeEq;
   if(state.mode==='live'){
@@ -973,7 +974,7 @@ function initPostProcessing(){
  postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),shader));
 }
 function initFisheyeRender(){
- fishTarget=new THREE.WebGLCubeRenderTarget(256,{generateMipmaps:false,minFilter:THREE.LinearFilter});
+ fishTarget=new THREE.WebGLCubeRenderTarget(window.innerWidth<760?128:256,{generateMipmaps:false,minFilter:THREE.LinearFilter});
  fishCamera=new THREE.CubeCamera(.1,250,fishTarget);scene.add(fishCamera);
  const fragment=`precision highp float;uniform samplerCube tCube;uniform float uAspect;uniform float uCircle;uniform vec4 uQuat;varying vec2 vUv;
  vec3 rot(vec3 v,vec4 q){return v+2.0*cross(q.xyz,cross(q.xyz,v)+q.w*v);}
@@ -1054,7 +1055,7 @@ function frame(){
     parts.legs.forEach(({pivot,side})=>pivot.rotation.x=state.walking?Math.sin(phase*3.5)*-side*.27:0);}
   }
   if(isFisheye()&&fishCamera&&fishShader){
-    fishCamera.position.copy(camera.position);fishCamera.update(renderer,scene);
+    if(performance.now()-lastFishCapture>85){fishCamera.position.copy(camera.position);fishCamera.update(renderer,scene);lastFishCapture=performance.now();}
     fishShader.uniforms.uQuat.value.set(camera.quaternion.x,camera.quaternion.y,camera.quaternion.z,camera.quaternion.w);
     fishShader.uniforms.uCircle.value=state.projection==='fishcircle'?1:0;
     renderer.setRenderTarget(null);renderer.render(fishScene,postCamera);

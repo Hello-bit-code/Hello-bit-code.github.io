@@ -1,0 +1,1061 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#09121f" />
+  <meta name="description" content="브랜드별 렌즈와 센서·화각·조리개를 3D 장면 및 모바일 카메라에서 비교하는 렌즈 시뮬레이터 시제품" />
+  <title>FRAME LAB 3D — 인터랙티브 렌즈 시뮬레이터</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <style>:root{--bg:#0a121e;--bg2:#0e1928;--panel:#101c2d;--line:#263548;--line2:#1e2b3d;--mint:#6fe7c9;--mint2:#3bbf9e;--text:#f0f6fa;--muted:#9badbd;--sub:#647b90;--amber:#f7c06c;--shadow:0 12px 40px #0003;font-family:Inter,SUIT,Pretendard,"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 65% -20%,#1a3144 0,transparent 39%),var(--bg);color:var(--text);font-size:14px;letter-spacing:-.025em}button,select,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--mint);outline-offset:2px}button,select{transition:background .15s,border-color .15s,color .15s}button:hover{filter:brightness(1.1)}.app-shell{max-width:1610px;margin:auto;padding:0 36px}.topbar{height:91px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line2);gap:20px}.brand{display:flex;gap:13px;align-items:center;flex-shrink:0}.brand-mark{width:39px;height:39px;border:2px solid var(--mint);border-radius:10px;display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:8px;transform:rotate(8deg)}.brand-mark span{border:1.5px solid var(--mint);border-radius:2px}.brand strong{display:block;font-size:22px;letter-spacing:-.065em;font-weight:880}.brand strong span{color:var(--mint)}.brand small{display:block;font-size:8.5px;letter-spacing:.19em;color:var(--muted);margin-top:2px;font-weight:700}.brand small b{color:var(--mint)}.top-mid{font-size:10px;letter-spacing:.13em;color:var(--sub);font-weight:800;white-space:nowrap}.top-divider{margin:0 14px;border-left:1px solid var(--line);height:10px}.online-dot,.status-dot{width:7px;height:7px;background:var(--mint);border-radius:50%;display:inline-block;margin-right:8px;box-shadow:0 0 9px #6fe7c957}.top-actions{display:flex;gap:10px}.ghost-btn,.primary-btn{height:39px;border-radius:7px;padding:0 17px;font-size:12px;font-weight:750}.ghost-btn{color:#c8d6e2;background:#172438;border:1px solid #2d4055}.ghost-btn span{font-size:17px;color:var(--mint);vertical-align:-1px;margin-right:3px}.primary-btn{background:var(--mint);color:#0b2530;border:1px solid var(--mint)}.intro{padding:39px 1px 27px;display:flex;justify-content:space-between;align-items:end;gap:12px}.eyebrow{color:var(--mint);font-size:10px;letter-spacing:.20em;font-weight:850}.eyebrow span{font-size:8px;vertical-align:1px;margin-right:7px}.intro h1{font-weight:825;font-size:clamp(26px,2.35vw,38px);margin:12px 0 10px;letter-spacing:-.065em}.intro h1 em{font-style:normal;color:var(--mint)}.intro p{margin:0;color:#94a7b6;font-size:12px;line-height:1.75;max-width:700px}.intro-index{text-align:right;flex-shrink:0;padding-bottom:2px}.intro-index strong{font-size:22px;font-weight:550;letter-spacing:.06em}.intro-index strong span{color:#557087}.intro-index small{display:block;color:#718ba0;font-size:9px;letter-spacing:.16em;margin-top:8px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 345px;gap:18px;align-items:start}.viewer-col{min-width:0}.viewer-top{height:53px;padding:7px 13px;background:#111f30;border:1px solid var(--line);border-radius:11px 11px 0 0;display:flex;justify-content:space-between;align-items:center}.view-modes{display:flex;gap:6px}.view-modes button{color:#99afc2;background:transparent;border:1px solid transparent;border-radius:6px;font-size:11px;font-weight:800;padding:9px 13px}.view-modes button.selected{background:#253b4b;color:var(--mint);border-color:#365d65}.camera-status{font-size:9px;letter-spacing:.14em;color:#c1d5df;font-weight:850;white-space:nowrap}.camera-status .status-dot{width:6px;height:6px}.viewport{position:relative;width:100%;aspect-ratio:3/2;overflow:hidden;background:radial-gradient(ellipse at 50% 30%,#2d5262,#20384a 60%,#1b2637);touch-action:pan-y;isolation:isolate}.viewport:has(.mobile-move){touch-action:none}#webglMount,#liveVideo{position:absolute;inset:0;width:100%;height:100%}#webglMount canvas{display:block;width:100%;height:100%}#liveVideo{display:none;object-fit:cover;transform-origin:center;pointer-events:none}.viewport.live #webglMount{display:none}.viewport.live #liveVideo{display:block}.viewport.live #mobileMove{display:none}.scene-loading{position:absolute;inset:0;background:linear-gradient(145deg,#1d3c4d,#0c1b2b);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;text-align:center;z-index:4}.scene-loading strong{font-size:14px}.scene-loading small{font-size:11px;color:var(--muted)}.loading-ring{height:32px;width:32px;border:3px solid #3a5663;border-top-color:var(--mint);border-radius:50%;animation:turn 1s linear infinite}@keyframes turn{to{transform:rotate(360deg)}}.scene-loading.hidden{display:none}.exposure-layer,.vignette-layer,.flare-layer,.grid-layer{position:absolute;inset:0;pointer-events:none}.exposure-layer{z-index:1}.vignette-layer{z-index:2;background:radial-gradient(ellipse at center,transparent 37%,#03101b67 100%)}.flare-layer{z-index:3;opacity:0;background:radial-gradient(circle at var(--flare-x,73%) var(--flare-y,25%),#fff6b7bb 0%,#ffdea953 4%,#e6a56816 14%,transparent 32%),linear-gradient(128deg,transparent 25%,#e6c4a718 46%,transparent 55%);mix-blend-mode:screen}.grid-layer{z-index:4;opacity:.72}.grid-layer.thirds{background:linear-gradient(90deg,transparent calc(33.333% - .6px),#ffffff90 33.333%,transparent calc(33.333% + .6px),transparent calc(66.667% - .6px),#ffffff90 66.667%,transparent calc(66.667% + .6px)),linear-gradient(0deg,transparent calc(33.333% - .6px),#ffffff90 33.333%,transparent calc(33.333% + .6px),transparent calc(66.667% - .6px),#ffffff90 66.667%,transparent calc(66.667% + .6px))}.grid-layer.golden{background:linear-gradient(90deg,transparent calc(38.2% - .6px),#fff8 38.2%,transparent calc(38.2% + .6px),transparent calc(61.8% - .6px),#fff8 61.8%,transparent calc(61.8% + .6px)),linear-gradient(0deg,transparent calc(38.2% - .6px),#fff8 38.2%,transparent calc(38.2% + .6px),transparent calc(61.8% - .6px),#fff8 61.8%,transparent calc(61.8% + .6px))}.grid-layer.center{background:linear-gradient(90deg,transparent calc(50% - .5px),#fffa 50%,transparent calc(50% + .5px)),linear-gradient(0deg,transparent calc(50% - .5px),#fffa 50%,transparent calc(50% + .5px))}.grid-layer.diagonal{background:linear-gradient(to top right,transparent calc(50% - .5px),#fffa 50%,transparent calc(50% + .5px)),linear-gradient(to top left,transparent calc(50% - .5px),#fffa 50%,transparent calc(50% + .5px))}.grid-layer.none{display:none}.corner-mark{position:absolute;z-index:5;width:21px;height:21px;opacity:.9;pointer-events:none}.tl{top:16px;left:17px;border-top:2px solid #fff9;border-left:2px solid #fff9}.tr{top:16px;right:17px;border-top:2px solid #fff9;border-right:2px solid #fff9}.bl{bottom:17px;left:17px;border-bottom:2px solid #fff9;border-left:2px solid #fff9}.br{bottom:17px;right:17px;border-bottom:2px solid #fff9;border-right:2px solid #fff9}.view-hud,.view-bottom-left,.view-bottom-right,.virtual-guide,.focus-reticle{position:absolute;z-index:6;pointer-events:none;text-shadow:0 2px 8px #000b}.view-hud.top-left{top:38px;left:36px;display:flex;flex-direction:column;gap:5px}.tiny-label{font-size:9px;color:#dcf1f3bf;letter-spacing:.15em;font-weight:800}.view-hud.top-left strong{font-size:16px;max-width:400px;line-height:1.35}.view-hud.top-left span{font-size:11px;color:#e3f0f1}.view-hud.top-right{top:42px;right:36px;font-size:10px;letter-spacing:.09em;font-weight:850}.rec-dot{color:#f29a74;vertical-align:1px;margin-right:3px}.focus-reticle{left:50%;top:50%;transform:translate(-50%,-50%);font-size:27px;color:#fffbe0;opacity:.78;font-weight:200}.view-bottom-left{bottom:37px;left:36px;display:flex;align-items:baseline;gap:11px}.view-bottom-left strong{font-size:35px;line-height:1;font-variant-numeric:tabular-nums}.view-bottom-left strong span{font-size:12px;margin-left:3px}.view-bottom-left>span{font-size:10px;letter-spacing:.04em;color:#e7f6f5}.view-bottom-right{bottom:39px;right:36px;text-align:right;font-size:10px;letter-spacing:.07em;font-weight:850;line-height:1.9}.virtual-guide{bottom:12px;width:100%;text-align:center;color:#eef8f6b4;font-size:10px;font-weight:650}.virtual-guide span{padding:0 6px}.mobile-move{display:none;position:absolute;z-index:9;bottom:44px;left:15px;align-items:center;flex-direction:column;gap:2px}.mobile-move>div{display:flex;gap:3px}.mobile-move button{border:1px solid #fff5;background:#0617259c;color:white;border-radius:6px;width:33px;height:31px;font-size:17px;touch-action:none}.scene-toolbar{background:#112034;border:1px solid var(--line);border-top:0;border-radius:0 0 9px 9px;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 14px}.toolbar-group{display:flex;gap:8px;align-items:center}.toolbar-caption{font-size:9px;letter-spacing:.12em;color:#69829a;font-weight:900;margin-right:3px}.segmented{display:flex;gap:4px}.segmented button{background:#1b2b3d;border:1px solid #2a4156;color:#aabccb;font-size:11px;padding:7px 11px;border-radius:5px;font-weight:750}.segmented button.active{background:#284e50;border-color:#37766b;color:#a9ffdd}.scene-toolbar select,.scene-toolbar .icon-button{background:#1b2b3d;color:#d9e8ef;border:1px solid #2a4156;border-radius:5px;height:31px;padding:0 8px;font-size:11px}.scene-toolbar .icon-button{font-size:16px;font-weight:800;width:32px}.reset-btn{background:transparent;border:none;color:#849bae;font-size:11px;white-space:nowrap}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:14px;gap:1px;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--line)}.metric{background:#112033;min-height:110px;padding:19px 20px 13px}.metric>span{display:block;font-size:9px;letter-spacing:.12em;color:#8299ad;font-weight:900;white-space:nowrap}.metric strong{display:block;margin-top:10px;font-size:25px;font-weight:760;line-height:1.1;letter-spacing:-.055em;white-space:nowrap}.metric small{font-size:12px;font-weight:600;color:#9db0c0;margin-left:3px}.metric-caption{margin-top:9px;font-size:10px;color:#617a91}.notice{margin-top:13px;padding:15px 17px;display:flex;gap:11px;border:1px solid #365061;border-radius:8px;background:#132638;font-size:11px;color:#a3bdcb;line-height:1.7}.notice-icon{font-size:16px;color:var(--mint);line-height:1.2}.controls{background:#111d2d;border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);overflow:hidden}.control-head{padding:22px 21px 18px;display:flex;align-items:center;justify-content:space-between}.control-head .eyebrow{font-size:9px}.control-head h2{font-size:23px;letter-spacing:-.06em;margin:7px 0 0}.control-head h2 span{color:#7295a1;font-size:18px;font-weight:400}.control-head button{border:1px solid #294157;background:#1a2a3d;color:#aac0d0;border-radius:6px;padding:8px 10px;font-size:10px}.control-section{border-top:1px solid var(--line);padding:17px 20px 20px}.section-caption{display:flex;gap:9px;align-items:center;margin-bottom:18px;font-weight:850;font-size:12px}.section-caption .num{font-size:10px;color:var(--mint);font-weight:800;letter-spacing:.08em}.section-trail{margin-left:auto;font-size:9px;letter-spacing:.12em;color:#5f758a;font-weight:850}.control-section label:not(.switch-line){font-size:10px;letter-spacing:.04em;color:#a6bac9;display:block;font-weight:750;margin:13px 0 7px}.control-section select,.control-section input[type=search]{width:100%;height:37px;border:1px solid #30465a;border-radius:6px;background:#1b2b3e;color:#e3edf4;outline:none;padding:0 11px;font-size:12px;min-width:0}.control-section input[type=search]::placeholder{color:#688399}.control-section select option{background:#1b2b3e;color:#eaf3fa}.lens-detail{background:#182b3b;border:1px solid #274458;border-radius:7px;display:flex;align-items:center;gap:11px;margin-top:12px;padding:11px}.lens-icon{color:var(--mint);font-size:26px;line-height:1}.lens-detail strong,.lens-detail span:not(.lens-icon){display:block}.lens-detail strong{font-size:11px;line-height:1.4}.lens-detail div>span{font-size:10px;color:#7899af;margin-top:4px}.helper{font-size:10px;line-height:1.6;color:#7e98aa;margin-top:7px}.two-col{display:grid;grid-template-columns:1fr auto;gap:8px}.read-only-chip{background:#1b3d3d;border:1px solid #386d63;color:#8bdfc3;padding:10px;border-radius:6px;font-size:10px;font-weight:850;min-width:87px;text-align:center;white-space:nowrap}.param-heading{display:flex;align-items:baseline;justify-content:space-between;gap:5px}.param-heading label{margin:2px 0 11px!important}.param-heading output{color:var(--mint);font-size:16px;font-weight:850;letter-spacing:-.03em}input[type=range]{width:100%;accent-color:var(--mint);cursor:pointer;height:19px;margin:3px 0 0}.range-ends{display:flex;justify-content:space-between;color:#637d93;font-size:10px;margin:2px 0 14px}.quick-focals{border:1px solid #293b50;background:#152535;border-radius:7px;padding:11px}.quick-focals>span{display:block;font-size:10px;color:#b4c8d5;font-weight:800;margin-bottom:9px}.quick-focals>div{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}.quick-focals button{background:#223549;color:#bacdda;border:1px solid #30495f;border-radius:5px;padding:7px 0;font-size:11px;font-weight:800}.quick-focals button.active{background:#285b54;border-color:#488c79;color:#adffe2}.quick-focals small{display:block;color:#6c8b9f;font-size:9px;line-height:1.6;margin-top:8px}.pad-top{padding-top:17px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.switch-line{position:relative;display:flex;align-items:center;justify-content:space-between;gap:9px;padding:13px 0 0;cursor:pointer}.switch-line>span:first-child{font-size:11px;color:#d4e1e9;font-weight:750;line-height:1.3}.switch-line small{display:block;color:#728da0;font-size:10px;margin-top:5px;font-weight:450}.switch-line input{position:absolute;opacity:0;width:1px;height:1px}.switch-ui{width:34px;height:19px;background:#2b3d4f;border-radius:20px;border:1px solid #456074;flex-shrink:0;position:relative}.switch-ui:before{content:'';width:13px;height:13px;border-radius:50%;position:absolute;top:2px;left:3px;background:#8fa4b2;transition:transform .15s}.switch-line input:checked+.switch-ui{background:#266553;border-color:#389475}.switch-line input:checked+.switch-ui:before{transform:translateX(14px);background:#bbffe7}.switch-line.compact{border-top:1px solid #243548;margin-top:10px;padding-top:13px}.switch-line.compact:first-of-type{margin-top:15px}.live-settings.hidden{display:none}.live-note{margin:13px 0 11px;line-height:1.7;font-size:11px;color:#a6c0ce;background:#18344a;padding:12px;border-left:2px solid var(--mint)}.stop-camera{width:100%;height:34px;border-radius:6px;background:#442d38;color:#ffd7d8;border:1px solid #7c4853;font-size:11px;font-weight:700}.toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,12px);background:#e9fff5;color:#102b2d;border-radius:8px;padding:12px 18px;font-size:12px;font-weight:750;opacity:0;pointer-events:none;z-index:50;transition:all .2s;box-shadow:var(--shadow);max-width:90vw;text-align:center}.toast.show{transform:translate(-50%,0);opacity:1}footer{border-top:1px solid var(--line2);display:flex;justify-content:space-between;padding:21px 2px 27px;margin-top:27px;gap:10px;color:#6d8194;font-size:9px;letter-spacing:.1em;font-weight:800}footer span{color:var(--mint)}
+@media(max-width:1280px){.app-shell{padding:0 22px}.workspace{grid-template-columns:minmax(0,1fr) 322px;gap:13px}.metric{padding:17px 11px}.metric>span{font-size:8px}.scene-toolbar{flex-wrap:wrap}.reset-btn{margin-left:auto}.intro-index{display:none}}
+@media(max-width:990px){.workspace{grid-template-columns:minmax(0,1fr)}.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;align-items:start}.control-head{grid-column:1/-1}.control-section{min-width:0}.control-section:nth-child(odd){border-left:1px solid var(--line)}.intro{padding:30px 0 22px}.top-mid{display:none}.viewer-top{height:55px}.control-section:last-child{grid-column:1/-1}.scene-toolbar{flex-wrap:nowrap}}
+@media(max-width:650px){.app-shell{padding:0 12px}.topbar{height:67px;gap:7px}.brand-mark{width:29px;height:29px;padding:6px;border-radius:8px}.brand{gap:9px}.brand strong{font-size:17px}.brand small{font-size:6.5px;letter-spacing:.13em}.top-actions{gap:5px}.ghost-btn,.primary-btn{height:34px;font-size:10px;padding:0 9px}.ghost-btn span{display:none}.intro{padding:26px 3px 19px}.intro .eyebrow{font-size:9px}.intro h1{font-size:27px;line-height:1.3}.intro h1 em{display:block}.intro p{font-size:11px;line-height:1.75}.workspace{gap:12px}.viewer-top{padding:7px;height:51px}.view-modes button{padding:8px;font-size:10px}.camera-status{font-size:8px;letter-spacing:.05em}.viewport{min-height:235px}.view-hud.top-left{top:31px;left:25px;gap:3px}.view-hud.top-left strong{font-size:12px;max-width:215px}.view-hud.top-left span{font-size:9px}.view-hud.top-right{top:33px;right:25px;font-size:8px}.view-bottom-left{bottom:32px;left:25px;gap:6px}.view-bottom-left strong{font-size:28px}.view-bottom-left>span{font-size:9px}.view-bottom-right{bottom:33px;right:24px;font-size:8px}.virtual-guide{bottom:8px;font-size:8px}.corner-mark{width:13px;height:13px}.tl{top:10px;left:10px}.tr{top:10px;right:10px}.bl{bottom:10px;left:10px}.br{bottom:10px;right:10px}.mobile-move{display:flex;bottom:77px}.scene-toolbar{padding:11px 9px;flex-wrap:wrap;gap:10px}.toolbar-caption{font-size:8px}.segmented button{font-size:10px;padding:7px}.toolbar-group{gap:5px}.scene-toolbar select{max-width:110px}.reset-btn{font-size:10px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:11px}.metric{min-height:95px;padding:16px}.metric strong{font-size:24px}.metric>span{font-size:9px}.notice{font-size:10px;padding:12px}.controls{display:block}.control-section:nth-child(odd){border-left:0}.control-head{padding:20px}.control-section{padding:16px 19px 20px}footer{flex-wrap:wrap;font-size:8px;line-height:1.8}}
+@media(max-width:390px){.app-shell{padding:0 8px}.brand small{display:none}.brand strong{font-size:16px}.view-modes button{font-size:9px}.camera-status{font-size:7px}.intro h1{font-size:24px}.scene-toolbar .toolbar-group:nth-child(2){order:3}.scene-toolbar .reset-btn{order:2;margin-left:auto}.view-bottom-right{display:none}.mobile-move{bottom:37px}}
+
+.quick-focals>div{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media(max-width:650px){.mobile-move{left:auto;right:12px;bottom:72px}}
+@media(max-width:390px){.mobile-move{left:auto;right:8px;bottom:64px}}
+</style>
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div><strong>FRAME<span>LAB</span></strong><small>INTERACTIVE LENS STUDIO <b>03</b></small></div></div>
+      <div class="top-mid"><span class="online-dot"></span> PHOTOGRAPHY PLAYGROUND <span class="top-divider"></span> <span id="top-count">51</span> LENS PROFILES</div>
+      <div class="top-actions"><button id="shareBtn" class="ghost-btn" type="button" title="현재 설정을 URL로 공유"><span>↗</span> 설정 공유</button><button id="snapshotBtn" class="primary-btn" type="button">◉ &nbsp;프레임 저장</button></div>
+    </header>
+
+    <section class="intro"><div><div class="eyebrow"><span>●</span> VIRTUAL PHOTOGRAPHY LAB</div><h1>렌즈를 사기 전에, <em>먼저 촬영해보세요.</em></h1><p>장면 속을 직접 걸어 다니며 브랜드별 렌즈, 화각, 조리개와 구도를 실험하세요. 모바일에서는 실제 카메라 화면에 화각을 대조할 수 있습니다.</p></div><div class="intro-index"><strong>01 <span>/ 03</span></strong><small>EXPLORE · COMPARE · CAPTURE</small></div></section>
+
+    <main class="workspace">
+      <section class="viewer-col" aria-label="렌즈 시뮬레이션 뷰어">
+        <div class="viewer-top"><div class="view-modes" role="tablist" aria-label="화면 모드"><button id="mode3d" class="selected" role="tab" aria-selected="true">◈ &nbsp;3D 가상 촬영</button><button id="modeLive" role="tab" aria-selected="false">◎ &nbsp;실시간 카메라</button></div><div class="camera-status" id="cameraStatus"><span class="status-dot"></span> 3D SCENE LIVE</div></div>
+        <div class="viewport" id="viewport">
+          <div id="webglMount" aria-label="가상 3D 촬영 공간"></div>
+          <video id="liveVideo" autoplay muted playsinline aria-label="실시간 카메라 미리보기"></video>
+          <div id="sceneLoading" class="scene-loading"><div class="loading-ring"></div><strong>3D 장면을 불러오는 중입니다</strong><small>인터넷 연결과 WebGL 지원이 필요합니다.</small></div>
+          <div id="exposureLayer" class="exposure-layer"></div>
+          <div id="vignetteLayer" class="vignette-layer"></div>
+          <div id="flareLayer" class="flare-layer"></div>
+          <div id="gridLayer" class="grid-layer thirds" aria-hidden="true"></div>
+          <div class="corner-mark tl"></div><div class="corner-mark tr"></div><div class="corner-mark bl"></div><div class="corner-mark br"></div>
+          <div class="view-hud top-left"><div class="tiny-label">ACTIVE LENS</div><strong id="hudLens">24–70mm F2.8 GM II</strong><span id="hudSpec">50mm · f/2.8 · ISO 100</span></div>
+          <div class="view-hud top-right"><span class="rec-dot">●</span> <span id="hudScene">PARK / DAYLIGHT</span></div>
+          <div id="focusReticle" class="focus-reticle">⌖</div>
+          <div class="view-bottom-left"><strong id="hudFocal">50<span>mm</span></strong><span id="hudEquivalent">50mm eq.</span></div>
+          <div class="view-bottom-right"><div id="hudAngle">HFOV 39.6°</div><div id="hudSettings">f/2.8 &nbsp; 1/125 &nbsp; ISO 100</div></div>
+          <div id="virtualGuide" class="virtual-guide">드래그: 시선 이동 <span>·</span> W A S D: 이동 <span>·</span> 피사체 클릭: 초점</div>
+          <div class="mobile-move" id="mobileMove" aria-label="이동 조작"><button data-move="forward" aria-label="앞으로">↑</button><div><button data-move="left" aria-label="왼쪽">←</button><button data-move="backward" aria-label="뒤로">↓</button><button data-move="right" aria-label="오른쪽">→</button></div></div>
+        </div>
+        <div class="scene-toolbar"><div class="toolbar-group"><span class="toolbar-caption">SCENE</span><div class="segmented scene-tabs"><button data-scene="park" class="active">🌿 공원</button><button data-scene="city">▤ 거리</button><button data-scene="studio">◈ 스튜디오</button></div></div><div class="toolbar-group"><span class="toolbar-caption">SUBJECT</span><select id="targetSelect" aria-label="피사체 선택"><option value="person">인물</option><option value="car">차량</option><option value="animal">동물</option><option value="flower">꽃</option><option value="tree">나무</option></select><button id="lookAtBtn" class="icon-button" title="피사체를 화면 중앙으로">⌖</button></div><button id="resetView" class="reset-btn" title="시점 초기화">↺ <span>시점 초기화</span></button></div>
+        <div class="metrics">
+          <div class="metric"><span>HORIZONTAL FOV</span><strong id="metricHFov">39.6<small>°</small></strong><div class="metric-caption">수평 화각</div></div>
+          <div class="metric"><span>35MM EQUIVALENT</span><strong id="metricEq">50<small>mm</small></strong><div class="metric-caption">풀프레임 환산</div></div>
+          <div class="metric"><span>DEPTH OF FIELD</span><strong id="metricDof">—</strong><div class="metric-caption" id="metricDofDesc">초점 심도 근사</div></div>
+          <div class="metric"><span>FOCUS DISTANCE</span><strong id="metricDistance">—</strong><div class="metric-caption">피사체까지 거리</div></div>
+        </div>
+        <div id="message" class="notice" role="status" aria-live="polite"><span class="notice-icon">ⓘ</span><div>실제 렌즈 광학계의 보케·플레어·왜곡을 재현한 제품별 광학 프로파일이 아닙니다. 화각과 심도는 계산 기반, 효과는 교육용 연출입니다.</div></div>
+      </section>
+
+      <aside class="controls" aria-label="촬영 설정">
+        <div class="control-head"><div><div class="eyebrow">CAMERA CONFIGURATION</div><h2>촬영 설정 <span>⌘</span></h2></div><button id="resetAllBtn" type="button">초기화 ↺</button></div>
+        <section class="control-section"><div class="section-caption"><span class="num">01</span><span>렌즈 라이브러리</span><span class="section-trail">LENS</span></div>
+          <label for="brandSelect">제조사 / BRAND</label><select id="brandSelect"></select>
+          <label for="lensSearch">렌즈 모델 / MODEL</label><input id="lensSearch" type="search" placeholder="모델명 또는 초점거리 검색" autocomplete="off" />
+          <select id="lensSelect" size="1"></select>
+          <div class="lens-detail"><span class="lens-icon">◉</span><div><strong id="lensDetailName">—</strong><span id="lensDetailMount">—</span></div></div>
+        </section>
+        <section class="control-section"><div class="section-caption"><span class="num">02</span><span>이미지 센서</span><span class="section-trail">SENSOR</span></div>
+          <label for="sensorSelect">센서 규격 / FORMAT</label><select id="sensorSelect"></select><div class="helper" id="sensorHelp">풀프레임 · 크롭 배율 1.00×</div>
+          <label for="ratioSelect">화면 비율 / ASPECT RATIO</label><div class="two-col"><select id="ratioSelect"><option value="3:2">3 : 2</option><option value="4:3">4 : 3</option><option value="16:9">16 : 9</option><option value="1:1">1 : 1</option></select><div class="read-only-chip" id="coverageChip">FF 커버</div></div>
+        </section>
+        <section class="control-section"><div class="section-caption"><span class="num">03</span><span>촬영 파라미터</span><span class="section-trail">EXPOSURE</span></div>
+          <div class="param-heading"><label for="focalRange">초점거리 / FOCAL LENGTH</label><output id="focalValue">50 mm</output></div>
+          <input id="focalRange" type="range" min="24" max="70" value="50" step="1" /><div class="range-ends"><span id="focalMin">24mm</span><span id="focalMax">70mm</span></div>
+          <div class="quick-focals"><span>환산 화각 빠른 비교</span><div><button data-eq="24">24</button><button data-eq="25">25</button><button data-eq="35">35</button><button data-eq="50" class="active">50</button><button data-eq="85">85</button><button data-eq="135">135</button></div><small>선택 렌즈의 범위를 벗어나면 자유 가상 렌즈로 전환</small></div>
+          <div class="param-heading pad-top"><label for="apertureSelect">조리개 / APERTURE</label><output id="apertureValue">f/2.8</output></div><select id="apertureSelect"></select>
+          <div class="field-grid"><div><label for="isoSelect">감도 / ISO</label><select id="isoSelect"></select></div><div><label for="shutterSelect">셔터 / SHUTTER</label><select id="shutterSelect"></select></div></div>
+          <label class="switch-line"><span>피사체 크기 고정<small>초점거리 변경 시 카메라 전·후진</small></span><input id="sizeLock" type="checkbox" role="switch" /><span class="switch-ui"></span></label>
+        </section>
+        <section class="control-section"><div class="section-caption"><span class="num">04</span><span>구도 및 렌즈 효과</span><span class="section-trail">COMPOSITION</span></div>
+          <label for="gridSelect">구도 격자</label><select id="gridSelect"><option value="thirds">3분할 격자</option><option value="center">중앙 십자선</option><option value="golden">황금비 격자</option><option value="diagonal">대각선 구도</option><option value="none">격자 없음</option></select>
+          <label class="switch-line compact"><span>심도 / 배경 흐림<small>3D 화면에서 거리 기반 근사</small></span><input id="dofToggle" type="checkbox" checked role="switch" /><span class="switch-ui"></span></label>
+          <label class="switch-line compact"><span>비네팅<small>주변부 밝기 감소 연출</small></span><input id="vignetteToggle" type="checkbox" checked role="switch" /><span class="switch-ui"></span></label>
+          <label class="switch-line compact"><span>렌즈 플레어<small>빛 번짐 연출</small></span><input id="flareToggle" type="checkbox" role="switch" /><span class="switch-ui"></span></label>
+          <label class="switch-line compact"><span>배럴 왜곡<small>효과 예시 (렌즈 실측 아님)</small></span><input id="distortionToggle" type="checkbox" role="switch" /><span class="switch-ui"></span></label>
+        </section>
+        <section id="liveSettings" class="control-section live-settings hidden"><div class="section-caption"><span class="num">05</span><span>실시간 카메라 보정</span><span class="section-trail">MOBILE</span></div>
+          <label for="deviceSelect">카메라 장치</label><select id="deviceSelect"><option value="">기본 후면 카메라</option></select>
+          <div class="param-heading"><label for="nativeEq">현재 카메라의 환산 초점거리</label><output id="nativeEqValue">26 mm</output></div><input id="nativeEq" type="range" min="12" max="85" step="1" value="26" /><div class="helper" id="liveCalibration">26mm는 가정값입니다. 스마트폰 기종별 스펙으로 보정하세요.</div>
+          <p class="live-note">라이브 화면은 <b>디지털 크롭으로 환산 화각만 비교</b>합니다. 실제 렌즈의 광학 보케, 조리개, ISO, 셔터 속도를 휴대폰 하드웨어에 적용하지 않습니다. 물리적으로 더 넓은 화각도 생성할 수 없습니다.</p>
+          <button id="stopCameraBtn" class="stop-camera">■ &nbsp;카메라 중지</button>
+        </section>
+      </aside>
+    </main>
+    <footer><div>FRAME LAB 3D <span>·</span> OPEN PROTOTYPE</div><div>3D / THREE.JS &nbsp; · &nbsp; CAMERA / MEDIADEVICES &nbsp; · &nbsp; NO UPLOAD / LOCAL-ONLY</div></footer>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module">
+/**
+ * FRAME LAB 3D · curated sample catalogue
+ * Each entry is a reference *specification*, not a calibrated optical profile.
+ * maxA/maxT are the advertised maximum f-numbers at wide/tele.
+ * mounts are informational: physical mount/body compatibility must be checked separately.
+ * Source landing pages listed in README.md.
+ * Extend by appending rows. Versioned catalog/verification data is a future upgrade.
+ */
+const rows = [
+  // brand, name, format, mounts, min focal, max focal, wide F, tele F
+  ['Sony','FE 16-35mm F2.8 GM II','FF','Sony E',16,35,2.8,2.8],
+  ['Sony','FE 20-70mm F4 G','FF','Sony E',20,70,4,4],
+  ['Sony','FE 24-70mm F2.8 GM II','FF','Sony E',24,70,2.8,2.8],
+  ['Sony','FE 24-105mm F4 G OSS','FF','Sony E',24,105,4,4],
+  ['Sony','FE 35mm F1.4 GM','FF','Sony E',35,35,1.4,1.4],
+  ['Sony','FE 50mm F1.2 GM','FF','Sony E',50,50,1.2,1.2],
+  ['Sony','FE 85mm F1.4 GM II','FF','Sony E',85,85,1.4,1.4],
+  ['Sony','FE 70-200mm F2.8 GM OSS II','FF','Sony E',70,200,2.8,2.8],
+  ['Sony','FE 200-600mm F5.6-6.3 G OSS','FF','Sony E',200,600,5.6,6.3],
+  ['Canon','RF 15-35mm F2.8 L IS USM','FF','Canon RF',15,35,2.8,2.8],
+  ['Canon','RF 24-70mm F2.8 L IS USM','FF','Canon RF',24,70,2.8,2.8],
+  ['Canon','RF 24-105mm F4 L IS USM','FF','Canon RF',24,105,4,4],
+  ['Canon','RF 28-70mm F2 L USM','FF','Canon RF',28,70,2,2],
+  ['Canon','RF 50mm F1.2 L USM','FF','Canon RF',50,50,1.2,1.2],
+  ['Canon','RF 85mm F1.2 L USM','FF','Canon RF',85,85,1.2,1.2],
+  ['Canon','RF 70-200mm F2.8 L IS USM','FF','Canon RF',70,200,2.8,2.8],
+  ['Canon','RF 100-500mm F4.5-7.1 L IS USM','FF','Canon RF',100,500,4.5,7.1],
+  ['Nikon','NIKKOR Z 14-24mm f/2.8 S','FF','Nikon Z',14,24,2.8,2.8],
+  ['Nikon','NIKKOR Z 24-70mm f/2.8 S','FF','Nikon Z',24,70,2.8,2.8],
+  ['Nikon','NIKKOR Z 24-120mm f/4 S','FF','Nikon Z',24,120,4,4],
+  ['Nikon','NIKKOR Z 35mm f/1.8 S','FF','Nikon Z',35,35,1.8,1.8],
+  ['Nikon','NIKKOR Z 50mm f/1.2 S','FF','Nikon Z',50,50,1.2,1.2],
+  ['Nikon','NIKKOR Z 85mm f/1.2 S','FF','Nikon Z',85,85,1.2,1.2],
+  ['Nikon','NIKKOR Z 70-200mm f/2.8 VR S','FF','Nikon Z',70,200,2.8,2.8],
+  ['Nikon','NIKKOR Z 180-600mm f/5.6-6.3 VR','FF','Nikon Z',180,600,5.6,6.3],
+  ['Sigma','14-24mm F2.8 DG DN | Art','FF','Sony E · L',14,24,2.8,2.8],
+  ['Sigma','24-70mm F2.8 DG DN II | Art','FF','Sony E · L',24,70,2.8,2.8],
+  ['Sigma','28-45mm F1.8 DG DN | Art','FF','Sony E · L',28,45,1.8,1.8],
+  ['Sigma','35mm F1.4 DG DN | Art','FF','Sony E · L',35,35,1.4,1.4],
+  ['Sigma','85mm F1.4 DG DN | Art','FF','Sony E · L',85,85,1.4,1.4],
+  ['Sigma','18-50mm F2.8 DC DN | Contemporary','APS-C','Sony E · Fujifilm X · Canon RF · L',18,50,2.8,2.8],
+  ['Tamron','17-28mm F/2.8 Di III RXD','FF','Sony E',17,28,2.8,2.8],
+  ['Tamron','28-75mm F/2.8 Di III VXD G2','FF','Sony E · Nikon Z',28,75,2.8,2.8],
+  ['Tamron','35-150mm F/2-2.8 Di III VXD','FF','Sony E · Nikon Z',35,150,2,2.8],
+  ['Tamron','50-400mm F/4.5-6.3 Di III VC VXD','FF','Sony E · Nikon Z',50,400,4.5,6.3],
+  ['Fujifilm','XF 8-16mmF2.8 R LM WR','APS-C','Fujifilm X',8,16,2.8,2.8],
+  ['Fujifilm','XF 16-55mmF2.8 R LM WR II','APS-C','Fujifilm X',16,55,2.8,2.8],
+  ['Fujifilm','XF 23mmF1.4 R LM WR','APS-C','Fujifilm X',23,23,1.4,1.4],
+  ['Fujifilm','XF 33mmF1.4 R LM WR','APS-C','Fujifilm X',33,33,1.4,1.4],
+  ['Fujifilm','XF 56mmF1.2 R WR','APS-C','Fujifilm X',56,56,1.2,1.2],
+  ['Fujifilm','XF 50-140mmF2.8 R LM OIS WR','APS-C','Fujifilm X',50,140,2.8,2.8],
+  ['Panasonic','LUMIX S PRO 24-70mm F2.8','FF','L',24,70,2.8,2.8],
+  ['Panasonic','LUMIX S 24-105mm F4 MACRO O.I.S.','FF','L',24,105,4,4],
+  ['Panasonic','LUMIX S 85mm F1.8','FF','L',85,85,1.8,1.8],
+  ['OM System','M.Zuiko ED 12-40mm F2.8 PRO II','M43','Micro Four Thirds',12,40,2.8,2.8],
+  ['OM System','M.Zuiko ED 40-150mm F2.8 PRO','M43','Micro Four Thirds',40,150,2.8,2.8],
+  ['OM System','M.Zuiko ED 17mm F1.2 PRO','M43','Micro Four Thirds',17,17,1.2,1.2],
+  ['Samyang','AF 35mm F1.4 FE II','FF','Sony E',35,35,1.4,1.4],
+  ['Samyang','AF 85mm F1.4 FE II','FF','Sony E',85,85,1.4,1.4],
+  ['Leica','SUMMILUX-M 50mm f/1.4 ASPH.','FF','Leica M',50,50,1.4,1.4],
+  ['Leica','APO-SUMMICRON-M 35mm f/2 ASPH.','FF','Leica M',35,35,2,2],
+];
+const LENSES = rows.map(([brand,name,format,mounts,min,max,maxA,maxT],i)=>({
+  id:`l${i}`,brand,name,format,mounts,min,max,maxA,maxT
+}));
+const SENSORS = {
+ FF:{label:'풀프레임 · 36 × 24 mm',w:36,h:24,description:'35mm 풀프레임'},
+ APSC:{label:'APS-C · 23.5 × 15.6 mm',w:23.5,h:15.6,description:'Sony / Nikon 계열'},
+ APSCC:{label:'APS-C Canon · 22.3 × 14.9 mm',w:22.3,h:14.9,description:'Canon 크롭'},
+ M43:{label:'마이크로포서드 · 17.3 × 13 mm',w:17.3,h:13,description:'Micro Four Thirds'},
+ INCH:{label:'1인치 · 13.2 × 8.8 mm',w:13.2,h:8.8,description:'1형 센서'},
+ MF:{label:'중형 · 43.8 × 32.9 mm',w:43.8,h:32.9,description:'44×33급 중형'}
+};
+const FSTOPS=[1,1.2,1.4,1.8,2,2.2,2.5,2.8,3.2,3.5,4,4.5,5,5.6,6.3,7.1,8,9,10,11,13,16,18,22,32];
+const ISO_VALUES=[50,100,200,400,800,1600,3200,6400,12800,25600];
+const SHUTTER_VALUES=[['1/4000',1/4000],['1/2000',1/2000],['1/1000',1/1000],['1/500',1/500],['1/250',1/250],['1/125',1/125],['1/60',1/60],['1/30',1/30],['1/15',1/15],['1/8',1/8]];
+
+/**
+ * Frame Lab: dependency-free projected 3D scene fallback.
+ * Uses a real 3D world coordinate system, perspective camera and a Canvas2D painter.
+ * It is deliberately stylized, not a physically based ray tracer.
+ */
+const WORLD = {
+  park:{person:[0,2.5,1.65],car:[4.2,-6,1],animal:[2,2,.65],flower:[-2.3,3.5,1],tree:[-4.4,-1.7,2.8]},
+  city:{person:[0,2.4,1.65],car:[4.5,-3,1],animal:[2.1,1.5,.65],flower:[-2.2,3.3,1],tree:[-4.5,-2.2,2.7]},
+  studio:{person:[0,2.5,1.65],car:[4.7,-3,1],animal:[2.2,1.2,.65],flower:[-2.5,3.6,1],tree:[-4.8,-4,2.5]}
+};
+const SUBJECT_LABEL={person:'인물',car:'자동차',animal:'반려견',flower:'꽃',tree:'나무'};
+function makeFallback(mount, getState, getAngles, onFrame){
+ const canvas=document.createElement('canvas');canvas.className='canvas-fallback';mount.appendChild(canvas);
+ const ctx=canvas.getContext('2d',{alpha:false});
+ const camera={x:0,y:1.75,z:12,yaw:0,pitch:0};
+ let W=800,H=520,px=1,alive=true,frameId=0,last=0;
+ const RAD=Math.PI/180;
+ function resize(){const r=mount.getBoundingClientRect();W=Math.max(1,Math.round(r.width));H=Math.max(1,Math.round(r.height));px=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(W*px);canvas.height=Math.round(H*px);canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(px,0,0,px,0,0);}
+ function position(key){let p=WORLD[getState().scene]?.[key]||WORLD.park.person;return {x:p[0],z:p[1],y:p[2]};}
+ function focusDistance(){const p=position(getState().target);return Math.hypot(camera.x-p.x,camera.y-p.y,camera.z-p.z);}
+ function lookAt(key){const p=position(key);const dx=p.x-camera.x,dy=p.y-camera.y,dz=p.z-camera.z;camera.yaw=Math.atan2(-dx,-dz);camera.pitch=Math.atan2(dy,Math.hypot(dx,dz));}
+ function reset(){camera.x=0;camera.y=1.75;camera.z=12;lookAt(getState().target);}
+ function move(dir,delta){const d=delta*4.8,ca=Math.cos(camera.yaw),sa=Math.sin(camera.yaw);
+   if(dir==='forward'){camera.x-=sa*d;camera.z-=ca*d;}
+   else if(dir==='backward'){camera.x+=sa*d;camera.z+=ca*d;}
+   else if(dir==='right'){camera.x+=ca*d;camera.z-=sa*d;}
+   else if(dir==='left'){camera.x-=ca*d;camera.z+=sa*d;}
+   else if(dir==='up')camera.y+=d;else if(dir==='down')camera.y-=d;
+   camera.x=Math.max(-70,Math.min(70,camera.x));camera.y=Math.max(.25,Math.min(14,camera.y));camera.z=Math.max(-90,Math.min(80,camera.z));
+ }
+ function projected(x,y,z){
+   const xx=x-camera.x,yy=y-camera.y,zz=z-camera.z;
+   const ca=Math.cos(camera.yaw),sa=Math.sin(camera.yaw),cp=Math.cos(camera.pitch),sp=Math.sin(camera.pitch);
+   const X=ca*xx-sa*zz,Z=sa*xx+ca*zz,Y=cp*yy+sp*Z,ZZ=-sp*yy+cp*Z;
+   const d=-ZZ;
+   if(d<=.10)return null;
+   const f=(H*.5)/Math.tan(getAngles().vert*RAD*.5);
+   const s=f/d;
+   return {x:W*.5+X*s,y:H*.5-Y*s,d,s};
+ }
+ function drawPoly(points,color,stroke){const a=points.map(p=>projected(...p));if(a.some(v=>!v))return;ctx.beginPath();a.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=color;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
+ function line3(a,b,color,width=1){let p=projected(...a),q=projected(...b);if(!p||!q)return;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.lineWidth=width;ctx.strokeStyle=color;ctx.stroke();}
+ function cube(x,y,z,w,h,d,colors){let l=x-w/2,r=x+w/2,b=y,t=y+h,n=z-d/2,f=z+d/2;
+   drawPoly([[l,b,n],[r,b,n],[r,t,n],[l,t,n]],colors[1]||colors[0]);
+   drawPoly([[l,b,f],[r,b,f],[r,t,f],[l,t,f]],colors[0]);
+   drawPoly([[l,t,n],[r,t,n],[r,t,f],[l,t,f]],colors[2]||colors[0]);
+   drawPoly([[l,b,n],[l,b,f],[l,t,f],[l,t,n]],colors[1]||colors[0]);
+   drawPoly([[r,b,n],[r,b,f],[r,t,f],[r,t,n]],colors[1]||colors[0]);
+ }
+ function ellipse(x,y,rx,ry,color,rotation=0){ctx.beginPath();ctx.ellipse(x,y,Math.max(.3,rx),Math.max(.3,ry),rotation,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();}
+ function dot(x,y,z,rad,color,stretch=1){const p=projected(x,y,z);if(!p)return;let rr=rad*p.s;ellipse(p.x,p.y,rr,rr*stretch,color);}
+ function shadow(x,z,r){const p=projected(x,.025,z);if(!p)return;ellipse(p.x,p.y,r*p.s*.8,r*p.s*.21,'#081c2540');}
+ function tree(x,z,s=1){const p=projected(x,0,z);if(!p)return;shadow(x,z,1.3*s);cube(x,0,z,.32*s,2*s,.34*s,['#78624a','#604b3a','#988067']);dot(x,2.1*s,z,1.12*s,'#3a7653',.8);dot(x-.44*s,2.45*s,z+.15*s,.9*s,'#458964',.74);dot(x+.48*s,2.45*s,z,.95*s,'#4f956b',.78);dot(x,2.9*s,z,.88*s,'#5b9f74',.8);}
+ function flower(x,z,s=1,color='#ffbad4'){const p=projected(x,.7*s,z);if(!p)return;shadow(x,z,.18*s);line3([x,.04,z],[x,.78*s,z],'#3c794f',Math.max(1,p.s*.038));for(let i=0;i<7;i++){const a=i*Math.PI*2/7;ellipse(p.x+Math.cos(a)*.13*p.s*s,p.y+Math.sin(a)*.13*p.s*s,.115*p.s*s,.085*p.s*s,color,a);}ellipse(p.x,p.y,.09*p.s*s,.09*p.s*s,'#ffd16f');}
+ function person(x,z,s=1,color='#dd987e'){
+   const p=projected(x,1.15*s,z);if(!p)return;shadow(x,z,.52*s);
+   const scale=p.s*s;
+   const point=(xx,yy)=>projected(x+xx*s,yy*s,z);
+   const L=point(-.15,.06),R=point(.15,.06),kL=point(-.15,.87),kR=point(.15,.87);
+   if(!L||!R||!kL||!kR)return;
+   ctx.lineWidth=Math.max(2,scale*.15);ctx.lineCap='round';ctx.strokeStyle='#354c61';for(const [a,b] of [[L,kL],[R,kR]]){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
+   ctx.lineWidth=Math.max(2,scale*.11);ctx.strokeStyle=color;
+   for(const side of [-1,1]){let a=point(side*.27,1.5),b=point(side*.38,1.04);if(a&&b){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}
+   const center=point(0,1.38);if(center){ellipse(center.x,center.y,scale*.28,scale*.43,color);}
+   const face=point(0,1.97);if(face){ellipse(face.x,face.y,scale*.235,scale*.25,'#f1cbaa');ellipse(face.x,face.y-scale*.17,scale*.22,scale*.08,'#352b35');}
+ }
+ function dog(x,z,s=1){const p=projected(x,.55*s,z);if(!p)return;shadow(x,z,.58*s);
+  dot(x,.56*s,z,.43*s,'#b58b60',.57);dot(x+.42*s,.76*s,z,.31*s,'#c49a70',.86);
+  for(const xx of [-.31,.28])for(const zz of [-.16,.16])line3([x+xx*s,.50*s,z+zz*s],[x+xx*s,.06,z+zz*s],'#99704f',Math.max(1,p.s*.09));
+  dot(x+.65*s,.69*s,z,.16*s,'#e6c8a3',.7);dot(x+.77*s,.72*s,z,.06*s,'#2e3537');line3([x-.35*s,.73*s,z],[x-.75*s,1.05*s,z],'#bd9268',Math.max(1,p.s*.08));
+ }
+ function car(x,z,s=1,col='#d7755c'){
+  const p=projected(x,.6*s,z);if(!p)return;shadow(x,z,2.1*s);
+  cube(x,.33*s,z,3.8*s,.76*s,1.75*s,[col,'#864f46','#f0a789']);
+  cube(x-.20*s,.94*s,z,2.08*s,.60*s,1.46*s,['#527c8d','#426172','#90b5b6']);
+  for(const cx of [-1.24,1.22])for(const zz of [-.81,.81]){dot(x+cx*s,.42*s,z+zz*s,.39*s,'#182532');dot(x+cx*s,.42*s,z+zz*s,.17*s,'#c3d1d1');}
+  for(const zz of [-.58,.58])dot(x+1.95*s,.70*s,z+zz*s,.10*s,'#ffe7aa');
+ }
+ function building(x,z,w,h,d,col){cube(x,0,z,w,h,d,[col,'#536477','#8c9aa8']);
+  for(let floor=1;floor<h/2-1;floor+=1)for(let c=0;c<3;c++){
+    let wx=x-w*.33+c*w*.33,zz=z+d/2+.02;
+    drawPoly([[wx-.30,floor*2,zz],[wx+.30,floor*2,zz],[wx+.30,floor*2+.92,zz],[wx-.30,floor*2+.92,zz]],(floor+c)%3?'#aed2d0':'#fee0ab');
+  }
+ }
+ function background(){const theme=getState().scene;
+  const sky=ctx.createLinearGradient(0,0,0,H);if(theme==='park'){sky.addColorStop(0,'#83b3c6');sky.addColorStop(.54,'#b6d7d0');sky.addColorStop(1,'#9fb593');}else if(theme==='city'){sky.addColorStop(0,'#8d96b7');sky.addColorStop(.55,'#dfb5a2');sky.addColorStop(1,'#84949a');}else{sky.addColorStop(0,'#7d909f');sky.addColorStop(1,'#aeb6b9');}
+  ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+  const sun=projected(-18,24,-30);if(sun&&theme!=='studio'){const g=ctx.createRadialGradient(sun.x,sun.y,0,sun.x,sun.y,W*.28);g.addColorStop(0,'#fff5cbb2');g.addColorStop(.10,'#ffe2bd55');g.addColorStop(1,'#fff1d000');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+  if(theme==='studio'){drawPoly([[-80,0,-18],[80,0,-18],[80,0,60],[-80,0,60]],'#9aa8b0');drawPoly([[-80,0,-18],[80,0,-18],[80,60,-18],[-80,60,-18]],'#8495a0');}
+  else drawPoly([[-180,-.04,-180],[180,-.04,-180],[180,-.04,160],[-180,-.04,160]],theme==='park'?'#759f78':'#677782');
+ }
+ function ground(){const theme=getState().scene;
+  if(theme==='park'){drawPoly([[-2.3,.0,-60],[2.3,0,-60],[3.0,.0,60],[-3,.0,60]],'#d5c6a4');
+   for(let i=-8;i<=8;i++){const z=i*5;line3([-2.6,0,z],[-2.6,0,z+3],'#dfdcc4',1);line3([2.6,0,z],[2.6,0,z+3],'#dfdcc4',1);} }
+  if(theme==='city'){drawPoly([[-5.0,.03,-150],[5.0,.03,-150],[5.0,.03,150],[-5.0,.03,150]],'#424b57');
+   for(let z=-65;z<=40;z+=6)drawPoly([[-.14,.05,z], [.14,.05,z],[.14,.05,z+3],[-.14,.05,z+3]],'#e7dbad');
+   for(let x of [-5.1,5.1])line3([x,.03,-100],[x,.03,100],'#d4bba0',2);
+  }
+  if(theme==='studio'){drawPoly([[-6,.04,-6],[6,.04,-6],[6,.04,6],[-6,.04,6]],'#cad3d2');}
+ }
+ function draw(){if(!alive)return;
+   if(mount.clientWidth!==W||mount.clientHeight!==H)resize();
+   ctx.clearRect(0,0,W,H);background();ground();
+   const scene=getState().scene;
+   const items=[];
+   const add=(kind,x,z,s=1,color)=>{const p=projected(x,0,z);if(p)items.push({kind,x,z,s,color,depth:p.d});};
+   if(scene==='park'){
+      for(let i=0;i<20;i++){let x=(i%2?-1:1)*(6+(i%4)*2.8),z=-39+i*3.7;add('tree',x,z,.72+(i%4)*.13);}
+      for(let i=0;i<36;i++){let x=Math.sin(i*12.7)*9.5,z=Math.cos(i*6.7)*13-5;if(Math.abs(x)>3)add('flower',x,z,.32+(i%4)*.10,['#f5b9cc','#f9df8c','#ead2ff'][i%3]);}
+   }else if(scene==='city'){
+      for(let i=0;i<18;i++){let x=(i%2?-1:1)*(8+(i%3)*3),z=-49+i*5.4;add('building',x,z,1,['#71848f','#9b8d83','#5e7988'][i%3]);}
+      for(let i=0;i<8;i++)add('tree',(i%2?-1:1)*6.6,-28+i*6,.65);
+   }else{
+      for(let x of [-7,7])add('softbox',x,-2,1);
+   }
+   const P=WORLD[scene];add('person',P.person[0],P.person[1],1,scene==='city'?'#8ba6b8':'#d6947a');add('car',P.car[0],P.car[1],1,scene==='city'?'#68afb2':'#c56b5a');add('dog',P.animal[0],P.animal[1]);add('flower',P.flower[0],P.flower[1],1.45,'#ffafd2');add('tree',P.tree[0],P.tree[1],1.1);
+   items.sort((a,b)=>b.depth-a.depth);
+   for(const o of items){
+      if(o.kind==='tree')tree(o.x,o.z,o.s);
+      if(o.kind==='flower')flower(o.x,o.z,o.s,o.color);
+      if(o.kind==='person')person(o.x,o.z,o.s,o.color);
+      if(o.kind==='car')car(o.x,o.z,o.s,o.color);
+      if(o.kind==='dog')dog(o.x,o.z,o.s);
+      if(o.kind==='building')building(o.x,o.z,4.7,8+(Math.abs(Math.floor(o.z))*7%11),5,o.color);
+      if(o.kind==='softbox'){cube(o.x,.2,-2,.08,3.7,.1,['#333e4c']);cube(o.x,3.6,-2,1.5,1.6,.18,['#effaff','#b6d5da','#e8f8fd']);}
+   }
+   // Active subject annotation. It stays in the world when the user navigates.
+   const point=position(getState().target);const target=projected(point.x,point.y,point.z);
+   if(target&&target.x>-50&&target.x<W+50&&target.y>-50&&target.y<H+50){
+      const radius=Math.min(32,Math.max(11,26*50/getState().focal));
+      ctx.strokeStyle='#91ffe5bb';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(target.x,target.y,radius,0,Math.PI*2);ctx.stroke();
+      ctx.font='600 11px system-ui,sans-serif';ctx.textAlign='center';ctx.fillStyle='#e2fff7';ctx.fillText(SUBJECT_LABEL[getState().target],target.x,target.y-radius-9);
+   }
+   // Fallback optical effect: mild screen-space defocus, not lens-specific blur.
+   if(getState().dof&&getState().aperture<=2){ctx.fillStyle='#e7f9e904';ctx.fillRect(0,0,W,H);}
+   if(getState().distortion){ctx.strokeStyle='#ffffff1b';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(W/2,H/2,W*.48,H*.48,0,0,2*Math.PI);ctx.stroke();}
+   if(getState().flare){const g=ctx.createRadialGradient(W*.78,H*.22,0,W*.78,H*.22,W*.32);g.addColorStop(0,'#fff5c588');g.addColorStop(1,'#fff4b900');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+ }
+ function animate(t){if(!alive)return;let elapsed=Math.min(.05,(t-last)/1000||0);last=t;onFrame(elapsed);draw();frameId=requestAnimationFrame(animate);}
+ function setOrientation(dx,dy){camera.yaw-=dx*.004;camera.pitch=Math.max(-1.4,Math.min(1.4,camera.pitch-dy*.004));}
+ reset();resize();requestAnimationFrame(animate);
+ const observer=new ResizeObserver(resize);observer.observe(mount);
+ return {canvas,camera,reset,lookAt,move,position,focusDistance,setOrientation,draw,destroy(){alive=false;cancelAnimationFrame(frameId);observer.disconnect();canvas.remove();}};
+}
+
+
+let THREE=null;
+try {THREE=await Promise.race([import('three'),new Promise((_,rej)=>setTimeout(()=>rej(new Error('CDN timeout')),4500))]);}
+catch(err){console.warn('Three.js not available; using dependency-free 3D perspective fallback.',err);}
+
+
+// FRAME LAB 3D / static GitHub Pages demonstration
+const $ = id => document.getElementById(id);
+const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo,x));
+const fmt = x => (Number.isInteger(x) ? String(x) : x.toFixed(1));
+const fullFrameDiagonal = Math.hypot(36,24);
+const initialLens = LENSES.find(l=>l.brand==='Sony' && l.name.includes('24-70mm F2.8 GM II'));
+const state = {
+  mode:'3d', scene:'park', target:'person', lensId:initialLens.id, brand:'Sony',
+  sensor:'FF', ratio:'3:2', focal:50, aperture:2.8, iso:100, shutter:'1/125',
+  grid:'thirds', dof:true, vignette:true, flare:false, distortion:false,
+  sizeLock:false, nativeEq:26, cameraId:'',
+};
+let cameraStream=null, videoTrack=null, renderer=null, camera=null, scene=null, sun=null, fallback=null;
+let renderTarget=null, postScene=null, postCamera=null, shader=null;
+let pointerStart=null, dragPointerId=null, dragging=false;
+const heldKeys = new Set();
+let toastTimeout;
+const worlds={};
+const clock = THREE ? new THREE.Clock() : null;
+const shadowMaterials={};
+const sunPosition = THREE ? new THREE.Vector3(-18,24,-30) : null;
+let lastMetricUpdate=0;
+const names={park:'PARK / DAYLIGHT',city:'CITY / GOLDEN HOUR',studio:'STUDIO / SOFTBOX'};
+const targets={};
+
+function toast(text){const t=$('toast');t.textContent=text;t.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.classList.remove('show'),3200);}
+function notice(msg){$('message').innerHTML='<span class="notice-icon">ⓘ</span><div>'+msg+'</div>';}
+function getLens(){return LENSES.find(l=>l.id===state.lensId)||null;}
+function getSensor(){
+  const src=SENSORS[state.sensor];const l=getLens();
+  // A smaller lens image circle cannot fill a larger nominal sensor. Simulate the crop area.
+  let cover=l?.format==='APS-C'?SENSORS.APSC:l?.format==='M43'?SENSORS.M43:SENSORS.FF;
+  if(!l)cover=src;
+  const area=Math.min(1,Math.hypot(cover.w,cover.h)/Math.hypot(src.w,src.h));
+  return {w:src.w*area,h:src.h*area,isCropped:area<.995,source:src};
+}
+function cropFactor(){const s=getSensor();return fullFrameDiagonal/Math.hypot(s.w,s.h);}
+function equiv(){return state.focal*cropFactor();}
+function maxApertureAt(f){
+  const lens=getLens();if(!lens)return 1;
+  if(lens.min===lens.max)return lens.maxA;
+  // Variable aperture max-f estimate, not a measured aperture staircase.
+  return lens.maxA + (lens.maxT-lens.maxA)*((f-lens.min)/(lens.max-lens.min));
+}
+function focalAngles(){
+  const s=getSensor();let w=s.w,h=s.h;
+  const [rw,rh]=state.ratio.split(':').map(Number);const frameRatio=rw/rh;
+  if(frameRatio<w/h)w=h*frameRatio;else h=w/frameRatio;
+  return {horiz:2*Math.atan(w/(2*state.focal))*180/Math.PI,vert:2*Math.atan(h/(2*state.focal))*180/Math.PI,w,h};
+}
+function getSelectedPosition(){
+  if(fallback){const p=fallback.position(state.target);return {x:p.x,y:p.y,z:p.z};}
+  const item=targets[state.scene]?.[state.target];
+  return item?item.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0,item.userData.focusY||0,0)):new THREE.Vector3(0,1.4,1);
+}
+function focusDistance(){return fallback?fallback.focusDistance():camera?camera.position.distanceTo(getSelectedPosition()):10;}
+function depthOfField(){
+  const sensor=getSensor(),f=state.focal,N=state.aperture,s=focusDistance()*1000;
+  const coc=.03*(Math.hypot(sensor.w,sensor.h)/fullFrameDiagonal);
+  const H=f*f/(N*coc)+f;
+  const near=(H*s)/(H+(s-f));
+  const far=(H<=s-f)?Infinity:(H*s)/(H-(s-f));
+  return {near:near/1000,far:far/1000,range:(far-near)/1000};
+}
+function updateMetrics(){
+  const {horiz,vert,h}=focalAngles(),cf=cropFactor(),dof=depthOfField();
+  if(camera){camera.aspect=$('viewport').clientWidth/Math.max(1,$('viewport').clientHeight);camera.fov=vert;camera.updateProjectionMatrix();}
+  $('hudLens').textContent=getLens()?.name||'자유 가상 렌즈 · FREE FOCAL';
+  $('hudSpec').textContent=`${fmt(state.focal)}mm · f/${fmt(state.aperture)} · ISO ${state.iso}`;
+  $('hudFocal').innerHTML=`${fmt(state.focal)}<span>mm</span>`;
+  $('hudEquivalent').textContent=`${fmt(equiv())}mm eq.`;
+  $('hudAngle').textContent=`HFOV ${horiz.toFixed(1)}° · VFOV ${vert.toFixed(1)}°`;
+  $('hudSettings').textContent=`f/${fmt(state.aperture)}     ${state.shutter}     ISO ${state.iso}`;
+  $('metricHFov').innerHTML=`${horiz.toFixed(1)}<small>°</small>`;
+  $('metricEq').innerHTML=`${fmt(Math.round(equiv()*10)/10)}<small>mm</small>`;
+  $('metricDof').textContent=state.mode==='live'?'참고값':(!Number.isFinite(dof.range)?'∞':`${dof.range<1?dof.range.toFixed(2):dof.range.toFixed(1)} m`);
+  $('metricDistance').textContent=state.mode==='live'?'미측정':`${focusDistance().toFixed(1)} m`;
+  $('metricDofDesc').textContent=state.mode==='live'?'실제 거리 측정 불가':`근점 ${dof.near.toFixed(1)}m / 원점 ${Number.isFinite(dof.far)?dof.far.toFixed(1)+'m':'∞'}`;
+  $('focalValue').textContent=`${fmt(state.focal)} mm`;
+  $('apertureValue').textContent=`f/${fmt(state.aperture)}`;
+  $('focalRange').value=String(state.focal);
+  const nativeRange=equiv()/state.nativeEq;
+  if(state.mode==='live'){
+    $('hudScene').textContent=`LIVE CAMERA · ${nativeRange>=1?nativeRange.toFixed(2)+'× CROP':'NO WIDER FOV'}`;
+    $('liveVideo').style.transform=`scale(${Math.max(1,nativeRange)})`;
+  }
+  // Approximate 3D exposure response, not an emulation of a camera exposure meter.
+  const seconds=SHUTTER_VALUES.find(s=>s[0]===state.shutter)?.[1]??1/125;
+  const relativeExposure=(state.iso/100)*(seconds/(1/125))*Math.pow(4/state.aperture,2);
+  const stops=Math.log2(relativeExposure);
+  if(renderer){renderer.toneMappingExposure=clamp(Math.pow(2,stops*.25),.35,2.4);}
+  const dark=clamp(-stops*.075,0,.45),light=clamp(stops*.065,0,.24);
+  $('exposureLayer').style.background=state.mode==='live'?`rgba(${light>0?'255,246,215':'0,0,0'},${Math.max(dark,light)})`:'transparent';
+  if(shader){shader.uniforms.uFocus.value=focusDistance();shader.uniforms.uFocal.value=state.focal;shader.uniforms.uAperture.value=state.aperture;shader.uniforms.uDof.value=state.dof?1:0;shader.uniforms.uDistort.value=state.distortion?1:0;}
+  $('vignetteLayer').style.display=state.vignette?'block':'none';
+  $('flareLayer').style.opacity=state.flare?'0.85':'0';
+  $('gridLayer').className=`grid-layer ${state.grid}`;
+  $('coverageChip').textContent=getSensor().isCropped?'화각 크롭':'센서 커버';
+  const compatibleNotes=getSensor().isCropped?'선택한 렌즈의 이미지 서클이 센서 전체를 덮지 못해 유효 영역을 크롭합니다. ':' ';
+  $('sensorHelp').textContent=`환산 크롭 ${cf.toFixed(2)}× · 센서 ${getSensor().w.toFixed(1)}×${getSensor().h.toFixed(1)}mm. ${compatibleNotes}`;
+  document.querySelectorAll('[data-eq]').forEach(b=>b.classList.toggle('active',Math.abs(Number(b.dataset.eq)-equiv())<.7));
+}
+
+// ---------- 3D procedural subjects. All geometry is authored in this demo. ----------
+function mat(c,metalness=0,roughness=.78){return new THREE.MeshStandardMaterial({color:c,metalness,roughness});}
+const MAT=THREE?{
+  skin:mat('#ecc5a8'),hair:mat('#242b35'),jacket:mat('#ca8b68'),jeans:mat('#243c52'),
+  shoe:mat('#e5e5d5'),white:mat('#f2eee1'),black:mat('#232b34'),
+  grass:mat('#648a64'),road:mat('#384653'),stem:mat('#407b4e'),leaf:mat('#497951'),
+  car:mat('#bf6154',.25,.34),glass:mat('#6a9ca8',.1,.2),dog:mat('#b08a62'),
+  flower:mat('#f9c9de'),sun:mat('#f7d394')
+}:null;
+function shape(geo,ma,x=0,y=0,z=0,parent){const m=new THREE.Mesh(geo,ma);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;if(parent)parent.add(m);return m;}
+function box(w,h,d,ma,x,y,z,parent){return shape(new THREE.BoxGeometry(w,h,d),ma,x,y,z,parent);}
+function ball(r,ma,x,y,z,parent){return shape(new THREE.SphereGeometry(r,12,9),ma,x,y,z,parent);}
+function cylinder(rt,rb,h,ma,x,y,z,parent){return shape(new THREE.CylinderGeometry(rt,rb,h,10),ma,x,y,z,parent);}
+function cone(r,h,ma,x,y,z,parent){return shape(new THREE.ConeGeometry(r,h,9),ma,x,y,z,parent);}
+function groupAt(parent,x,z){const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);return g;}
+function person(parent,x,z,top='#cb8a61'){
+ const g=groupAt(parent,x,z);const coat=mat(top),pants=MAT.jeans;
+ cylinder(.26,.3,.76,coat,0,1.32,0,g);
+ ball(.245,MAT.skin,0,1.95,0,g);
+ const hair=ball(.25,MAT.hair,0,2.07,-.035,g);hair.scale.set(1,.48,1.02);
+ [-1,1].forEach(side=>{const arm=cylinder(.09,.085,.73,coat,side*.36,1.31,.02,g);arm.rotation.z=side*.19; cylinder(.115,.095,.89,pants,side*.16,.55,0,g);box(.2,.11,.39,MAT.shoe,side*.16,.075,.12,g);});
+ ball(.035,MAT.black,-.085,1.96,.215,g);ball(.035,MAT.black,.085,1.96,.215,g);
+ g.userData.focusY=1.58;return g;
+}
+function car(parent,x,z,paint='#b85851'){
+ const g=groupAt(parent,x,z);const m=mat(paint,.38,.3);
+ box(3.8,.58,1.85,m,0,.64,0,g);
+ box(2.12,.57,1.55,m,-.18,1.14,0,g);
+ box(1.91,.37,1.57,MAT.glass,-.19,1.18,0,g);
+ box(.24,.43,1.67,m,-1.27,1.18,0,g);
+ const rubber=mat('#1b2228'),hub=mat('#b5b8b9',.65,.3);
+ for(const cx of [-1.23,1.22])for(const cz of [-.9,.9]){
+   const wheel=cylinder(.41,.41,.2,rubber,cx,.4,cz,g);wheel.rotation.x=Math.PI/2;
+   const wheelInner=cylinder(.20,.20,.22,hub,cx,.4,cz,g);wheelInner.rotation.x=Math.PI/2;
+ }
+ for(const side of [-1,1]){ball(.16,mat(side>0?'#fff2b5':'#ee6a55'),1.86,.69,side*.53,g);}
+ g.userData.focusY=.92;return g;
+}
+function dog(parent,x,z){
+ const g=groupAt(parent,x,z);
+ const b=ball(.43,MAT.dog,0,.55,0,g);b.scale.set(1.45,.8,.69);
+ ball(.30,MAT.dog,.52,.79,0,g);
+ const muzzle=ball(.19,mat('#e1c8a0'),.76,.68,0,g);muzzle.scale.set(1,.65,.78);
+ for(const s of [-1,1]){const ear=cone(.12,.29,mat('#825b3f'),.47,.98,s*.2,g);ear.rotation.z=-.13;
+  cylinder(.095,.1,.47,MAT.dog,-.38,.24,s*.24,g);cylinder(.09,.1,.48,MAT.dog,.36,.24,s*.2,g);
+  ball(.035,MAT.black,.76,.82,s*.14,g);
+ }
+ const tail=cylinder(.065,.07,.5,MAT.dog,-.67,.83,0,g);tail.rotation.z=.8;
+ ball(.065,MAT.black,.91,.67,0,g);
+ g.userData.focusY=.65;return g;
+}
+function flower(parent,x,z,color='#f4bdd9',size=1){
+ const g=groupAt(parent,x,z);g.scale.setScalar(size);
+ cylinder(.027,.04,.77,MAT.stem,0,.41,0,g);
+ for(let i=0;i<6;i++){const a=i*Math.PI/3;const petal=ball(.16,mat(color),Math.cos(a)*.18,.83+Math.sin(a)*.05,Math.sin(a)*.18,g);petal.scale.set(.9,.55,.8);}
+ ball(.11,MAT.sun,0,.86,0,g);
+ const leaf=ball(.14,MAT.leaf,-.12,.4,0,g);leaf.scale.set(1.6,.35,.56);
+ g.userData.focusY=.75*size;return g;
+}
+function tree(parent,x,z,scale=1){
+ const g=groupAt(parent,x,z);g.scale.setScalar(scale);
+ cylinder(.15,.24,2.2,mat('#78644b'),0,1.1,0,g);
+ for(let i=0;i<3;i++){const level=2.0+i*.66;const r=1.28-i*.2;
+  const leaf=ball(r,mat(i===0?'#4b845a':i===1?'#598e62':'#6d9a6a'),0,level,0,g);leaf.scale.set(1,.67,1);
+ }
+ g.userData.focusY=2.8*scale;return g;
+}
+function setupGround(g,c){const floor=shape(new THREE.PlaneGeometry(400,400),mat(c),0,-.045,0,g);floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;floor.castShadow=false;}
+function tagSubject(g,key){g.traverse(o=>{if(o.isMesh)o.userData.subject=key;});}
+function register(world,key,obj){tagSubject(obj,key);targets[world][key]=obj;}
+function addFlowers(g,count,seed){for(let i=0;i<count;i++){
+ const x=Math.sin(i*25.17+seed)*8.5, z=-5+Math.cos(i*17.8+seed)*8.5;
+ if(Math.hypot(x,z-2)<2.7||Math.abs(x)<1.9&&z>-5)continue;
+ flower(g,x,z,['#f5b9cb','#f9e4a4','#e6c4ef','#e8ecf2'][i%4],.4+.2*(i%3));
+}}
+function buildPark(){
+ const key='park',g=new THREE.Group();scene.add(g);targets[key]={};setupGround(g,'#6b9072');
+ const path=box(3.4,.012,28,mat('#bea990'),0,-.023,1,g);path.receiveShadow=true;path.castShadow=false;
+ const road=box(50,.014,5.0,mat('#525c62'),0,-.01,-9.5,g);road.castShadow=false;
+ for(let i=-5;i<=5;i++)box(2.3,.022,.1,mat('#e6dfb8'),i*4,0,-9.5,g);
+ for(let i=0;i<12;i++){const x=(i%2===0?-1:1)*(5.7+(i%4)*1.8),z=-13+Math.floor(i/2)*5;
+ tree(g,x,z,.76+(i%3)*.18);}
+ for(let i=0;i<4;i++){const b=groupAt(g,(i%2?-3.8:3.8),-1-i*3);box(1.45,.12,.55,mat('#8d6845'),0,.54,0,b);box(1.5,.45,.11,mat('#8d6845'),0,.88,-.19,b);}
+ addFlowers(g,55,2);
+ register(key,'person',person(g,0,2.5));
+ register(key,'car',car(g,4.2,-6,'#d1775b'));
+ register(key,'animal',dog(g,2,2));
+ register(key,'flower',flower(g,-2.3,3.5,'#ff9ac4',1.35));
+ register(key,'tree',tree(g,-4.4,-1.7,1.15));
+ return g;
+}
+function buildCity(){
+ const key='city',g=new THREE.Group();scene.add(g);targets[key]={};setupGround(g,'#5a6570');
+ box(70,.03,9,mat('#363f49'),0,.005,-5,g);
+ for(let i=-5;i<6;i++)box(2.2,.025,.15,mat('#e2d5ae'),i*4,.03,-5,g);
+ for(let i=0;i<13;i++){
+  const x=(i%2===0?-1:1)*(7.5+(i%3)*2),z=-9-(i%5)*5;
+  const h=7+(i*13%13);
+  box(4.6,h,5,mat(['#6a7883','#637d89','#9d8b7c','#4b6775'][i%4]),x,h/2,z,g);
+  for(let row=0;row<Math.floor(h/2)-1;row++)for(let col=0;col<3;col++)
+    box(.67,.78,.03,mat(row%3===0?'#f4d2a1':'#9bc0ce'),x-1.3+col*1.2,1.8+row*2,z+2.52,g);
+ }
+ for(let i=0;i<5;i++){tree(g,-6.5,-12+i*4,.65);tree(g,6.5,-13+i*4,.65);}
+ // street lights
+ for(let i=0;i<3;i++){let x=-5.5+i*5; cylinder(.06,.08,4,mat('#31363d'),x,2,-4,g);ball(.22,mat('#fff0c2'),x,4.04,-4,g);}
+ register(key,'person',person(g,0,2.4,'#6c99b0'));
+ register(key,'car',car(g,4.5,-3,'#7bb2b6'));
+ register(key,'animal',dog(g,2.1,1.5));
+ register(key,'flower',flower(g,-2.2,3.3,'#e9bbec',1.45));
+ register(key,'tree',tree(g,-4.5,-2.2,.93));
+ return g;
+}
+function buildStudio(){
+ const key='studio',g=new THREE.Group();scene.add(g);targets[key]={};setupGround(g,'#a6aeb0');
+ box(90,25,.4,mat('#8c9da6'),0,12.5,-17,g);
+ box(.4,25,70,mat('#84949c'),-30,12.5,-2,g);
+ box(.4,25,70,mat('#84949c'),30,12.5,-2,g);
+ const riser=cylinder(5.0,5.0,.12,mat('#bbc1c3'),0,.06,0,g);riser.castShadow=false;
+ const softbox=mat('#d9f3ff',.1,.28);
+ for(const x of [-6,6]){const s=groupAt(g,x,-1);cylinder(.04,.04,4,mat('#333942'),0,2,0,s);const b=box(1.4,1.5,.15,softbox,0,4.0,0,s);b.rotation.y=x>0?-.3:.3;}
+ for(let i=0;i<4;i++){
+   const p=groupAt(g,(i-1.5)*5,-8);box(1.2,.8,1.2,mat('#8d7769'),0,.4,0,p);
+ }
+ register(key,'person',person(g,0,2.5,'#b484a1'));
+ register(key,'car',car(g,4.7,-3,'#c99e72'));
+ register(key,'animal',dog(g,2.2,1.2));
+ register(key,'flower',flower(g,-2.5,3.6,'#eea2b1',1.5));
+ register(key,'tree',tree(g,-4.8,-4,.85));
+ return g;
+}
+
+// -------- Renderer, view movement, and approximate screen-space defocus --------
+function createRenderer(){
+ const view=$('viewport');
+ scene=new THREE.Scene();scene.background=new THREE.Color('#86b7c4');scene.fog=new THREE.Fog('#86b7c4',46,155);
+ camera=new THREE.PerspectiveCamera(35,1,.08,400);camera.rotation.order='YXZ';
+ camera.position.set(0,1.75,12);scene.add(camera);
+ scene.add(new THREE.HemisphereLight('#e1f2fb','#7d7159',2));
+ sun=new THREE.DirectionalLight('#fff0d2',3);
+ sun.position.copy(sunPosition);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
+ sun.shadow.camera.left=-34;sun.shadow.camera.right=34;sun.shadow.camera.top=34;sun.shadow.camera.bottom=-34;
+ sun.shadow.normalBias=.023;scene.add(sun);
+ const sunMesh=ball(2.4,new THREE.MeshBasicMaterial({color:'#fff2cb',fog:false}),sunPosition.x,sunPosition.y,sunPosition.z,scene);sunMesh.castShadow=false;
+ renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,preserveDrawingBuffer:true,powerPreference:'high-performance'});
+ renderer.outputColorSpace=THREE.SRGBColorSpace;
+ renderer.toneMapping=THREE.ACESFilmicToneMapping;
+ renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+ renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.65));
+ view.querySelector('#webglMount').appendChild(renderer.domElement);
+ worlds.park=buildPark();worlds.city=buildCity();worlds.studio=buildStudio();
+ initPostProcessing();
+ changeScene(state.scene,false);
+ resize();
+ new ResizeObserver(resize).observe(view);
+ $('sceneLoading').classList.add('hidden');
+ clock.start();requestAnimationFrame(frame);
+}
+function initPostProcessing(){
+ const vertex=`varying vec2 vUv; void main(){vUv=uv;gl_Position=vec4(position.xy,0.0,1.0);}`;
+ const fragment=`
+ precision highp float;
+ uniform sampler2D tColor;uniform sampler2D tDepth;
+ uniform vec2 uResolution;uniform float uNear;uniform float uFar;
+ uniform float uFocus;uniform float uAperture;uniform float uFocal;
+ uniform float uDof;uniform float uDistort;
+ varying vec2 vUv;
+ float zFromDepth(float d){return (uNear*uFar)/(uFar-d*(uFar-uNear));}
+ vec2 opticalUv(vec2 uv){vec2 p=uv-.5;float r2=dot(p,p);return .5+p*(1.0+uDistort*0.19*r2);}
+ void main(){
+   vec2 uv=opticalUv(vUv);
+   if(uv.x<0.0||uv.x>1.0||uv.y<0.0||uv.y>1.0){gl_FragColor=vec4(.03,.05,.07,1.0);return;}
+   vec4 center=texture2D(tColor,uv);
+   if(uDof<.5){gl_FragColor=center;return;}
+   float depth=texture2D(tDepth,uv).r;
+   float z=zFromDepth(depth);
+   // A deliberately approximate depth-aware screen-space defocus, NOT measured bokeh.
+   float radius=clamp(abs(z-uFocus)/max(1.0,z) * (uFocal/50.0) * (2.8/max(1.0,uAperture)) * 9.0,0.0,3.6);
+   if(radius<.22){gl_FragColor=center;return;}
+   vec2 px=radius/uResolution;
+   vec4 sum=center*2.0;
+   sum+=texture2D(tColor,opticalUv(vUv+vec2(px.x,0.0)));
+   sum+=texture2D(tColor,opticalUv(vUv-vec2(px.x,0.0)));
+   sum+=texture2D(tColor,opticalUv(vUv+vec2(0.0,px.y)));
+   sum+=texture2D(tColor,opticalUv(vUv-vec2(0.0,px.y)));
+   sum+=texture2D(tColor,opticalUv(vUv+vec2(px.x,px.y)*.78));
+   sum+=texture2D(tColor,opticalUv(vUv+vec2(-px.x,px.y)*.78));
+   sum+=texture2D(tColor,opticalUv(vUv+vec2(px.x,-px.y)*.78));
+   sum+=texture2D(tColor,opticalUv(vUv+vec2(-px.x,-px.y)*.78));
+   gl_FragColor=sum/10.0;
+ }`;
+ shader=new THREE.ShaderMaterial({uniforms:{
+   tColor:{value:null},tDepth:{value:null},uResolution:{value:new THREE.Vector2(600,400)},
+   uNear:{value:camera.near},uFar:{value:camera.far},uFocus:{value:10},
+   uAperture:{value:2.8},uFocal:{value:50},uDof:{value:1},uDistort:{value:0}
+ },vertexShader:vertex,fragmentShader:fragment,depthTest:false,depthWrite:false});
+ postScene=new THREE.Scene();postCamera=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+ postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),shader));
+}
+function resize(){
+ if(fallback){fallback.draw();return;}
+ if(!renderer||!camera)return;
+ const v=$('viewport'),w=Math.max(1,v.clientWidth),h=Math.max(1,v.clientHeight);
+ renderer.setSize(w,h,false);
+ const size=renderer.getDrawingBufferSize(new THREE.Vector2());
+ if(!renderTarget){renderTarget=new THREE.WebGLRenderTarget(size.x,size.y,{minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter,depthBuffer:true,stencilBuffer:false});
+   renderTarget.depthTexture=new THREE.DepthTexture(size.x,size.y);renderTarget.depthTexture.type=THREE.UnsignedIntType;
+ }else renderTarget.setSize(size.x,size.y);
+ shader.uniforms.tColor.value=renderTarget.texture;
+ shader.uniforms.tDepth.value=renderTarget.depthTexture;
+ shader.uniforms.uResolution.value.set(size.x,size.y);
+ camera.aspect=w/h;camera.fov=focalAngles().vert;camera.updateProjectionMatrix();
+}
+function directionFromCamera(){
+ const d=new THREE.Vector3(0,0,-1).applyQuaternion(camera.quaternion);d.y=0;return d.normalize();
+}
+function centerOnTarget(){
+ if(fallback){fallback.lookAt(state.target);return;}
+ if(!camera)return;
+ const p=getSelectedPosition(),delta=p.sub(camera.position);
+ const yaw=Math.atan2(delta.x,-delta.z),pitch=Math.atan2(delta.y,Math.hypot(delta.x,delta.z));
+ camera.rotation.set(clamp(pitch,-1.48,1.48),yaw,0,'YXZ');
+}
+function resetCamera(){if(fallback){fallback.reset();updateMetrics();return;}if(!camera)return;camera.position.set(0,1.75,12);centerOnTarget();updateMetrics();}
+function moveCamera(direction,dt){
+ if(state.mode!=='3d')return;
+ if(fallback){fallback.move(direction,dt*(heldKeys.has('Shift')?2.3:1));return;}
+ if(!camera)return;
+ const speed=dt*4.8*(heldKeys.has('Shift')?2.3:1),forward=directionFromCamera();
+ const right=new THREE.Vector3(-forward.z,0,forward.x);
+ if(direction==='forward')camera.position.addScaledVector(forward,speed);
+ if(direction==='backward')camera.position.addScaledVector(forward,-speed);
+ if(direction==='right')camera.position.addScaledVector(right,speed);
+ if(direction==='left')camera.position.addScaledVector(right,-speed);
+ if(direction==='up')camera.position.y+=speed;
+ if(direction==='down')camera.position.y-=speed;
+ camera.position.y=clamp(camera.position.y,.25,16);
+ camera.position.x=clamp(camera.position.x,-80,80);
+ camera.position.z=clamp(camera.position.z,-90,85);
+}
+function changeScene(name,reset=true){
+ if(!fallback&&!worlds[name])return;
+ state.scene=name;
+ for(const [id,g] of Object.entries(worlds))g.visible=(id===name);
+ document.querySelectorAll('[data-scene]').forEach(b=>b.classList.toggle('active',b.dataset.scene===name));
+ if(scene){const hex=name==='park'?'#85b5c0':name==='city'?'#c5b2a0':'#9daeb8';scene.background=new THREE.Color(hex);scene.fog.color.set(hex);}
+ $('hudScene').textContent=names[name];
+ if(reset)resetCamera();
+ updateMetrics();
+}
+function frame(){
+ requestAnimationFrame(frame);
+ if(!renderer||!camera)return;
+ const dt=Math.min(.05,clock.getDelta());
+ if(state.mode==='3d'){
+  for(const [key,action] of [['w','forward'],['ArrowUp','forward'],['s','backward'],['ArrowDown','backward'],['a','left'],['ArrowLeft','left'],['d','right'],['ArrowRight','right'],['e','up'],['q','down']]){
+    if(heldKeys.has(key))moveCamera(action,dt);
+  }
+  if(renderTarget&&shader){renderer.setRenderTarget(renderTarget);renderer.render(scene,camera);renderer.setRenderTarget(null);renderer.render(postScene,postCamera);}
+  else renderer.render(scene,camera);
+  if(state.flare){
+   const p=sunPosition.clone().project(camera);const visible=p.z>-1&&p.z<1&&Math.abs(p.x)<1.4&&Math.abs(p.y)<1.4&&state.scene!=='studio';
+   $('flareLayer').style.opacity=visible?'.8':'0';
+   $('flareLayer').style.setProperty('--flare-x',`${((p.x+1)*50).toFixed(1)}%`);
+   $('flareLayer').style.setProperty('--flare-y',`${((1-p.y)*50).toFixed(1)}%`);
+  }
+  const now=performance.now();if(now-lastMetricUpdate>250){lastMetricUpdate=now;updateMetrics();}
+ }
+}
+
+// -------------- camera device mode (no access until user taps) --------------
+async function stopCamera(){
+ if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;videoTrack=null;}
+ $('liveVideo').srcObject=null;
+}
+async function cameraDevices(){
+ if(!navigator.mediaDevices?.enumerateDevices)return;
+ try{
+  const devices=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='videoinput');
+  const sel=$('deviceSelect');const old=state.cameraId;sel.replaceChildren();
+  sel.add(new Option('후면 카메라 (자동)',''));
+  devices.forEach((d,i)=>sel.add(new Option(d.label||`카메라 ${i+1}`,d.deviceId)));
+  sel.value=[...sel.options].some(o=>o.value===old)?old:'';
+ }catch{}
+}
+async function startCamera(){
+ if(!navigator.mediaDevices?.getUserMedia){toast('카메라 사용은 HTTPS 또는 localhost에서만 가능합니다.');return false;}
+ await stopCamera();
+ const constraints={audio:false,video:{width:{ideal:1920},height:{ideal:1080},frameRate:{ideal:30},
+  ...(state.cameraId?{deviceId:{exact:state.cameraId}}:{facingMode:{ideal:'environment'}})}};
+ try{
+  cameraStream=await navigator.mediaDevices.getUserMedia(constraints);
+  videoTrack=cameraStream.getVideoTracks()[0];$('liveVideo').srcObject=cameraStream;
+  await $('liveVideo').play();
+  await cameraDevices();
+  return true;
+ }catch(err){
+  console.warn('Camera unavailable',err);
+  let msg='카메라를 열 수 없습니다.';
+  if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError')msg='카메라 권한을 허용해야 실시간 비교를 할 수 있습니다.';
+  if(err.name==='NotFoundError')msg='연결된 카메라가 없습니다.';
+  if(err.name==='OverconstrainedError')msg='선택한 카메라를 사용할 수 없습니다. 다른 장치를 선택하세요.';
+  toast(msg);return false;
+ }
+}
+async function changeMode(mode){
+ if(mode===state.mode)return;
+ if(mode==='live'){
+  const ok=await startCamera();if(!ok)return;
+ }
+ if(mode==='3d')await stopCamera();
+ state.mode=mode;
+ $('mode3d').classList.toggle('selected',mode==='3d');$('modeLive').classList.toggle('selected',mode==='live');
+ $('mode3d').setAttribute('aria-selected',String(mode==='3d'));
+ $('modeLive').setAttribute('aria-selected',String(mode==='live'));
+ $('viewport').classList.toggle('live',mode==='live');
+ $('liveSettings').classList.toggle('hidden',mode!=='live');
+ $('cameraStatus').innerHTML=mode==='3d'?'<span class="status-dot"></span> 3D SCENE LIVE':'<span class="status-dot"></span> LOCAL CAMERA ACTIVE';
+ $('virtualGuide').textContent=mode==='3d'?'드래그: 시선 이동 · W A S D: 이동 · 피사체 클릭: 초점':'카메라 실시간 미리보기 · 렌즈 환산 화각에 맞춘 크롭';
+ $('hudScene').textContent=mode==='3d'?names[state.scene]:'LIVE CAMERA';
+ if(mode==='live')notice('실시간 카메라의 <b>화각 비교는 디지털 확대/크롭</b>입니다. 기준 카메라의 35mm 환산 초점거리를 반드시 보정하세요. 브라우저에서 렌즈의 실물 보케·플레어·조리개·ISO·셔터를 적용할 수 없습니다.');
+ else notice('렌즈 모델명과 기본 사양은 참고용이며, 실물 렌즈의 측정된 보케·플레어·왜곡 데이터는 포함되어 있지 않습니다. 화각은 수학적 계산, 3D 심도와 효과는 근사 연출입니다.');
+ updateMetrics();
+}
+
+// -------------- DOM controls --------------
+function setupLibrary(){
+ $('top-count').textContent=LENSES.length;
+ const brands=['전체 브랜드',...new Set(LENSES.map(x=>x.brand))];
+ $('brandSelect').replaceChildren(...brands.map(b=>new Option(b,b)));
+ $('brandSelect').value=state.brand;
+ $('sensorSelect').replaceChildren(...Object.entries(SENSORS).map(([key,s])=>new Option(s.label,key)));
+ $('sensorSelect').value=state.sensor;
+ $('isoSelect').replaceChildren(...ISO_VALUES.map(n=>new Option(n.toLocaleString('ko-KR'),String(n))));
+ $('shutterSelect').replaceChildren(...SHUTTER_VALUES.map(([label])=>new Option(label+' s',label)));
+ $('isoSelect').value=String(state.iso);$('shutterSelect').value=state.shutter;
+ listLenses();fillApertures();
+}
+function listLenses(){
+ const brand=$('brandSelect').value,search=$('lensSearch').value.trim().toLowerCase();
+ const options=LENSES.filter(l=>(brand==='전체 브랜드'||l.brand===brand)&&
+     (!search||`${l.brand} ${l.name} ${l.min}mm ${l.max}mm`.toLowerCase().includes(search)));
+ const sel=$('lensSelect');sel.replaceChildren();sel.add(new Option('자유 가상 렌즈 · 범위 제한 없음','custom'));
+ for(const l of options)sel.add(new Option(`${l.brand} · ${l.name}`,l.id));
+ if(options.some(l=>l.id===state.lensId))sel.value=state.lensId;
+ else if(state.lensId==='custom')sel.value='custom';
+ else {const selected=getLens();if(selected){sel.add(new Option(`현재 선택됨 · ${selected.brand} ${selected.name}`,selected.id));sel.value=selected.id;}else sel.value='custom';}
+ $('lensDetailName').textContent=getLens()?getLens().name:'가상 렌즈 (초점거리 자유 설정)';
+ $('lensDetailMount').textContent=getLens()?`${getLens().mounts} | ${getLens().format} 지원`:'가상 렌즈 · 구매 가능한 모델이 아닙니다';
+}
+function fillApertures(){
+ const min=maxApertureAt(state.focal)-.0001;
+ // For variable-aperture zoom lenses, the intermediate f-number is an estimate.
+ const options=FSTOPS.filter(n=>n>=min);
+ if(!options.length)options.push(32);
+ const sel=$('apertureSelect');sel.replaceChildren(...options.map(n=>new Option(`f/${fmt(n)}`,String(n))));
+ const nearest=options.find(n=>n>=state.aperture-.0001)||options[0];
+ state.aperture=nearest;sel.value=String(nearest);
+ $('apertureValue').textContent=`f/${fmt(nearest)}`;
+}
+function syncFocalRange(){
+ const l=getLens(),min=l?.min??8,max=l?.max??600;
+ const range=$('focalRange');range.min=String(min);range.max=String(max);
+ range.step=l?.min===l?.max?'1':state.focal<40?'.5':'1';
+ range.disabled=Boolean(l?.min===l?.max);
+ $('focalMin').textContent=`${min}mm`;$('focalMax').textContent=`${max}mm`;
+ state.focal=clamp(state.focal,min,max);
+ range.value=String(state.focal);
+}
+function selectLens(id,preserveFocal=false){
+ const l=LENSES.find(x=>x.id===id)||null;
+ const oldF=state.focal;
+ const nextF=l?(preserveFocal?clamp(oldF,l.min,l.max):(l.min+l.max)/2):oldF;
+ preserveSubjectSize(nextF,oldF);
+ state.lensId=l?.id??'custom';
+ state.focal=nextF;
+ if(l&&l.min===l.max)state.focal=l.min;
+ // Suggest a matching sensor when selecting formats that cannot illuminate FF.
+ if(l?.format==='APS-C'&&state.sensor==='FF')state.sensor='APSC';
+ if(l?.format==='M43'&&state.sensor==='FF')state.sensor='M43';
+ $('sensorSelect').value=state.sensor;
+ syncFocalRange();listLenses();fillApertures();updateMetrics();
+}
+function preserveSubjectSize(next,previous){
+ if(state.sizeLock&&fallback&&state.mode==='3d'&&previous>0){const p=fallback.position(state.target),c=fallback.camera,f=next/previous;c.x=p.x+(c.x-p.x)*f;c.y=clamp(p.y+(c.y-p.y)*f,.3,16);c.z=p.z+(c.z-p.z)*f;return;}
+ if(state.sizeLock&&camera&&state.mode==='3d'&&previous>0){
+  const subject=getSelectedPosition();
+  const relative=camera.position.clone().sub(subject).multiplyScalar(next/previous);
+  const p=subject.add(relative);p.y=clamp(p.y,.3,16);
+  camera.position.copy(p);
+ }
+}
+function adjustFocal(next){
+ preserveSubjectSize(next,state.focal);
+ state.focal=next;
+ fillApertures();updateMetrics();
+}
+function selectEquivalent(targetEq){
+ const newF=targetEq/cropFactor();const l=getLens();
+ if(l&&(newF<l.min||newF>l.max)){
+  $('brandSelect').value='전체 브랜드';state.brand='전체 브랜드';$('lensSearch').value='';
+  state.lensId='custom';preserveSubjectSize(newF,state.focal);state.focal=clamp(newF,8,600);
+  listLenses();syncFocalRange();fillApertures();
+  toast('선택 렌즈 범위를 벗어나 자유 가상 렌즈로 전환했습니다.');
+ }else{
+  adjustFocal(clamp(newF,8,600));
+ }
+ updateMetrics();
+}
+function changeRatio(){
+ state.ratio=$('ratioSelect').value;
+ const [a,b]=state.ratio.split(':').map(Number);
+ $('viewport').style.aspectRatio=`${a} / ${b}`;
+ resize();updateMetrics();
+}
+function bindControls(){
+ $('brandSelect').addEventListener('change',()=>{
+  state.brand=$('brandSelect').value;$('lensSearch').value='';
+  const first=state.brand==='전체 브랜드'?getLens()||LENSES[0]:LENSES.find(l=>l.brand===state.brand);
+  selectLens(first?.id??'custom');
+ });
+ $('lensSearch').addEventListener('input',listLenses);
+ $('lensSelect').addEventListener('change',()=>selectLens($('lensSelect').value));
+ $('sensorSelect').addEventListener('change',()=>{state.sensor=$('sensorSelect').value;fillApertures();updateMetrics();});
+ $('ratioSelect').addEventListener('change',changeRatio);
+ $('focalRange').addEventListener('input',()=>adjustFocal(Number($('focalRange').value)));
+ $('apertureSelect').addEventListener('change',()=>{state.aperture=Number($('apertureSelect').value);updateMetrics();});
+ $('isoSelect').addEventListener('change',()=>{state.iso=Number($('isoSelect').value);updateMetrics();});
+ $('shutterSelect').addEventListener('change',()=>{state.shutter=$('shutterSelect').value;updateMetrics();});
+ $('gridSelect').addEventListener('change',()=>{state.grid=$('gridSelect').value;updateMetrics();});
+ for(const [id,key] of [['dofToggle','dof'],['vignetteToggle','vignette'],['flareToggle','flare'],['distortionToggle','distortion'],['sizeLock','sizeLock']]){
+   $(id).addEventListener('change',()=>{state[key]=$(id).checked;updateMetrics();});
+ }
+ document.querySelectorAll('[data-eq]').forEach(b=>b.addEventListener('click',()=>selectEquivalent(Number(b.dataset.eq))));
+ document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>changeScene(b.dataset.scene)));
+ $('targetSelect').addEventListener('change',()=>{state.target=$('targetSelect').value;centerOnTarget();updateMetrics();});
+ $('lookAtBtn').addEventListener('click',()=>{centerOnTarget();updateMetrics();});
+ $('resetView').addEventListener('click',resetCamera);
+ $('mode3d').addEventListener('click',()=>changeMode('3d'));
+ $('modeLive').addEventListener('click',()=>changeMode('live'));
+ $('stopCameraBtn').addEventListener('click',()=>changeMode('3d'));
+ $('nativeEq').addEventListener('input',()=>{state.nativeEq=Number($('nativeEq').value);$('nativeEqValue').textContent=`${state.nativeEq} mm`;updateMetrics();});
+ $('deviceSelect').addEventListener('change',async()=>{
+   state.cameraId=$('deviceSelect').value;
+   if(state.mode==='live'){if(!(await startCamera())){state.cameraId='';await startCamera();}updateMetrics();}
+ });
+ $('snapshotBtn').addEventListener('click',saveSnapshot);
+ $('shareBtn').addEventListener('click',shareSettings);
+ $('resetAllBtn').addEventListener('click',()=>{location.href=location.pathname;});
+ // Keyboard: movement keys ignored while form fields are being edited.
+ window.addEventListener('keydown',e=>{
+  if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName))return;
+  if(['w','a','s','d','q','e','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();
+  heldKeys.add(e.key.length===1?e.key.toLowerCase():e.key);
+ });
+ window.addEventListener('keyup',e=>heldKeys.delete(e.key.length===1?e.key.toLowerCase():e.key));
+ window.addEventListener('blur',()=>heldKeys.clear());
+ document.querySelectorAll('[data-move]').forEach(b=>{
+   const key={forward:'w',backward:'s',left:'a',right:'d'}[b.dataset.move];
+   b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();b.setPointerCapture(e.pointerId);heldKeys.add(key);});
+   for(const ev of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(ev,()=>heldKeys.delete(key));
+ });
+ setupViewPointer();
+ window.addEventListener('pagehide',()=>{if(cameraStream)cameraStream.getTracks().forEach(t=>t.stop());});
+}
+function setupViewPointer(){
+ const view=$('viewport');
+ view.addEventListener('pointerdown',e=>{
+  if(state.mode!=='3d'||e.target.closest('button'))return;
+  if(e.button!==0&&e.pointerType==='mouse')return;
+  view.setPointerCapture(e.pointerId);pointerStart={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY};
+  dragPointerId=e.pointerId;dragging=false;
+ });
+ view.addEventListener('pointermove',e=>{
+  if(e.pointerId!==dragPointerId||!pointerStart||state.mode!=='3d'||(!camera&&!fallback))return;
+  const dx=e.clientX-pointerStart.lastX,dy=e.clientY-pointerStart.lastY;
+  if(Math.hypot(e.clientX-pointerStart.x,e.clientY-pointerStart.y)>5)dragging=true;
+  if(dragging){if(fallback)fallback.setOrientation(dx,dy);else {camera.rotation.y-=dx*.004;camera.rotation.x=clamp(camera.rotation.x-dy*.004,-1.48,1.48);}}
+  pointerStart.lastX=e.clientX;pointerStart.lastY=e.clientY;
+ });
+ view.addEventListener('pointerup',e=>{
+  if(e.pointerId!==dragPointerId||!pointerStart)return;
+  if(!dragging&&camera&&scene){
+   const rect=view.getBoundingClientRect(),x=((e.clientX-rect.left)/rect.width)*2-1,y=-((e.clientY-rect.top)/rect.height)*2+1;
+   const ray=new THREE.Raycaster();ray.setFromCamera(new THREE.Vector2(x,y),camera);
+   const group=worlds[state.scene];const hits=ray.intersectObjects(group.children,true);
+   const chosen=hits.find(h=>h.object.userData.subject);
+   if(chosen){state.target=chosen.object.userData.subject;$('targetSelect').value=state.target;centerOnTarget();toast(`초점 대상: ${$('targetSelect').selectedOptions[0]?.textContent}`);}
+  }
+  dragPointerId=null;pointerStart=null;dragging=false;
+ });
+ view.addEventListener('pointercancel',()=>{pointerStart=null;dragPointerId=null;dragging=false;});
+ view.addEventListener('wheel',e=>{
+   if(state.mode!=='3d'||(!camera&&!fallback))return;e.preventDefault();
+   moveCamera(e.deltaY<0?'forward':'backward',Math.min(.3,Math.abs(e.deltaY)*.002));
+ },{passive:false});
+}
+
+// -------------- export: nothing is uploaded to a server --------------
+function paintGrid(ctx,w,h,type){
+ if(type==='none')return;
+ ctx.save();ctx.strokeStyle='rgba(255,255,255,.60)';ctx.lineWidth=Math.max(1,w/1600);
+ ctx.beginPath();
+ if(type==='thirds'||type==='golden'){
+  const q=type==='thirds'?[1/3,2/3]:[.382,.618];
+  for(const x of q){ctx.moveTo(w*x,0);ctx.lineTo(w*x,h);ctx.moveTo(0,h*x);ctx.lineTo(w,h*x);}
+ }else if(type==='center'){
+  ctx.moveTo(w/2,0);ctx.lineTo(w/2,h);ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);
+ }else if(type==='diagonal'){
+  ctx.moveTo(0,0);ctx.lineTo(w,h);ctx.moveTo(w,0);ctx.lineTo(0,h);
+ }
+ ctx.stroke();ctx.restore();
+}
+function saveSnapshot(){
+ const view=$('viewport'),w=Math.min(2560,Math.round(view.clientWidth*2)),h=Math.round(w*(view.clientHeight/Math.max(1,view.clientWidth)));
+ const out=document.createElement('canvas');out.width=w;out.height=h;
+ const ctx=out.getContext('2d');if(!ctx)return;
+ if(state.mode==='3d'&&(renderer||fallback)){
+  ctx.drawImage(renderer?renderer.domElement:fallback.canvas,0,0,w,h);
+ }else if(state.mode==='live'&&$('liveVideo').videoWidth){
+  const v=$('liveVideo'),vw=v.videoWidth,vh=v.videoHeight,ratio=w/h,zoom=Math.max(1,equiv()/state.nativeEq);
+  let cropW=vw,cropH=vh;
+  if(vw/vh>ratio)cropW=vh*ratio;else cropH=vw/ratio;
+  cropW/=zoom;cropH/=zoom;
+  ctx.drawImage(v,(vw-cropW)/2,(vh-cropH)/2,cropW,cropH,0,0,w,h);
+ }else{toast('저장할 카메라 프레임이 없습니다.');return;}
+ if(state.vignette){
+  const grad=ctx.createRadialGradient(w*.5,h*.5,w*.10,w*.5,h*.5,w*.7);
+  grad.addColorStop(0,'#00000000');grad.addColorStop(.6,'#00000000');grad.addColorStop(1,'#00111d86');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
+ }
+ if(state.flare){
+  const grad=ctx.createRadialGradient(w*.76,h*.17,0,w*.76,h*.17,w*.28);
+  grad.addColorStop(0,'#fff4bf83');grad.addColorStop(.14,'#fbd9a527');grad.addColorStop(1,'#00000000');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
+ }
+ paintGrid(ctx,w,h,state.grid);
+ ctx.save();ctx.fillStyle='rgba(4,18,31,.66)';ctx.fillRect(0,h-44*(w/1000),w,44*(w/1000));
+ ctx.font=`700 ${Math.max(12,Math.round(w/88))}px system-ui,sans-serif`;
+ ctx.fillStyle='#b0ffe2';ctx.textAlign='left';ctx.fillText(`FRAME LAB · ${getLens()?.brand||'FREE'} · ${fmt(state.focal)}mm · f/${fmt(state.aperture)} · ${state.iso} ISO`,w*.027,h-w*.014);
+ ctx.textAlign='right';ctx.fillStyle='#fff';ctx.fillText(`${fmt(equiv())}mm EQ. · ${state.mode==='live'?'DIGITAL CROP':'3D DEMO'}`,w*.97,h-w*.014);ctx.restore();
+ out.toBlob(blob=>{
+  if(!blob){toast('이미지 생성에 실패했습니다.');return;}
+  const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;
+  link.download=`frame-lab-${state.mode}-${Math.round(equiv())}mm-${Date.now()}.png`;
+  link.click();setTimeout(()=>URL.revokeObjectURL(url),5000);
+  toast('현재 프레임을 PNG로 저장했습니다.');
+ },'image/png');
+}
+function shareSettings(){
+ const url=new URL(location.href);url.search='';
+ const keys=['scene','target','lensId','sensor','ratio','focal','aperture','iso','shutter','grid','dof','vignette','flare','distortion','sizeLock','nativeEq'];
+ keys.forEach(k=>url.searchParams.set(k,String(state[k])));
+ if(camera){url.searchParams.set('pos',camera.position.toArray().map(v=>v.toFixed(3)).join(','));
+   url.searchParams.set('rot',[camera.rotation.x,camera.rotation.y].map(v=>v.toFixed(4)).join(','));}
+ if(fallback){const c=fallback.camera;url.searchParams.set('pos',[c.x,c.y,c.z].map(v=>v.toFixed(3)).join(','));url.searchParams.set('rot',[c.pitch,c.yaw].map(v=>v.toFixed(4)).join(','));}
+ const text=url.toString();
+ if(navigator.clipboard?.writeText){navigator.clipboard.writeText(text).then(()=>toast('설정 링크를 복사했습니다. 다른 기기에서 열 수 있습니다.')).catch(()=>window.prompt('설정 링크 복사',text));}
+ else window.prompt('설정 링크 복사',text);
+}
+function readSharedSettings(){
+ const params=new URLSearchParams(location.search);
+ const strings=['scene','target','lensId','sensor','ratio','shutter','grid'];
+ for(const k of strings)if(params.has(k))state[k]=params.get(k);
+ const nums=['focal','aperture','iso','nativeEq'];for(const k of nums)if(params.has(k)&&Number.isFinite(Number(params.get(k))))state[k]=Number(params.get(k));
+ const bools=['dof','vignette','flare','distortion','sizeLock'];for(const k of bools)if(params.has(k))state[k]=params.get(k)==='true';
+ if(!LENSES.some(l=>l.id===state.lensId))state.lensId='custom';
+ if(!SENSORS[state.sensor])state.sensor='FF';
+ if(!worldNames.includes(state.scene))state.scene='park';
+ if(!['person','car','animal','flower','tree'].includes(state.target))state.target='person';
+ if(!['3:2','4:3','16:9','1:1'].includes(state.ratio))state.ratio='3:2';
+ if(!['thirds','golden','center','diagonal','none'].includes(state.grid))state.grid='thirds';
+ if(!SHUTTER_VALUES.some(s=>s[0]===state.shutter))state.shutter='1/125';
+ if(!ISO_VALUES.includes(state.iso))state.iso=100;
+ state.nativeEq=clamp(state.nativeEq,12,85);
+ state.focal=clamp(state.focal,8,600);
+ state.brand=getLens()?.brand||'전체 브랜드';
+ return params;
+}
+const worldNames=['park','city','studio'];
+function activateFallback(){
+ if(fallback)return;
+ fallback=makeFallback($('webglMount'),()=>state,focalAngles,dt=>{
+  if(state.mode!=='3d')return;
+  for(const [key,action] of [['w','forward'],['ArrowUp','forward'],['s','backward'],['ArrowDown','backward'],['a','left'],['ArrowLeft','left'],['d','right'],['ArrowRight','right'],['e','up'],['q','down']])if(heldKeys.has(key))moveCamera(action,dt);
+ });
+ $('sceneLoading').classList.add('hidden');
+ $('cameraStatus').innerHTML='<span class="status-dot"></span> 3D PERSPECTIVE MODE';
+}
+function initialize(){
+ const params=readSharedSettings();
+ setupLibrary();
+ $('brandSelect').value=state.brand;
+ $('lensSelect').value=state.lensId;
+ $('sensorSelect').value=state.sensor;
+ $('ratioSelect').value=state.ratio;
+ $('targetSelect').value=state.target;
+ $('gridSelect').value=state.grid;
+ $('isoSelect').value=String(state.iso);
+ $('shutterSelect').value=state.shutter;
+ $('nativeEq').value=String(state.nativeEq);$('nativeEqValue').textContent=`${state.nativeEq} mm`;
+ for(const [id,k] of [['dofToggle','dof'],['vignetteToggle','vignette'],['flareToggle','flare'],['distortionToggle','distortion'],['sizeLock','sizeLock']])$(id).checked=state[k];
+ syncFocalRange();fillApertures();
+ changeRatio();
+ bindControls();
+ try{
+  if(THREE){createRenderer();}else{activateFallback();}
+  resetCamera();
+  if(params.has('pos')&&params.has('rot')){
+   const pos=params.get('pos').split(',').map(Number),rot=params.get('rot').split(',').map(Number);
+   if(pos.length===3&&rot.length===2&&[...pos,...rot].every(Number.isFinite)){
+    if(fallback){Object.assign(fallback.camera,{x:clamp(pos[0],-80,80),y:clamp(pos[1],.25,16),z:clamp(pos[2],-90,85),pitch:clamp(rot[0],-1.48,1.48),yaw:rot[1]});}
+    if(camera){camera.position.set(clamp(pos[0],-80,80),clamp(pos[1],.25,16),clamp(pos[2],-90,85));camera.rotation.set(clamp(rot[0],-1.48,1.48),rot[1],0,'YXZ');}
+   }
+  }
+  updateMetrics();
+ }catch(err){
+  console.error(err);
+  renderer?.domElement?.remove();renderer=null;camera=null;scene=null;
+  activateFallback();
+  toast('WebGL 대신 기본 3D 투영 모드로 전환했습니다.');
+ }
+}
+initialize();
+
+</script>
+</body>
+</html>

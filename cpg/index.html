@@ -181,6 +181,24 @@ footer{border-color:var(--line);color:#aaa096}footer span{color:#a76b50}
  .gallery-items{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 @media(max-width:370px){.gallery-items{grid-template-columns:1fr}}
+
+/* CPG v0.7 — neutral photographic seed studio and third person observer */
+.third-person-view{position:absolute;right:13px;bottom:111px;width:190px;z-index:10;background:#191d1cdb;color:#fff;border:1px solid #ffffff90;border-radius:10px;overflow:hidden;box-shadow:0 7px 24px #0004;pointer-events:auto;backdrop-filter:blur(4px)}
+.third-view-head{display:flex;align-items:center;justify-content:space-between;padding:4px 7px 4px 9px;border-bottom:1px solid #ffffff24;gap:4px}.third-view-head span{font-size:10px;font-weight:800;letter-spacing:.02em}.third-view-head button{min-width:24px;min-height:23px;border:1px solid #ffffff35;border-radius:5px;background:#ffffff1f;color:#fff;font-size:15px;line-height:1}
+.third-person-view canvas{touch-action:manipulation;pointer-events:auto;display:block;width:100%;aspect-ratio:186/114;background:linear-gradient(#a5c0c9 0 55%,#718f70 56%);object-fit:cover;pointer-events:none}.third-person-view.is-collapsed{width:auto}.third-person-view.is-collapsed canvas{display:none}
+.viewport.live .third-person-view{display:none}
+.world-generator{background:#fdfbf6;color:#45443f;border:1px solid #e1d9cd;border-top:0;border-radius:0 0 10px 10px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:11px 13px}
+.generator-title{display:flex;flex:1 1 210px;flex-direction:column;gap:3px}.generator-title strong{font-size:12px;font-weight:850;color:#57553f}.generator-title small{font-size:10px;color:#877e71}
+.world-generator label{font-size:9px;color:#8a7b65;letter-spacing:.08em;font-weight:850;display:flex;gap:7px;align-items:center}
+.world-generator input{width:135px;max-width:38vw;border:1px solid #d6cbbd;border-radius:6px;height:33px;font-size:11px;font-weight:750;padding:0 9px;background:#fff;color:#393830;letter-spacing:0}
+.world-generator button{height:33px;background:#e7e1d6;color:#5e523f;border:1px solid #d3c9ba;border-radius:7px;padding:0 11px;font-size:11px;font-weight:800}
+.world-generator button#regenerateWorldBtn{background:#57684f;color:#fff;border-color:#57684f}
+.world-generator #seedStatus{font-size:10px;color:#8a7f73;width:100%;text-align:right}
+.portrait-compare{margin-top:11px;border:1px solid #e0ddd5;border-radius:10px;background:#fffdfa;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px}
+.portrait-compare>div:first-child{flex:1 1 205px;display:flex;flex-direction:column;gap:3px}.portrait-compare strong{font-size:12px;color:#494942}.portrait-compare small{font-size:10px;color:#858177;line-height:1.45}
+.portrait-actions{display:flex;gap:5px;flex-wrap:wrap}.portrait-actions button{border:1px solid #d8cfc3;background:#f5f0e8;color:#685343;font-size:11px;font-weight:800;padding:8px 10px;border-radius:7px}
+@media(max-width:650px){.third-person-view{right:7px;bottom:91px;width:136px;border-radius:8px}.third-view-head{padding:3px 4px 3px 6px}.third-view-head span{font-size:8px}.third-view-head button{min-height:21px;min-width:21px}.world-generator{padding:9px 7px;gap:6px}.generator-title{flex-basis:100%}.generator-title strong{font-size:11px}.generator-title small{font-size:9px}.world-generator label{flex:1 1 140px}.world-generator input{width:100%;min-width:0;max-width:45vw}.world-generator button{height:31px;font-size:10px;padding:0 8px}.world-generator #seedStatus{text-align:left;font-size:9px}.portrait-compare{padding:9px;gap:8px}.portrait-compare small{font-size:9px}.portrait-actions{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.portrait-actions button{padding:7px 2px;font-size:10px}}
+@media(max-width:370px){.third-person-view{width:122px;bottom:91px}.world-generator label{flex-basis:100%}.world-generator input{max-width:none}}
 </style>
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}
@@ -189,7 +207,7 @@ footer{border-color:var(--line);color:#aaa096}footer span{color:#a76b50}
 <body>
   <div class="app-shell">
     <header class="topbar">
-      <div class="brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div><strong>카메라 <span>소풍단 연구소</span></strong><small>CPG · CAMERA PICNIC GROUP <b>06</b></small></div></div>
+      <div class="brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div><strong>카메라 <span>소풍단 연구소</span></strong><small>CPG · CAMERA PICNIC GROUP <b>07</b></small></div></div>
       <div class="top-mid"><span class="online-dot"></span> CPG · CAMERA PICNIC STUDIO <span class="top-divider"></span> <span id="top-count">100+</span> LENS PROFILES</div>
       <div class="top-actions"><button id="shareBtn" class="ghost-btn" type="button" title="현재 설정을 URL로 공유"><span>↗</span> 설정 공유</button><button id="snapshotBtn" class="primary-btn" type="button">◉ &nbsp;프레임 저장</button></div>
     </header>
@@ -202,7 +220,7 @@ footer{border-color:var(--line);color:#aaa096}footer span{color:#a76b50}
         <div class="viewport" id="viewport">
           <div id="webglMount" aria-label="가상 3D 촬영 공간"></div>
           <video id="liveVideo" autoplay muted playsinline aria-label="실시간 카메라 미리보기"></video>
-          <div id="sceneLoading" class="scene-loading"><div class="loading-ring"></div><strong>3D 장면을 불러오는 중입니다</strong><small>인터넷 연결과 WebGL 지원이 필요합니다.</small></div>
+          <div id="sceneLoading" class="scene-loading"><div class="loading-ring"></div><strong>시드 월드를 만드는 중입니다</strong><small>동일 시드에서는 같은 마을·공원 배치를 생성합니다.</small></div>
           <div id="exposureLayer" class="exposure-layer"></div>
           <div id="vignetteLayer" class="vignette-layer"></div>
           <div id="flareLayer" class="flare-layer"></div>
@@ -219,6 +237,10 @@ footer{border-color:var(--line);color:#aaa096}footer span{color:#a76b50}
           <div id="virtualGuide" class="virtual-guide">드래그: 시선 회전 <span>·</span> 휠/핀치: 렌즈 줌 <span>·</span> 화면 터치: 초점</div>
           <div class="move-joystick" id="mobileMove" aria-label="가상 이동 조이스틱" role="group"><div class="joystick-base" id="joystickBase"><div class="joystick-thumb" id="joystickThumb"></div></div><small>이동</small></div>
           <div class="shutter-controls"><button class="photo-mini" id="openGalleryBtn" type="button" aria-label="촬영 사진 라이브러리 열기"><span id="galleryMiniThumb">▧</span><b id="galleryCount">0</b></button><button class="shutter-button" id="shutterBtn" type="button" aria-label="사진 촬영"><span></span></button><small>촬영</small></div>
+          <div class="third-person-view" id="thirdPersonView" aria-label="3인칭 촬영자 미니뷰">
+            <div class="third-view-head"><span>▣ 3인칭 · 촬영자</span><button type="button" id="thirdViewToggle" aria-expanded="true" aria-label="3인칭 화면 접기">−</button></div>
+            <canvas id="thirdPersonCanvas" width="186" height="114" aria-label="촬영자와 주변 환경을 뒤쪽에서 보여주는 3인칭 화면"></canvas>
+          </div>
           <div id="shutterFlash" class="shutter-flash" aria-hidden="true"></div>
                   <div id="quickSelector" class="quick-selector hidden" role="dialog" aria-label="화면에서 카메라와 렌즈 변경">
             <div class="quick-select-top"><strong>카메라 · 렌즈</strong><button id="closeQuick" type="button" aria-label="닫기">✕</button></div>
@@ -242,14 +264,24 @@ footer{border-color:var(--line);color:#aaa096}footer span{color:#a76b50}
           <div class="manual-mf" id="manualMf"><label for="manualFocusDistance">수동 초점 거리 <strong id="focusDistanceValue">3.0 m</strong></label><input id="manualFocusDistance" type="range" min="0.25" max="80" step="0.05" value="3" disabled /><span id="manualFocusHint">AF-C: 카메라 이동·피사체 변화에 따라 자동으로 초점을 갱신합니다.</span></div>
         </section>
         <button id="advancedSettingsToggle" class="mobile-settings-toggle" type="button" aria-expanded="false">상세 렌즈 · 센서 설정 펼치기 <span>⌄</span></button>
-        <div class="scene-toolbar"><div class="toolbar-group"><span class="toolbar-caption">SCENE</span><div class="segmented scene-tabs"><button data-scene="park" class="active">🌿 공원</button><button data-scene="city">▤ 거리</button><button data-scene="studio">◈ 스튜디오</button></div></div><div class="toolbar-group"><span class="toolbar-caption">피사체</span><select id="targetSelect" aria-label="피사체 선택"><option value="person">인물</option><option value="car">차량</option><option value="animal">동물</option><option value="flower">꽃</option><option value="tree">나무</option></select><button id="lookAtBtn" class="icon-button" title="선택 피사체로 시선을 이동">⌖</button><button id="walkToggle" class="walk-toggle" type="button" aria-pressed="true">인물 걷기 ON</button></div><button id="resetView" class="reset-btn" title="시점 초기화">↺ <span>시점 초기화</span></button></div>
+        <div class="scene-toolbar"><div class="toolbar-group"><span class="toolbar-caption">SCENE</span><div class="segmented scene-tabs"><button data-scene="park" class="active">🌿 공원</button><button data-scene="village">⌂ 마을</button><button data-scene="city">▤ 거리</button><button data-scene="studio">◈ 스튜디오</button></div></div><div class="toolbar-group"><span class="toolbar-caption">피사체</span><select id="targetSelect" aria-label="피사체 선택"><option value="person">인물</option><option value="car">차량</option><option value="animal">동물</option><option value="flower">꽃</option><option value="tree">나무</option></select><button id="lookAtBtn" class="icon-button" title="선택 피사체로 시선을 이동">⌖</button><button id="walkToggle" class="walk-toggle" type="button" aria-pressed="true">인물 걷기 ON</button></div><button id="resetView" class="reset-btn" title="시점 초기화">↺ <span>시점 초기화</span></button></div>
+        <section class="world-generator" aria-label="시드 기반 3D 환경 생성">
+          <div class="generator-title"><strong>🌳 시드 월드 생성</strong><small>같은 환경 + 같은 시드 = 같은 장소 · 나무는 풀숲에 배치</small></div>
+          <label for="worldSeedInput">SEED <input type="text" id="worldSeedInput" maxlength="48" spellcheck="false" value="CPG-2026" placeholder="예: PICNIC-2026" /></label>
+          <button id="regenerateWorldBtn" type="button">시드 적용</button><button id="randomSeedBtn" type="button">↻ 새 장소</button>
+          <span id="seedStatus" role="status">현재 시드 CPG-2026</span>
+        </section>
+        <section class="portrait-compare" aria-label="인물 초점거리와 촬영 거리 비교">
+          <div><strong>인물 원근감 비교</strong><small>동일한 머리·어깨 구도를 위해 카메라와 인물 사이의 거리도 조절합니다. 단순 줌과 다릅니다.</small></div>
+          <div class="portrait-actions"><button type="button" data-portrait="24">24mm · 근접</button><button type="button" data-portrait="50">50mm · 표준</button><button type="button" data-portrait="85">85mm · 인물</button></div>
+        </section>
         <div class="metrics">
           <div class="metric"><span>HORIZONTAL FOV</span><strong id="metricHFov">39.6<small>°</small></strong><div class="metric-caption">수평 화각</div></div>
           <div class="metric"><span>35MM EQUIVALENT</span><strong id="metricEq">50<small>mm</small></strong><div class="metric-caption">풀프레임 환산</div></div>
           <div class="metric"><span>DEPTH OF FIELD</span><strong id="metricDof">—</strong><div class="metric-caption" id="metricDofDesc">초점 심도 근사</div></div>
           <div class="metric"><span>FOCUS DISTANCE</span><strong id="metricDistance">—</strong><div class="metric-caption">피사체까지 거리</div></div>
         </div>
-        <div id="message" class="notice" role="status" aria-live="polite"><span class="notice-icon">ⓘ</span><div>실제 렌즈 광학계의 보케·플레어·왜곡을 재현한 제품별 광학 프로파일이 아닙니다. 화각과 심도는 계산 기반, 효과는 교육용 연출입니다.</div></div>
+        <div id="message" class="notice" role="status" aria-live="polite"><span class="notice-icon">ⓘ</span><div>실제 렌즈 실측 데이터가 아닌 촬영 교육용 시뮬레이션입니다. 인물 원근감은 초점거리 자체보다 촬영 거리와 시점이 결정합니다. 초점거리만 바꾸면 시점은 움직이지 않습니다.</div></div>
       </section>
 
       <aside class="controls" id="controlsPanel" aria-label="촬영 설정">
@@ -428,10 +460,19 @@ const SHUTTER_VALUES=[['1/4000',1/4000],['1/2000',1/2000],['1/1000',1/1000],['1/
  */
 const WORLD = {
   park:{person:[0,2.5,1.65],car:[4.2,-6,1],animal:[2,2,.65],flower:[-2.3,3.5,1],tree:[-4.4,-1.7,2.8]},
-  city:{person:[0,2.4,1.65],car:[4.5,-3,1],animal:[2.1,1.5,.65],flower:[-2.2,3.3,1],tree:[-4.5,-2.2,2.7]},
+  village:{person:[-5.3,2.5,1.65],car:[0,-7,1],animal:[5.4,3.5,.65],flower:[-9,5,1],tree:[-13,10,2.8]},
+  city:{person:[0,2.4,1.65],car:[4.5,-3,1],animal:[2.1,1.5,.65],flower:[-2.2,3.3,1],tree:[-12,2,2.7]},
   studio:{person:[0,2.5,1.65],car:[4.7,-3,1],animal:[2.2,1.2,.65],flower:[-2.5,3.6,1],tree:[-4.8,-4,2.5]}
 };
 const SUBJECT_LABEL={person:'인물',car:'자동차',animal:'반려견',flower:'꽃',tree:'나무'};
+// Stable, compact procedural seed: identical seed + theme -> identical placement, no Math.random calls in world construction.
+function seededRandom(text){
+ let h=2166136261; for(const c of String(text)){h=Math.imul(h^c.charCodeAt(0),16777619);}
+ return function(){h+=0x6D2B79F5;let t=h;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};
+}
+function randomSeedCode(){try{const a=new Uint32Array(1);crypto.getRandomValues(a);return 'CPG-'+a[0].toString(36).toUpperCase().slice(0,7);}catch{return 'CPG-'+Date.now().toString(36).toUpperCase().slice(-7);}}
+function seededPalette(rng){return ['#a98770','#7f9b9b','#c6a081','#aa8198','#8393a5','#a5967d','#887b8e','#aab5a2'][Math.floor(rng()*8)];}
+
 function makeFallback(mount, getState, getAngles, onFrame){
  const canvas=document.createElement('canvas');canvas.className='canvas-fallback';mount.appendChild(canvas);
  const ctx=canvas.getContext('2d',{alpha:false});
@@ -479,11 +520,15 @@ function makeFallback(mount, getState, getAngles, onFrame){
    const center=projected(x,1.25*s,z);if(!center)return;shadow(x,z,.54*s);
    const sc=center.s*s, P=(xx,yy)=>projected(x+xx*s,yy*s,z);
    const stroke=(a,b,col,w)=>{const p=P(...a),q=P(...b);if(!p||!q)return;ctx.lineCap='round';ctx.lineWidth=Math.max(1,sc*w);ctx.strokeStyle=col;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();};
-   const gait=getState().walking?Math.sin(performance.now()*.0015)*.09:0;
-   for(let side of [-1,1]){
+   const subjectPos=WORLD[getState().scene]?.person||WORLD.park.person;
+   const hero=Math.hypot(x-subjectPos[0],z-subjectPos[1])<1.1;
+   const gait=getState().walking&&hero?Math.sin(performance.now()*.0015)*.09:0;
+   const pose=Math.abs(Math.round(x*11+z*7))%5;
+   for(const side of [-1,1]){
     stroke([side*.15,.83],[side*(.15+gait*.35),.08],'#475a6d',.18);
-    stroke([side*.32,1.46],[side*.38-gait*.1,1.08],color,.14);
-    const hand=P(side*.38-gait*.1,1.03);if(hand)ellipse(hand.x,hand.y,sc*.065,sc*.08,'#f4cfb3');
+    const end=pose===1&&side===1?[.69,1.98]:pose===2?[side*.17,1.36]:pose===3&&side===-1?[-.15,1.62]:[side*.38-gait*.1,1.08];
+    stroke([side*.32,1.46],end,color,.14);
+    const hand=P(...end);if(hand)ellipse(hand.x,hand.y,sc*.065,sc*.08,'#f4cfb3');
     const shoe=P(side*(.15+gait*.35),.08);if(shoe)ellipse(shoe.x,shoe.y+sc*.01,sc*.16,sc*.057,'#e4dacd');
    }
    const trunk=P(0,1.3);if(trunk){ellipse(trunk.x,trunk.y,sc*.29,sc*.41,color);ellipse(trunk.x,trunk.y-sc*.08,sc*.04,sc*.17,'#e9dfce');}
@@ -537,11 +582,12 @@ function makeFallback(mount, getState, getAngles, onFrame){
   if(theme==='studio'){
    const wall=ctx.createLinearGradient(0,0,W,H);wall.addColorStop(0,'#e3dbcf');wall.addColorStop(1,'#b8ae9f');ctx.fillStyle=wall;ctx.fillRect(0,0,W,H);
    drawPoly([[-80,0,-18],[80,0,-18],[80,60,-18],[-80,60,-18]],'#c0b5a7');
-  }else drawPoly([[-180,-.04,-180],[180,-.04,-180],[180,-.04,160],[-180,-.04,160]],theme==='park'?'#7c9b72':'#8a8e90');
+  }else drawPoly([[-180,-.04,-180],[180,-.04,-180],[180,-.04,160],[-180,-.04,160]],theme==='park'||theme==='village'?'#7c9b72':'#8a8e90');
  }
  function ground(){const theme=getState().scene;
   if(theme==='park'){drawPoly([[-2.3,.0,-60],[2.3,0,-60],[3.0,.0,60],[-3,.0,60]],'#d5c6a4');
    for(let i=-8;i<=8;i++){const z=i*5;line3([-2.6,0,z],[-2.6,0,z+3],'#dfdcc4',1);line3([2.6,0,z],[2.6,0,z+3],'#dfdcc4',1);} }
+  if(theme==='village'){drawPoly([[-4,.02,-150],[4,.02,-150],[4,.02,150],[-4,.02,150]],'#929894');}
   if(theme==='city'){drawPoly([[-5.0,.03,-150],[5.0,.03,-150],[5.0,.03,150],[-5.0,.03,150]],'#424b57');
    for(let z=-65;z<=40;z+=6)drawPoly([[-.14,.05,z], [.14,.05,z],[.14,.05,z+3],[-.14,.05,z+3]],'#e7dbad');
    for(let x of [-5.1,5.1])line3([x,.03,-100],[x,.03,100],'#d4bba0',2);
@@ -552,18 +598,22 @@ function makeFallback(mount, getState, getAngles, onFrame){
    if(mount.clientWidth!==W||mount.clientHeight!==H)resize();
    ctx.clearRect(0,0,W,H);background();ground();
    const scene=getState().scene;
+   const rng=seededRandom(getState().seed+':'+scene+':fallback');
    const items=[];
    const add=(kind,x,z,s=1,color)=>{const p=projected(x,0,z);if(p)items.push({kind,x,z,s,color,depth:p.d});};
    if(scene==='park'){
-      for(let i=0;i<42;i++){let a=i*2.39996,r=12+(i%5)*5.6,x=Math.cos(a)*r,z=10+Math.sin(a)*r;add('tree',x,z,.72+(i%4)*.13);}
+      for(let i=0;i<34;i++){const x=-48+rng()*96,z=-61+rng()*124;if(Math.abs(x)<3.6||Math.abs(z-19)<3.1||Math.abs(z+15)<3.2||Math.hypot(x+21,z-36)<8)continue;add('tree',x,z,.68+rng()*.53);}
       for(let i=0;i<36;i++){let x=Math.sin(i*12.7)*9.5,z=Math.cos(i*6.7)*13-5;if(Math.abs(x)>3)add('flower',x,z,.32+(i%4)*.10,['#f5b9cc','#f9df8c','#ead2ff'][i%3]);}
+   }else if(scene==='village'){
+      for(let i=0;i<24;i++){const x=(i%2?-1:1)*(12+rng()*5),z=-66+Math.floor(i/2)*12;add('house',x,z,.8+rng()*.35,['#dbc6b1','#d6d2c5','#eacdb2'][i%3]);}
+      for(let i=0;i<16;i++){const x=(i%2?-1:1)*(9+rng()*3),z=-66+Math.floor(i/2)*16;if(Math.abs(z+19)>7)add('tree',x,z,.62+rng()*.24);}
    }else if(scene==='city'){
       for(let i=0;i<22;i++){let a=i*Math.PI*2/22,x=Math.cos(a)*32,z=12+Math.sin(a)*34;add('building',x,z,1,['#71848f','#9b8d83','#5e7988'][i%3]);}
       for(let i=0;i<8;i++)add('tree',(i%2?-1:1)*6.6,-28+i*6,.65);
    }else{
       for(let x of [-7,7])add('softbox',x,-2,1);
    }
-   const extras=scene==='park'?[[-2.05,.2,'#b4838b'],[2.28,-1.2,'#89a19b'],[-5,5,'#9e8371'],[6,9,'#82959c'],[-8,22,'#bb988c'],[4,29,'#928e75'],[11,-5,'#8a9b90'],[-7,3,'#aa8791'],[-6,4,'#7d8a9d'],[7,11,'#b6a784'],[8.5,11,'#748e88'],[-11,18,'#8d7282'],[-12,19,'#a8a08c'],[5,26,'#8492ab'],[6,25,'#bc8979'],[-10,-21,'#b68e6c']]:scene==='city'?[[-4,8,'#a28d7d'],[6,13,'#9da8b1'],[-4,23,'#b69886'],[5,-13,'#7e8d81'],[-5,11,'#ad7f66'],[7,16,'#91788a'],[-6,27,'#aa9784'],[9,14,'#b98f8b']]:[[-3,12,'#a49e8e'],[6,18,'#bba89e'],[-7,7,'#bc8d88'],[8,8,'#899c8d']];
+   const extras=scene==='village'?[[-5.6,-2,'#a98770'],[-5.2,-7,'#8ca1a1'],[5.5,14,'#bd8f79'],[-5.4,-10,'#8494a5'],[6.1,42,'#a98888'],[-5.5,-42,'#8b9d85']]:scene==='park'?[[-2.05,.2,'#b4838b'],[2.28,-1.2,'#89a19b'],[-5,5,'#9e8371'],[6,9,'#82959c'],[-8,22,'#bb988c'],[4,29,'#928e75'],[11,-5,'#8a9b90'],[-7,3,'#aa8791'],[-6,4,'#7d8a9d'],[7,11,'#b6a784'],[8.5,11,'#748e88'],[-11,18,'#8d7282'],[-12,19,'#a8a08c'],[5,26,'#8492ab'],[6,25,'#bc8979'],[-10,-21,'#b68e6c']]:scene==='city'?[[-4,8,'#a28d7d'],[6,13,'#9da8b1'],[-4,23,'#b69886'],[5,-13,'#7e8d81'],[-5,11,'#ad7f66'],[7,16,'#91788a'],[-6,27,'#aa9784'],[9,14,'#b98f8b']]:[[-3,12,'#a49e8e'],[6,18,'#bba89e'],[-7,7,'#bc8d88'],[8,8,'#899c8d']];
    extras.forEach(([x,z,c])=>add('person',x,z,1,c));
    if(scene==='park'){add('dog',6,20,.85);add('dog',-5,26,1.05);}
    const P=WORLD[scene];add('person',position('person').x,P.person[1],1,scene==='city'?'#8f8a83':'#a88e77');add('car',P.car[0],P.car[1],1,scene==='city'?'#68afb2':'#c56b5a');add('dog',P.animal[0],P.animal[1]);add('flower',P.flower[0],P.flower[1],1.45,'#ffafd2');add('tree',P.tree[0],P.tree[1],1.1);
@@ -575,6 +625,7 @@ function makeFallback(mount, getState, getAngles, onFrame){
       if(o.kind==='car')car(o.x,o.z,o.s,o.color);
       if(o.kind==='dog')dog(o.x,o.z,o.s);
       if(o.kind==='building')building(o.x,o.z,4.7,8+(Math.abs(Math.floor(o.z))*7%11),5,o.color);
+      if(o.kind==='house')building(o.x,o.z,5.9,3.1+o.s*2.2,5,o.color);
       if(o.kind==='softbox'){cube(o.x,.2,-2,.08,3.7,.1,['#333e4c']);cube(o.x,3.6,-2,1.5,1.6,.18,['#effaff','#b6d5da','#e8f8fd']);}
    }
    // Fallback optical effect: mild screen-space defocus, not lens-specific blur.
@@ -630,7 +681,7 @@ function makeFallback(mount, getState, getAngles, onFrame){
   return Math.max(.25,Math.hypot(dx,dy,dz)*t);
  }
  function focusCenter(){return focusAt(W*.5,H*.5);}
- function animate(t){if(!alive)return;let elapsed=Math.min(.05,(t-last)/1000||0);last=t;onFrame(elapsed);camera.y+=( (getState().sitting?0.99:1.75)-camera.y)*Math.min(1,elapsed*5);if(getState().projection==='rect'||!lastFish||t-lastFish>62){draw();lastFish=t;}frameId=requestAnimationFrame(animate);}
+ function animate(t){if(!alive)return;let elapsed=Math.min(.05,(t-last)/1000||0);last=t;onFrame(elapsed);camera.y+=( (getState().sitting?0.99:1.75)-camera.y)*Math.min(1,elapsed*5);if(getState().projection==='rect'||!lastFish||t-lastFish>62){draw();lastFish=t;}updateThirdPerson(t);frameId=requestAnimationFrame(animate);}
  function setOrientation(dx,dy){camera.yaw-=dx*.004;camera.pitch=Math.max(-1.4,Math.min(1.4,camera.pitch-dy*.004));}
  reset();resize();requestAnimationFrame(animate);
  const observer=new ResizeObserver(resize);observer.observe(mount);
@@ -654,7 +705,7 @@ const state = {
   sensor:'FF', ratio:'3:2', focal:50, aperture:2.8, iso:100, shutter:'1/125',
   grid:'thirds', dof:true, vignette:true, flare:false, distortion:false,
   sizeLock:false, nativeEq:26, cameraId:'',
-  focusMode:'AF',manualFocus:3,afDistance:9,focusLocked:false, walking:false, sitting:false, projection:'rect',flareStrength:.1,
+  focusMode:'AF',manualFocus:3,afDistance:9,focusLocked:false, walking:false, sitting:false, projection:'rect',flareStrength:.1, seed:'CPG-2026',
 };
 let cameraStream=null, videoTrack=null, renderer=null, camera=null, scene=null, sun=null, fallback=null;
 let renderTarget=null, postScene=null, postCamera=null, shader=null, fishTarget=null, fishCamera=null, fishScene=null, fishShader=null;
@@ -669,6 +720,8 @@ const sunPosition = THREE ? new THREE.Vector3(-18,24,-30) : null;
 let lastMetricUpdate=0, visualFocus=9, evStops=0;
 let activeFocusPoint=null, activeFocusObject=null, afScreen=null, focusPulseTimer=null;
 const joystick={x:0,y:0,pointerId:null};
+let miniRenderer=null,miniCamera=null,photographerAvatar=null,miniLastDraw=0,miniCtx=null;
+
 let galleryDb=null, galleryThumbUrls=[];
 function shutterSeconds(){return SHUTTER_VALUES.find(s=>s[0]===state.shutter)?.[1]??1/125;}
 // Relative photographic stops: aperture area × shutter time × ISO gain.
@@ -684,7 +737,7 @@ function pulseFocus(){
  clearTimeout(focusPulseTimer);focusPulseTimer=setTimeout(()=>{ret.classList.remove('acquiring');ret.classList.add('locked');},290);
 }
 
-const names={park:'PARK / DAYLIGHT',city:'CITY / GOLDEN HOUR',studio:'STUDIO / SOFTBOX'};
+const names={park:'PARK / DAYLIGHT',village:'VILLAGE / PICNIC',city:'CITY / GOLDEN HOUR',studio:'STUDIO / SOFTBOX'};
 const targets={};
 
 function toast(text){const t=$('toast');t.textContent=text;t.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.classList.remove('show'),3200);}
@@ -833,7 +886,10 @@ function updateMetrics(){
 }
 
 // ---------- 3D procedural subjects. All geometry is authored in this demo. ----------
-function mat(c,metalness=0,roughness=.78){return new THREE.MeshStandardMaterial({color:c,metalness,roughness});}
+const cachedMaterials=new Map();
+function mat(c,metalness=0,roughness=.78){const key=c+'|'+metalness+'|'+roughness;
+ if(!cachedMaterials.has(key))cachedMaterials.set(key,new THREE.MeshStandardMaterial({color:c,metalness,roughness}));return cachedMaterials.get(key);}
+
 const MAT=THREE?{
   skin:mat('#ecc5a8'),hair:mat('#242b35'),jacket:mat('#ca8b68'),jeans:mat('#243c52'),
   shoe:mat('#e5e5d5'),white:mat('#f2eee1'),black:mat('#232b34'),
@@ -847,7 +903,7 @@ function ball(r,ma,x,y,z,parent){return shape(new THREE.SphereGeometry(r,12,9),m
 function cylinder(rt,rb,h,ma,x,y,z,parent){return shape(new THREE.CylinderGeometry(rt,rb,h,10),ma,x,y,z,parent);}
 function cone(r,h,ma,x,y,z,parent){return shape(new THREE.ConeGeometry(r,h,9),ma,x,y,z,parent);}
 function groupAt(parent,x,z){const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);return g;}
-function person(parent,x,z,top='#c1aa91'){
+function person(parent,x,z,top='#c1aa91',pose='auto'){
  const g=groupAt(parent,x,z);
  const seed=(Math.abs(Math.round(x*19+z*13))%9),longHair=(seed%3===0||seed%3===2),dress=seed%4===2;
  const skinTone=['#f3d0b2','#dbab8c','#b98267','#e6b9a2','#d7a37f'][seed%5];
@@ -900,7 +956,28 @@ function person(parent,x,z,top='#c1aa91'){
  }
  const highlight=ball(.18,hairHi,-.038,2.121,-.05,g);highlight.scale.set(.78,.21,.81);
  g.userData.focusY=1.72;g.userData.walkParts={arms,legs};g.userData.baseX=x;
+ if(pose!=='walk')posePerson(g,pose==='auto'?['portrait','relaxed','chat','wave','photo'][seed%5]:pose);
  return g;
+}
+function posePerson(g,pose='relaxed'){
+ const p=g.userData.walkParts;if(!p)return g;
+ const arms=p.arms,legs=p.legs;
+ if(pose==='portrait'){
+  arms.forEach(({pivot,side})=>{pivot.rotation.z=side*.15;pivot.rotation.x=-.12;});
+ }else if(pose==='wave'){
+  arms.forEach(({pivot,side})=>{pivot.rotation.z=side<0?-.2:-2.25;pivot.rotation.x=-.22;});
+ }else if(pose==='chat'){
+  arms.forEach(({pivot,side})=>{pivot.rotation.z=side*.36;pivot.rotation.x=side*.58;});
+  g.rotation.y+=.12;
+ }else if(pose==='photo'){
+  arms.forEach(({pivot,side})=>{pivot.rotation.z=side*.24;pivot.rotation.x=-1.22;});
+  box(.27,.18,.14,mat('#383b3b'),0,1.30,.45,g);
+  cylinder(.055,.055,.1,mat('#717a83'),0,1.30,.54,g).rotation.x=Math.PI/2;
+ }else{
+  arms.forEach(({pivot,side})=>{pivot.rotation.x=-.08;pivot.rotation.z=side*.08;});
+  legs[1].pivot.rotation.x=.07;
+ }
+ g.userData.pose=pose;delete g.userData.walkParts;return g;
 }
 function car(parent,x,z,paint='#b85851'){
  const g=groupAt(parent,x,z);const m=mat(paint,.38,.3);
@@ -951,7 +1028,7 @@ function duck(parent,x,z){
  g.userData.focusY=.48;return g;
 }
 function seatedPerson(parent,x,z,color='#af958d',angle=0){
- const g=person(parent,x,z,color);g.position.y=-.36;g.rotation.y=angle;
+ const g=person(parent,x,z,color,'walk');g.position.y=-.36;g.rotation.y=angle;
  const parts=g.userData.walkParts;
  if(parts){parts.legs.forEach(({pivot})=>pivot.rotation.x=-1.23);parts.arms.forEach(({pivot})=>pivot.rotation.x=-.30);}
  delete g.userData.walkParts;
@@ -1001,6 +1078,55 @@ function parkDetails(g){
   if(i>0)box(4.3,.08,.10,mat('#b59c77'),x-2.14,.78,z,g);
  }
 }
+function grassIsland(parent,x,z,r=2.3){
+ const g=groupAt(parent,x,z);
+ const earth=cylinder(r,r,.075,mat('#77936d'),0,.001,0,g);earth.castShadow=false;
+ const rng=seededRandom(`${state.seed}:island:${x.toFixed(2)}:${z.toFixed(2)}`);
+ for(let i=0;i<12;i++){
+  const a=rng()*6.283,dist=rng()*r*.89;
+  let h=.12+rng()*.12;
+  const blade=cone(.035+rng()*.035,h,mat(i%2?'#4f8253':'#7ea169'),Math.cos(a)*dist,h*.5,Math.sin(a)*dist,g);
+  blade.castShadow=false;
+ }
+ return g;
+}
+function parkBench(parent,x,z,yaw=0){
+ const g=groupAt(parent,x,z);g.rotation.y=yaw;
+ const wood=mat('#9c7653'),iron=mat('#535b50');
+ box(1.7,.13,.60,wood,0,.55,0,g);box(1.7,.42,.11,wood,0,.89,-.25,g);
+ for(const side of [-1,1]){box(.1,.49,.5,iron,side*.67,.30,0,g);box(.13,.68,.09,iron,side*.68,.46,-.26,g);}
+ return g;
+}
+function makeHouse(parent,x,z,rng,side=1){
+ const g=groupAt(parent,x,z);g.rotation.y=side>0?-Math.PI/2:Math.PI/2;
+ const wall=mat(['#ead8bb','#dbd9ca','#e9c6ae','#d0cfd0','#d4c6b3'][Math.floor(rng()*5)]);
+ const roof=mat(['#aa735e','#96796d','#6e7d79','#8e5f56'][Math.floor(rng()*4)]);
+ const stories=rng()>.6?2:1,h=stories===2?6.2:3.7;
+ box(7,h,6.3,wall,0,h*.5,0,g);
+ const roofMesh=shape(new THREE.ConeGeometry(5.8,2.2,4),roof,0,h+.9,0,g);roofMesh.rotation.y=Math.PI/4;roofMesh.scale.z=.85;
+ const window=mat('#8ba8af',.05,.31),wood=mat('#8f7765');
+ for(const y of stories===2?[2.35,4.75]:[2.4])for(const px of [-2.2,2.2]){
+  box(1.26,1.35,.08,window,px,y,3.20,g);
+  box(1.40,.11,.12,mat('#fff9e7'),px,y+ .72,3.27,g);
+ }
+ box(1.10,2.1,.10,wood,0,1.07,3.20,g);
+ box(7.6,.16,.16,mat('#f2e9d7'),0,.13,3.25,g);
+ return g;
+}
+function makeCafe(parent,x,z,rng){
+ const g=groupAt(parent,x,z);
+ box(9,3.4,7.6,mat('#e4d8c2'),0,1.7,0,g);
+ box(9.4,.20,8.0,mat('#a76b54'),0,3.45,0,g);
+ box(9.2,.5,1.4,mat('#b77962'),0,2.95,4.4,g);
+ box(4.5,1.8,.07,mat('#8daea8',.10,.22),-1.8,1.8,3.85,g);
+ box(2,1.9,.08,mat('#736b5e'),3.15,1.8,3.84,g);
+ for(const x0 of [-2.8,0,2.8]){
+  cylinder(.07,.07,2,mat('#7f6b55'),x0,1,7,g);
+  const umbrella=cone(1.55,.52,mat(['#d6b68b','#b9a99b','#b46b54'][Math.floor(rng()*3)]),x0,2.25,7,g);umbrella.castShadow=false;
+  cylinder(.55,.55,.07,mat('#d1c7b7'),x0,.66,7,g);
+ }
+ return g;
+}
 function cityDetails(g){
  const stone=mat('#c8beb1'),stripe=mat('#f0eae0'),rust=mat('#ab644b');
  for(const side of [-1,1]){
@@ -1015,62 +1141,120 @@ function cityDetails(g){
  }
 }
 function buildPark(){
- const key='park',g=new THREE.Group();scene.add(g);targets[key]={};setupGround(g,'#75956b');
- const path=box(3.4,.012,28,mat('#bea990'),0,-.023,1,g);path.receiveShadow=true;path.castShadow=false;
- const road=box(50,.014,5.0,mat('#525c62'),0,-.01,-9.5,g);road.castShadow=false;
- for(let i=-5;i<=5;i++)box(2.3,.022,.1,mat('#e6dfb8'),i*4,0,-9.5,g);
- for(let i=0;i<12;i++){const x=(i%2===0?-1:1)*(5.7+(i%4)*1.8),z=-13+Math.floor(i/2)*5;
- tree(g,x,z,.76+(i%3)*.18);}
- for(let i=0;i<4;i++){const b=groupAt(g,(i%2?-3.8:3.8),-1-i*3);box(1.45,.12,.55,mat('#8d6845'),0,.54,0,b);box(1.5,.45,.11,mat('#8d6845'),0,.88,-.19,b);}
- addFlowers(g,100,2);parkDetails(g);
-  // 360° park layout: trees, crossings, benches and people also behind the starting camera.
-  box(3.1,.012,72,mat('#ccbaa1'),0,-.019,19,g).castShadow=false;
-  box(62,.014,2.6,mat('#cebda3'),0,-.018,19,g).castShadow=false;
-  for(let i=0;i<46;i++){
-    const a=i*2.39996, r=12+(i%5)*5.6, x=Math.cos(a)*r,z=10+Math.sin(a)*r;
-    if(Math.abs(x)<3.3&&Math.abs(z-19)<6)continue;
-    tree(g,x,z,.68+(i%4)*.12);
-  }
-  for(const [x,z,col,rot] of [[-5,5,'#a98c73',.35],[6,9,'#82959c',-1.1],[-8,22,'#bb988c',1.5],[4,29,'#928e75',-.8],[11,-5,'#8a9b90',2.1]]){
-    const pe=person(g,x,z,col);pe.rotation.y=rot;tagSubject(pe,'person');
-  }
-  for(const [x,z,sc] of [[6,20,.85],[-5,26,1.1],[3,38,.78]]){const d=dog(g,x,z);d.scale.setScalar(sc);tagSubject(d,'animal');}
-  // Families, pairs and an occupied bench; varied hair/outfits, generally stationary.
-  for(const [x,z,c,a] of [
-   [-7.8,3.2,'#ac7280',.6],[-6.6,4.1,'#7d8a9d',.7],[-6.0,2.9,'#ddad78',.45],
-   [7.1,10.3,'#b6a784',-1.3],[8.5,10.8,'#748e88',-1.4],
-   [-11,18,'#8d7282',2.3],[-12.2,18.9,'#a8a08c',2.4],
-   [4.2,25,'#8492ab',-.45],[5.9,26,'#bc8979',-.6],
-   [12,-19,'#9c937c',1.9],[-10,-21,'#b68e6c',-1.1]]){
-     const p=person(g,x,z,c);p.rotation.y=a;tagSubject(p,'person');
-   }
-  for(const [x,z,color,rotation] of [[-2.05,.2,'#b4838b',.35],[2.28,-1.2,'#89a19b',-.35]]){
-    const companion=person(g,x,z,color);companion.rotation.y=rotation;tagSubject(companion,'person');
-  }
-  for(const [x,z,col,angle] of [[-3.8,-1,'#8b9a8e',.15],[3.8,-4,'#a98272',-.2]]){
-   const seated=seatedPerson(g,x,z,col,angle);tagSubject(seated,'person');
-  }
-  for(const [x,z] of [[-6.8,15],[13,9]]){const pet=cat(g,x,z);tagSubject(pet,'animal');}
-  for(const [x,z] of [[-3,-23],[5,-24],[15,20]]){const bird=duck(g,x,z);tagSubject(bird,'animal');}
-  register(key,'person',person(g,0,2.5,'#9e8169'));
- register(key,'car',car(g,4.2,-6,'#d1775b'));
+ const key='park',g=new THREE.Group(),rng=seededRandom(state.seed+':park');scene.add(g);g.userData.seed=state.seed;targets[key]={};setupGround(g,'#7fa274');
+ // A walkable 360° public park: loop trails, crossing, pond, meadows and wooded lawns.
+ box(3.7,.017,156,mat('#d9c9ae'),0,-.026,0,g).castShadow=false;
+ box(106,.015,3.2,mat('#dbcbb1'),0,-.025,20,g).castShadow=false;
+ // Small side road (trees must never occupy this paved band).
+ box(110,.017,5.6,mat('#858c84'),0,-.019,-15,g).castShadow=false;
+ for(let i=-10;i<=10;i++)box(2,.022,.1,mat('#e4dac2'),i*5,0,-15,g).castShadow=false;
+ // Grass embankment and water feature on a distinct lawn.
+ const pond=groupAt(g,-21,36);cylinder(6,6,.045,mat('#738c74'),0,.01,0,pond).castShadow=false;
+ cylinder(4.8,4.8,.055,mat('#8dbec1',.05,.22),0,.035,0,pond).castShadow=false;
+ for(let j=0;j<13;j++){const a=j*Math.PI*2/13;const rock=ball(.25+(j%3)*.09,mat('#b9baab'),-21+Math.cos(a)*5.1,.08,36+Math.sin(a)*5.1,g);rock.scale.y=.3;rock.castShadow=false;}
+ const green=(x,z)=>Math.abs(x)>3.7 && Math.abs(z-20)>3.5 && Math.abs(z+15)>3.9 && Math.hypot(x+21,z-36)>8 && !(x>13&&x<29&&z>25&&z<42);
+ // Forest clusters live in planting beds only, never in the walkway or road.
+ let made=0,attempt=0;
+ while(made<42&&attempt++<420){const x=-48+rng()*96,z=-63+rng()*130;if(!green(x,z))continue;
+   const sz=.65+rng()*.60;grassIsland(g,x,z,1.1+sz*.65);tree(g,x,z,sz);made++;
+   if(rng()>.6){const a=rng()*6.28;ball(.55,mat('#588858'),x+Math.cos(a)*1.4,.23,z+Math.sin(a)*1.4,g).castShadow=false;}
+ }
+ // Formal rows of park benches are close to paths, with sitting visitors.
+ for(const [x,z,yaw] of [[-4.6,5,.5],[4.8,-1,-.5],[-4.6,29,.35],[4.8,34,-.3],[8,47,.9]])parkBench(g,x,z,yaw);
+ const people=[[-4.6,5,.5,'sit'],[4.8,-1,-.5,'sit'],[-4.6,29,.35,'sit'],
+   [-6.8,3.8,.3,'photo'],[-7.9,4.8,.4,'portrait'],[8.2,8,-1.5,'wave'],[9.1,9,-1.3,'chat'],
+   [6.2,26,-.1,'photo'],[-10.5,26,.9,'portrait'],[-11.8,25,.7,'chat'],[16,11,.4,'relaxed'],
+   [-15,-25,1.4,'portrait'],[11,-28,-.8,'wave'],[-7,-39,1.8,'chat'],[5,46,-1.4,'portrait']];
+ for(const [x,z,angle,pose] of people){const col=seededPalette(rng);
+  const p=pose==='sit'?seatedPerson(g,x,z,col,angle):person(g,x,z,col,pose);
+  p.rotation.y=angle;tagSubject(p,'person');}
+ for(let i=0;i<7;i++){let x=-37+rng()*73,z=-50+rng()*110;if(!green(x,z))continue;
+  const p=person(g,x,z,seededPalette(rng),['portrait','photo','relaxed','chat'][i%4]);p.rotation.y=rng()*Math.PI*2;tagSubject(p,'person');}
+ // Picnic platform and camera subjects in the accessible main clearing.
+ const pavilion=groupAt(g,21,34);cylinder(3.25,3.25,.18,mat('#d2c3a6'),0,.07,0,pavilion).castShadow=false;
+ for(const a of [0,Math.PI/2,Math.PI,Math.PI*1.5]){const x=Math.cos(a)*2.6,z=Math.sin(a)*2.6;
+  cylinder(.085,.085,2.8,mat('#a88462'),x,1.45,z,pavilion);}
+ const roof=cone(4.1,1.2,mat('#99816b'),0,3.28,0,pavilion);roof.castShadow=false;
+ // Flowers and animals grouped naturally in meadow patches.
+ for(let i=0;i<85;i++){const x=-40+rng()*80,z=-53+rng()*116;if(!green(x,z))continue;
+  flower(g,x,z,['#f7d4e0','#eed9ac','#d4c6e6','#f5efe4'][i%4],.32+rng()*.27);}
+ for(const [x,z] of [[-13,11],[13,30],[6,48]]){const d=dog(g,x,z);tagSubject(d,'animal');}
+ for(const [x,z] of [[-10,6],[10,38],[-5,48]]){const c=cat(g,x,z);tagSubject(c,'animal');}
+ for(const [x,z] of [[-17,32],[-23,33],[-26,40]]){const d=duck(g,x,z);tagSubject(d,'animal');}
+ // Primary targets stay predictable regardless of environment seed.
+ register(key,'person',person(g,0,2.5,'#a6897a','walk'));
+ register(key,'car',car(g,4.2,-15,'#ae7a68'));
  register(key,'animal',dog(g,2,2));
- register(key,'flower',flower(g,-2.3,3.5,'#ff9ac4',1.35));
- register(key,'tree',tree(g,-4.4,-1.7,1.15));
+ register(key,'flower',flower(g,-2.3,3.5,'#e5a5c5',1.3));
+ grassIsland(g,-8.5,-1,2.15);register(key,'tree',tree(g,-8.5,-1,1.05));
+ return g;
+}
+function buildVillage(){
+ const key='village',g=new THREE.Group(),rng=seededRandom(state.seed+':village');scene.add(g);g.userData.seed=state.seed;targets[key]={};setupGround(g,'#8ca377');
+ // Main street in every direction, with continuous paths, intersections and houses.
+ box(8,.023,166,mat('#7d8581'),0,.008,0,g).castShadow=false;
+ box(130,.023,7.5,mat('#858d87'),0,.008,-19,g).castShadow=false;
+ for(const side of [-1,1]){
+  box(2.2,.028,166,mat('#d8cbb7'),side*5.15,.031,0,g).castShadow=false;
+  box(130,.028,2.1,mat('#d8cbb7'),0,.031,-19+side*5,g).castShadow=false;
+ }
+ for(let z=-73;z<78;z+=9)box(.13,.028,4,mat('#e8d8b2'),0,.034,z,g).castShadow=false;
+ // Housing rows: the lawn belongs between the sidewalk and the buildings.
+ for(const side of [-1,1])for(let z=-65;z<=68;z+=14){
+  if(Math.abs(z+19)<10)continue;
+  const x=side*(14+rng()*3),zz=z+(rng()-.5)*3.5;
+  if(z>22&&z<48&&side>0)continue; // village square / cafe
+  makeHouse(g,x,zz,rng,side);
+  const gx=side*(9+rng()*2),gz=zz+(rng()-.5)*3.3;
+  grassIsland(g,gx,gz,1.9);tree(g,gx,gz,.57+rng()*.24);
+  for(let i=0;i<4;i++){
+   const fx=x-side*(1+rng()*1.8)+(rng()-.5)*2.5,fz=zz+(rng()-.5)*5;
+   flower(g,fx,fz,['#f5dadb','#e6cc9d','#e8e3f0'][i%3],.23+rng()*.17);
+  }
+ }
+ // Cross streets have additional hedges, small shops and lawn-side parkland.
+ makeCafe(g,26,35,rng);
+ box(14,.05,17,mat('#ccbea7'),24,.01,27,g).castShadow=false;
+ const parklet=groupAt(g,-27,31);
+ cylinder(9.5,9.5,.035,mat('#749b70'),0,.007,0,parklet).castShadow=false;
+ for(let i=0;i<7;i++){const a=i*Math.PI*2/7;
+   const x=-27+Math.cos(a)*7.2,z=31+Math.sin(a)*7.2;
+   grassIsland(g,x,z,1.5);tree(g,x,z,.6+rng()*.25);
+ }
+ parkBench(g,-27,31,.1);parkBench(g,-22,35,1.3);
+ // People inhabit sidewalks and the cafe square. Some pose, some chat, some sit.
+ const presets=[[-5.6,-2,'portrait'],[-5.2,-7,'photo'],[5.5,14,'chat'],[6.2,16,'wave'],
+  [-5.5,-10,'photo'],[5.4,-31,'portrait'],[-5.4,-38,'chat'],[6.1,42,'wave'],[24,27,'portrait'],[26,28,'photo'],[-22,36,'chat']];
+ presets.forEach(([x,z,pose],i)=>{const p=person(g,x,z,seededPalette(rng),pose);
+    p.rotation.y=(i%2?-.4:2.5)+rng()*.3;tagSubject(p,'person');});
+ const seated=seatedPerson(g,-27,31,seededPalette(rng),.1);tagSubject(seated,'person');
+ for(let i=0;i<8;i++){
+  const x=(rng()>.5?1:-1)*(5.1+rng()*.9),z=-56+rng()*112;
+  if(Math.abs(z+19)<5||Math.abs(z-2.5)<8)continue;
+  const p=person(g,x,z,seededPalette(rng),['photo','portrait','relaxed','chat'][i%4]);p.rotation.y=rng()*Math.PI*2;tagSubject(p,'person');
+ }
+ for(const [x,z] of [[6.4,4],[-8,43],[10,-44]])tagSubject(dog(g,x,z),'animal');
+ for(const [x,z] of [[-8,9],[10,45]])tagSubject(cat(g,x,z),'animal');
+ // Registered primary subjects remain predictable for focus selection and reset.
+ register(key,'person',person(g,-5.3,2.5,'#b39383','walk'));
+ register(key,'car',car(g,0,-8,'#859cab'));
+ register(key,'animal',dog(g,5.4,3.5));
+ register(key,'flower',flower(g,-9,5,'#ecc1c9',1.15));
+ grassIsland(g,-10.3,10,2);register(key,'tree',tree(g,-10.3,10,.95));
  return g;
 }
 function buildCity(){
- const key='city',g=new THREE.Group();scene.add(g);targets[key]={};setupGround(g,'#5a6570');
+ const key='city',g=new THREE.Group(),rng=seededRandom(state.seed+':city');scene.add(g);g.userData.seed=state.seed;targets[key]={};setupGround(g,'#5a6570');
  box(70,.03,9,mat('#363f49'),0,.005,-5,g);
  for(let i=-5;i<6;i++)box(2.2,.025,.15,mat('#e2d5ae'),i*4,.03,-5,g);
  for(let i=0;i<13;i++){
   const x=(i%2===0?-1:1)*(7.5+(i%3)*2),z=-9-(i%5)*5;
-  const h=7+(i*13%13);
+  const h=7+(i*13%13)+rng()*2.3;
   box(4.6,h,5,mat(['#6a7883','#637d89','#9d8b7c','#4b6775'][i%4]),x,h/2,z,g);
   for(let row=0;row<Math.floor(h/2)-1;row++)for(let col=0;col<3;col++)
     box(.67,.78,.03,mat(row%3===0?'#f4d2a1':'#9bc0ce'),x-1.3+col*1.2,1.8+row*2,z+2.52,g);
  }
- for(let i=0;i<5;i++){tree(g,-6.5,-12+i*4,.65);tree(g,6.5,-13+i*4,.65);}
+ for(let i=0;i<5;i++){grassIsland(g,-7,-34+i*6,1.3);tree(g,-7,-34+i*6,.62);grassIsland(g,7,-36+i*6,1.3);tree(g,7,-36+i*6,.62);}
  // street lights
  for(let i=0;i<3;i++){let x=-5.5+i*5; cylinder(.06,.08,4,mat('#31363d'),x,2,-4,g);ball(.22,mat('#fff0c2'),x,4.04,-4,g);}
  cityDetails(g);
@@ -1090,15 +1274,15 @@ function buildCity(){
     const p=person(g,x,z,col);p.rotation.y=angle;tagSubject(p,'person');
   }
   for(const [x,z] of [[-6.8,2.4],[9,13]]){const pet=cat(g,x,z);tagSubject(pet,'animal');}
-  register(key,'person',person(g,0,2.4,'#857b75'));
+  register(key,'person',person(g,0,2.4,'#857b75','walk'));
  register(key,'car',car(g,4.5,-3,'#7bb2b6'));
  register(key,'animal',dog(g,2.1,1.5));
  register(key,'flower',flower(g,-2.2,3.3,'#e9bbec',1.45));
- register(key,'tree',tree(g,-4.5,-2.2,.93));
+ grassIsland(g,-12,2,1.3);register(key,'tree',tree(g,-12,2,.75));
  return g;
 }
 function buildStudio(){
- const key='studio',g=new THREE.Group();scene.add(g);targets[key]={};setupGround(g,'#c8c0b1');
+ const key='studio',g=new THREE.Group();scene.add(g);g.userData.seed=state.seed;targets[key]={};setupGround(g,'#c8c0b1');
  box(90,25,.4,mat('#d1c6b6'),0,12.5,-17,g);
  box(.4,25,70,mat('#b9ad9b'),-30,12.5,-2,g);
  box(.4,25,70,mat('#b9ad9b'),30,12.5,-2,g);
@@ -1116,14 +1300,113 @@ function buildStudio(){
    [-5,17,'#8b8aa1',.6],[8,17,'#b6a580',-1],[-6,26,'#9d7b68',2]]){
    const model=person(g,x,z,col);model.rotation.y=angle;tagSubject(model,'person');
  }
- register(key,'person',person(g,0,2.5,'#b6a28c'));
+ register(key,'person',person(g,0,2.5,'#b6a28c','walk'));
  register(key,'car',car(g,4.7,-3,'#c99e72'));
  register(key,'animal',dog(g,2.2,1.2));
  register(key,'flower',flower(g,-2.5,3.6,'#eea2b1',1.5));
- register(key,'tree',tree(g,-4.8,-4,.85));
+ const pot=groupAt(g,-4.8,-4);cylinder(.85,.63,.7,mat('#8e7461'),0,.35,0,pot);cylinder(.8,.8,.07,mat('#6b8d65'),0,.72,0,pot);register(key,'tree',tree(g,-4.8,-4,.85));
  return g;
 }
 
+// Second camera: a genuine rear/over-shoulder 3D view that never appears in saved photos.
+function makeWorld(key){return key==='park'?buildPark():key==='village'?buildVillage():key==='city'?buildCity():buildStudio();}
+function disposeWorld(key){
+ const old=worlds[key];if(!old)return;
+ scene.remove(old);old.traverse(o=>{if(o.isMesh&&o.geometry)o.geometry.dispose();});
+ delete worlds[key];delete targets[key];
+}
+function buildPhotographer(){
+ const g=new THREE.Group(),coat=mat('#59675f'),jeans=mat('#374b56'),skin=mat('#ddb698'),shoe=mat('#4c453d');
+ cylinder(.24,.25,.7,coat,0,1.2,0,g);
+ for(const x of [-.14,.14]){
+  cylinder(.105,.09,.78,jeans,x,.43,0,g);
+  box(.22,.12,.40,shoe,x,.07,.13,g);
+  cylinder(.08,.075,.63,coat,x*2.2,1.17,-.19,g).rotation.x=-.45;
+ }
+ ball(.21,skin,0,1.81,0,g);
+ const hair=ball(.23,mat('#3a3430'),0,1.94,-.05,g);hair.scale.set(1,.48,1.0);
+ const held=box(.37,.23,.16,mat('#323b42'),0,1.43,-.53,g);
+ cylinder(.09,.09,.12,mat('#868c8f'),0,1.43,-.65,g).rotation.x=Math.PI/2;
+ g.visible=false;scene.add(g);return g;
+}
+function initThirdPerson(){
+ const c=$('thirdPersonCanvas');if(!THREE||!camera||!renderer)return;
+ try{
+  miniRenderer=new THREE.WebGLRenderer({canvas:c,antialias:true,powerPreference:'low-power'});
+  miniRenderer.outputColorSpace=THREE.SRGBColorSpace;
+  miniRenderer.toneMapping=THREE.ACESFilmicToneMapping;
+  miniRenderer.shadowMap.enabled=false;
+  miniRenderer.setPixelRatio(1);
+  miniRenderer.setSize(c.width,c.height,false);
+  miniCamera=new THREE.PerspectiveCamera(63,c.width/c.height,.1,280);
+  photographerAvatar=buildPhotographer();
+ }catch(e){console.warn('3인칭 WebGL 미니뷰 대체 모드',e);miniRenderer=null;miniCamera=null;miniCtx=c.getContext('2d');}
+}
+function drawThirdPersonFallback(){
+ const c=$('thirdPersonCanvas');if(!c||!fallback)return;
+ const ctx=miniCtx||(miniCtx=c.getContext('2d'));if(!ctx)return;
+ const w=c.width,h=c.height,cam=fallback.camera;
+ const sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,state.scene==='village'?'#91b5c5':'#a9cbd1');sky.addColorStop(.6,'#dbe8d2');sky.addColorStop(.61,'#82a179');sky.addColorStop(1,'#5c805d');
+ ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+ ctx.fillStyle=state.scene==='village'?'#aaa99a':'#c5b69c';
+ ctx.beginPath();ctx.moveTo(75,h);ctx.lineTo(84,54);ctx.lineTo(103,54);ctx.lineTo(118,h);ctx.fill();
+ // A recognizable rear-view photographer and a directional indicator, independent of the main lens.
+ ctx.save();ctx.translate(w*.5,h*.82);ctx.fillStyle='#4d5c58';ctx.fillRect(-12,-28,24,25);
+ ctx.fillStyle='#d8af91';ctx.beginPath();ctx.arc(0,-34,10,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#35322e';ctx.beginPath();ctx.arc(0,-38,10,Math.PI,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#303c47';ctx.fillRect(-10,-3,8,18);ctx.fillRect(2,-3,8,18);ctx.restore();
+ ctx.fillStyle='#fff';ctx.font='9px sans-serif';ctx.fillText(`X ${cam.x.toFixed(1)} · Z ${cam.z.toFixed(1)}`,7,13);
+}
+function updateThirdPerson(t){
+ if(state.mode!=='3d'||$('thirdPersonView')?.classList.contains('is-collapsed')||t-miniLastDraw<130)return;
+ miniLastDraw=t;
+ if(fallback||!miniRenderer||!miniCamera||!camera||!scene){drawThirdPersonFallback();return;}
+ try{
+  const viewDir=directionFromCamera();const right=new THREE.Vector3(-viewDir.z,0,viewDir.x);
+  photographerAvatar.position.set(camera.position.x,0,camera.position.z);
+  photographerAvatar.rotation.y=camera.rotation.y;
+  photographerAvatar.scale.y=state.sitting?.69:1;
+  const aim=new THREE.Vector3(camera.position.x,.92,camera.position.z);
+  miniCamera.position.copy(aim).addScaledVector(viewDir,-4.65).addScaledVector(right,1.7);
+  miniCamera.position.y=4.0;
+  miniCamera.lookAt(aim);
+  photographerAvatar.visible=true;
+  miniRenderer.render(scene,miniCamera);
+ }catch(e){console.warn('3인칭 미니뷰 렌더링 실패',e);}
+ finally{if(photographerAvatar)photographerAvatar.visible=false;}
+}
+function applySeedWorld(restorePose=true){
+ state.seed=(String($('worldSeedInput').value||'CPG-2026').trim().slice(0,48)||'CPG-2026');
+ $('worldSeedInput').value=state.seed;
+ if(scene){
+  // Keep the photographer's position and gaze when generating a new landscape.
+  if(worlds[state.scene])disposeWorld(state.scene);
+  worlds[state.scene]=makeWorld(state.scene);
+  for(const [key,g] of Object.entries(worlds))g.visible=key===state.scene;
+ }
+ clearTapFocus();updateAutoFocus();updateMetrics();
+ $('seedStatus').textContent=`현재 시드 ${state.seed} · ${state.scene==='village'?'마을':'환경'} 재생성 완료`;
+ toast(`환경 시드 ${state.seed} 적용 · 나무는 잔디/풀숲에 배치`);
+}
+function portraitDistancePreset(mm){
+ if(state.mode!=='3d'){toast('인물 원근감 비교는 3D 모드에서만 사용 가능합니다.');return;}
+ state.target='person';$('targetSelect').value='person';clearTapFocus();
+ selectEquivalent(mm);
+ // Hold roughly equal head-and-shoulders framing while changing camera-to-subject distance.
+ const dist=clamp(mm/50*1.85,.82,6.0);
+ if(fallback){
+  const p=fallback.position('person'),c=fallback.camera;
+  const dx=c.x-p.x,dz=c.z-p.z,l=Math.hypot(dx,dz)||1;
+  c.x=p.x+dx/l*dist;c.z=p.z+dz/l*dist;c.y=state.sitting?.99:1.75;
+  fallback.lookAt('person');
+ }else if(camera){
+  const p=getSelectedPosition(),dx=camera.position.x-p.x,dz=camera.position.z-p.z,l=Math.hypot(dx,dz)||1;
+  camera.position.set(p.x+dx/l*dist,state.sitting?.99:1.75,p.z+dz/l*dist);
+  centerOnTarget();
+ }
+ state.afDistance=dist;updateAutoFocus();updateMetrics();
+ toast(`${mm}mm 인물 비교 · 촬영 거리 약 ${dist.toFixed(2)}m (구도 비교용)`);
+}
 // -------- Renderer, view movement, and approximate screen-space defocus --------
 function createRenderer(){
  const view=$('viewport');
@@ -1150,8 +1433,8 @@ function createRenderer(){
  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.4));
  view.querySelector('#webglMount').appendChild(renderer.domElement);
- worlds.park=buildPark();worlds.city=buildCity();worlds.studio=buildStudio();
- initPostProcessing();initFisheyeRender();
+ worlds.park=buildPark();
+ initPostProcessing();initFisheyeRender();initThirdPerson();
  changeScene(state.scene,false);
  resize();
  new ResizeObserver(resize).observe(view);
@@ -1258,11 +1541,11 @@ function moveCamera(direction,dt){
  camera.position.z=clamp(camera.position.z,-90,85);
 }
 function changeScene(name,reset=true){
- if(!fallback&&!worlds[name])return;
+ if(!fallback){if(worlds[name]&&worlds[name].userData.seed!==state.seed)disposeWorld(name);if(!worlds[name])worlds[name]=makeWorld(name);}
  state.scene=name;
  for(const [id,g] of Object.entries(worlds))g.visible=(id===name);
  document.querySelectorAll('[data-scene]').forEach(b=>b.classList.toggle('active',b.dataset.scene===name));
- if(scene){const hex=name==='park'?'#b6cbd0':name==='city'?'#d9b8a8':'#d3c7b5';scene.background.set(hex);scene.fog.color.set(hex);scene.userData.sky.material.uniforms.uCity.value=name==='city'?1:0;scene.userData.sky.material.uniforms.uStudio.value=name==='studio'?1:0;}
+ if(scene){const hex=name==='park'?'#b6cbd0':name==='village'?'#bcd4d3':name==='city'?'#d9b8a8':'#d3c7b5';scene.background.set(hex);scene.fog.color.set(hex);scene.userData.sky.material.uniforms.uCity.value=name==='city'?.7:name==='village'?.16:0;scene.userData.sky.material.uniforms.uStudio.value=name==='studio'?1:0;}
  $('hudScene').textContent=names[name];
  if(reset)resetCamera();
  updateMetrics();
@@ -1302,6 +1585,7 @@ function frame(){
   visualFocus+=(focusDistance()-visualFocus)*(1-Math.exp(-dt*8));
   if(shader)shader.uniforms.uFocus.value=visualFocus;
   updateTrackingReticle();
+  updateThirdPerson(performance.now());
   if(state.flare){
    const p=sunPosition.clone().project(camera);const visible=p.z>-1&&p.z<1&&Math.abs(p.x)<1.4&&Math.abs(p.y)<1.4&&state.scene!=='studio';
    $('flareLayer').style.opacity=visible?String(state.flareStrength*.35):'0';
@@ -1491,6 +1775,11 @@ function bindControls(){
  $('mfBtn').addEventListener('click',()=>setFocusMode('MF'));
  $('manualFocusDistance').addEventListener('input',()=>{state.manualFocus=Number($('manualFocusDistance').value);updateMetrics();if(state.mode==='live')applyDeviceFocus();});
  $('postureBtn').addEventListener('click',()=>{state.sitting=!state.sitting;updatePostureButton();updateMetrics();});
+ $('thirdViewToggle').addEventListener('click',()=>{const panel=$('thirdPersonView');const closed=panel.classList.toggle('is-collapsed');$('thirdViewToggle').textContent=closed?'+':'−';$('thirdViewToggle').setAttribute('aria-expanded',String(!closed));});
+ $('regenerateWorldBtn').addEventListener('click',()=>applySeedWorld());
+ $('randomSeedBtn').addEventListener('click',()=>{$('worldSeedInput').value=randomSeedCode();applySeedWorld();});
+ $('worldSeedInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();applySeedWorld();}});
+ document.querySelectorAll('[data-portrait]').forEach(b=>b.addEventListener('click',()=>portraitDistancePreset(Number(b.dataset.portrait))));
  $('walkToggle').addEventListener('click',()=>{state.walking=!state.walking;$('walkToggle').textContent=state.walking?'인물 걷기 ON':'인물 걷기 OFF';$('walkToggle').setAttribute('aria-pressed',String(state.walking));});
  $('quickFisheyeBtn').addEventListener('click',()=>{state.projection=state.projection==='fishdiag'?'rect':'fishdiag';$('projectionSelect').value=state.projection;updateMetrics();});
  $('quickGearBtn').addEventListener('click',openQuickSelector);
@@ -1615,7 +1904,7 @@ function pinchZoom(distance){
 function setupViewPointer(){
  const view=$('viewport');
  view.addEventListener('pointerdown',e=>{
-  if(e.target.closest('button,select,input,.quick-selector,.camera-permission,.mobile-move'))return;
+  if(e.target.closest('button,select,input,.quick-selector,.camera-permission,.mobile-move,.third-person-view'))return;
   if(e.button!==0&&e.pointerType==='mouse')return;
   if(state.mode!=='3d'&&state.mode!=='live')return;
   activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
@@ -1754,7 +2043,7 @@ async function showGallery(){
 function hideGallery(){document.getElementById('viewport').scrollIntoView({behavior:'smooth',block:'start'});}
 function shareSettings(){
  const url=new URL(location.href);url.search='';
- const keys=['scene','target','lensId','sensor','ratio','focal','aperture','iso','shutter','grid','dof','vignette','flare','distortion','nativeEq','projection','focusMode','manualFocus','walking','sitting','flareStrength'];
+ const keys=['seed','scene','target','lensId','sensor','ratio','focal','aperture','iso','shutter','grid','dof','vignette','flare','distortion','nativeEq','projection','focusMode','manualFocus','walking','sitting','flareStrength'];
  keys.forEach(k=>url.searchParams.set(k,String(state[k])));
  if(camera){url.searchParams.set('pos',camera.position.toArray().map(v=>v.toFixed(3)).join(','));
    url.searchParams.set('rot',[camera.rotation.x,camera.rotation.y].map(v=>v.toFixed(4)).join(','));}
@@ -1765,13 +2054,14 @@ function shareSettings(){
 }
 function readSharedSettings(){
  const params=new URLSearchParams(location.search);
- const strings=['scene','target','lensId','sensor','ratio','shutter','grid','projection','focusMode'];
+ const strings=['seed','scene','target','lensId','sensor','ratio','shutter','grid','projection','focusMode'];
  for(const k of strings)if(params.has(k))state[k]=params.get(k);
  const nums=['focal','aperture','iso','nativeEq','manualFocus','flareStrength'];for(const k of nums)if(params.has(k)&&Number.isFinite(Number(params.get(k))))state[k]=Number(params.get(k));
  const bools=['dof','vignette','flare','distortion','walking','sitting'];for(const k of bools)if(params.has(k))state[k]=params.get(k)==='true';
  if(!LENSES.some(l=>l.id===state.lensId))state.lensId='custom';
  if(!SENSORS[state.sensor])state.sensor='FF';
  if(!worldNames.includes(state.scene))state.scene='park';
+ state.seed=(String(state.seed||'CPG-2026').trim().slice(0,48)||'CPG-2026');
  if(!['person','car','animal','flower','tree'].includes(state.target))state.target='person';
  if(!['3:2','4:3','16:9','1:1'].includes(state.ratio))state.ratio='3:2';
  if(!['thirds','golden','center','diagonal','none'].includes(state.grid))state.grid='thirds';
@@ -1785,7 +2075,7 @@ function readSharedSettings(){
  state.brand=getLens()?.brand||'전체 브랜드';
  return params;
 }
-const worldNames=['park','city','studio'];
+const worldNames=['park','village','city','studio'];
 function activateFallback(){
  if(fallback)return;
  fallback=makeFallback($('webglMount'),()=>state,focalAngles,dt=>{
@@ -1820,6 +2110,7 @@ function initialize(){
  $('nativeEq').value=String(state.nativeEq);$('nativeEqValue').textContent=`${state.nativeEq} mm`;
  $('flareStrength').value=state.flareStrength;$('flareStrengthValue').textContent=Math.round(state.flareStrength*100)+'%';
  $('projectionSelect').value=state.projection; $('manualFocusDistance').value=state.manualFocus;
+ $('worldSeedInput').value=state.seed;$('seedStatus').textContent='현재 시드 '+state.seed;
  updatePostureButton();
  $('walkToggle').textContent=state.walking?'인물 걷기 ON':'인물 걷기 OFF';
  for(const [id,k] of [['dofToggle','dof'],['vignetteToggle','vignette'],['flareToggle','flare'],['distortionToggle','distortion'],['sizeLock','sizeLock']])$(id).checked=state[k];

@@ -1,0 +1,126 @@
+/* V3 hardware surface, touch layout, practice view */
+:root{--a:#a5b8c5;--b:#cbb8a3;--gold:#bb965c;--green:#7cac87}
+body{background:#111315}
+.shell{max-width:1720px}
+.player,.mixer{background:linear-gradient(135deg,#292c2e,#16191b 75%);border-color:#454a4d;border-radius:4px;box-shadow:inset 0 2px #4b4e50,0 4px 14px #0007}
+.player{border-top:3px solid #666a6b}
+.jog{border:6px solid #7a7d7d;box-shadow:0 3px 1px #080909,0 9px 16px #0008,0 0 0 2px #121517,inset 0 0 0 5px #222629}
+.jog:active{box-shadow:0 2px 1px #050606,0 0 0 3px #61696f}
+.jog-note{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:8px;line-height:1.25}
+.jog-note span{font-size:8px;color:#acb0b2}
+.vinyl-mode{min-height:26px;border-radius:3px;color:#f1c68b;border:1px solid #69583e;background:#383025;font-size:9px;font-weight:900;padding:4px 7px;touch-action:manipulation}
+.vinyl-mode[aria-pressed="false"]{color:#9da8ac;border-color:#515659;background:#282c2e}
+.jog{touch-action:none;overscroll-behavior:contain;user-select:none;-webkit-user-select:none}
+.jog-plate small{color:#dbb27b}
+.mixer .channel-strips{gap:5px}
+.mixer .channel{padding:7px 4px 9px}
+.mixer .channel .ch-head{margin-bottom:8px}
+.knob-rack{width:100%;}
+.rack-heading{text-align:center;color:#818b8f;letter-spacing:.65px;font-weight:850;font-size:7px;line-height:1.4;min-height:17px}
+.knob-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));justify-items:center;align-items:start;gap:9px 3px;padding:2px 1px 7px}
+.knob-grid .knob-control{min-width:0;max-width:100%;margin:0;touch-action:none}
+.knob-grid .knob-control.filter-control{grid-column:1/-1}
+.knob-control .knob{touch-action:none;user-select:none}
+.knob-grid .knob-control small{font-size:8px;letter-spacing:.2px}
+.fx-panel{border-top:1px solid #464b4f;border-bottom:1px solid #464b4f;padding:9px 1px 11px;display:flex;flex-direction:column;gap:6px}
+.fx-head{display:flex;justify-content:space-between;align-items:center;gap:4px;font-size:9px;color:#b9c1c5;letter-spacing:.7px}
+.fx-on{padding:6px 7px;border:1px solid #6c6560;background:#332c27;color:#cca777;border-radius:3px;font-weight:900;font-size:9px;white-space:nowrap;touch-action:manipulation}
+.fx-on[aria-pressed="true"]{color:#f7f3e9;background:#8a6644;border-color:#bf8b5c}
+.fx-panel select{width:100%;background:#171c1e;border:1px solid #5d686d;border-radius:2px;color:#e2e8e9;font-size:10px;font-weight:850;min-height:29px;padding:2px 4px;cursor:pointer}
+.fx-controls{display:flex;flex-direction:column;gap:7px}
+.fx-controls label{font-size:8px;letter-spacing:.6px;font-weight:850;color:#aab3b8;display:flex;align-items:center;gap:5px}
+.fx-controls select{min-width:0;flex:1;min-height:26px}
+.fx-controls input{width:100%;min-width:0;flex:1;accent-color:#ad9b81;touch-action:none}
+.meter-and-fader{margin-top:10px}
+.pad-modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-bottom:7px}
+.pad-modes button{min-width:0;min-height:28px;padding:5px 2px;font-size:8px;font-weight:850;letter-spacing:-.05px;background:#26292b;color:#b9c1c5;border:1px solid #555b60;border-radius:3px;touch-action:manipulation}
+.pad-modes button.selected{color:#fff4e3;border-color:#9b8063;background:#5c4835}
+.pads{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.hotpad{touch-action:none;min-height:41px;height:clamp(38px,3.7vw,50px);user-select:none;-webkit-user-select:none;position:relative;color:#bec2c2}
+.hotpad:active,.hotpad.is-pressed{background:#a28a6e;color:#111!important;box-shadow:inset 0 2px 5px #0005}
+.hotpad.pad-color-0.is-set,.hotpad.pad-color-4.is-set{background:#814b3b;border-color:#bf7464}
+.hotpad.pad-color-1.is-set,.hotpad.pad-color-5.is-set{background:#5b6f9f;border-color:#899bc9}
+.hotpad.pad-color-2.is-set,.hotpad.pad-color-6.is-set{background:#6d7651;border-color:#9cad77}
+.hotpad.pad-color-3.is-set,.hotpad.pad-color-7.is-set{background:#87693e;border-color:#b99753}
+.pad-hint{display:flex;gap:5px;align-items:center;justify-content:space-between;margin-top:7px;min-height:23px;color:#acb2b5;font-size:9px}
+.pad-hint span{flex:1}
+.sample-assign{padding:6px 8px;min-height:28px;background:#394341;color:#d6e3dc;border:1px solid #657e75;font-weight:800;border-radius:3px;font-size:9px}
+.sample-assign[hidden]{display:none}
+.training{border:1px solid #6c655d;border-top:2px solid #b79c75;border-radius:4px;margin:9px 0;background:linear-gradient(110deg,#30302d,#1b2021 70%);padding:12px 15px;box-shadow:0 4px 14px #0009}
+.training[hidden]{display:none}
+.training-top,.training-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.training-top>div{display:flex;flex-direction:column;gap:2px}
+.training-top small{font-size:9px;color:#bea783;font-weight:800;letter-spacing:1.3px}
+.training-top strong{font-size:16px;letter-spacing:.5px}
+.training-top button,.training-actions button{border:1px solid #696d6e;background:#2c3032;color:#e4e8e9;border-radius:3px;min-height:34px;padding:7px 11px;font-weight:850}
+.training-content{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:12px 0}
+.training-instructions{flex:1}
+.training-instructions b{font-size:15px;color:#f0e7d9}
+.training-instructions p{margin:6px 0;font-size:12px;color:#d7dbdb}
+.training-instructions small{font-size:10px;color:#aeb9b8}
+.training-progress{width:clamp(120px,26%,300px);font-size:12px;font-weight:850;color:#c8b9a3}
+.training-progress-track{width:100%;height:7px;background:#101416;border:1px solid #585a5b;border-radius:2px;margin:7px 0;overflow:hidden}
+.training-progress-track i{display:block;height:100%;width:0;background:#b9a078;transition:width .25s}
+.training-progress span{display:block;color:#aeb6b7;font-size:9px;font-weight:550}
+.training-actions{justify-content:flex-start;gap:6px}
+.training-actions #lesson-demo{background:#4e5f51;border-color:#7a917c}
+.training-actions span{flex:1;text-align:right;color:#a3adb1;font-size:9px}
+.teach-button{border-color:#8f7755;color:#f1d1a6}
+.transport .cue-btn{touch-action:none}
+#crossfader,#crossfader-mobile,.channel-fader{touch-action:none}
+@media (min-width:741px) and (max-width:1050px){
+ .console{grid-template-columns:minmax(0,1fr) minmax(254px,1.08fr) minmax(0,1fr);gap:6px}
+ .player{padding:6px}
+ .mixer{padding:7px 5px}
+ .mixer .channel{padding:5px 3px}
+ .channel-strips{gap:4px}
+ .knob-grid{gap:8px 1px}
+ .knob-grid .knob{width:31px;height:31px}
+ .knob-grid .cap{width:22px;height:22px}
+ .fx-panel select{font-size:9px}
+ .rack-heading{font-size:6px}
+ .hotpad{height:39px;min-height:39px}
+ .pad-modes button{font-size:7px;min-height:25px}
+ .jog{width:clamp(100px,13vw,148px);height:clamp(100px,13vw,148px)}
+ .pitch-area{padding-left:6px}
+ .transport{gap:3px}
+ .transport button{font-size:9px}
+ .load-button,.demo-button{padding:6px 4px}
+ .jog-note span{display:none}
+}
+@media (min-width:1051px){
+ .console{grid-template-columns:minmax(0,1.14fr) minmax(270px,.86fr) minmax(0,1.14fr);gap:10px}
+ .knob-grid .knob{width:43px;height:43px}
+ .knob-grid .cap{width:31px;height:31px}
+}
+@media (max-width:740px){
+ .header-end{gap:4px}
+ .teach-button{font-size:9px;min-height:36px;max-width:100px;line-height:1.1;white-space:normal;padding:4px 5px}
+ .mechanics{gap:8px}
+ .jog-note{margin-top:7px;gap:4px}
+ .jog-note span{max-width:140px;font-size:8px}
+ .hotpad{height:clamp(44px,11vw,60px)}
+ .pad-modes button{min-height:40px;font-size:9px}
+ .pad-hint{font-size:9px;min-height:32px}
+ .mixer .channel{padding:10px 7px}
+ .mixer .knob-grid{gap:10px 4px}
+ .mixer .knob{width:43px;height:43px}
+ .mixer .cap{width:31px;height:31px}
+ .fx-panel{padding:10px 2px}
+ .training{padding:10px;margin:7px 0}
+ .training-top strong{font-size:14px}
+ .training-content{gap:12px;align-items:flex-start}
+ .training-instructions b{font-size:12px}
+ .training-instructions p{font-size:11px}
+ .training-instructions small{font-size:9px}
+ .training-progress{width:110px}
+ .training-actions span{flex-basis:100%;text-align:left}
+}
+@media (max-width:385px){
+ .mixer .knob{width:37px;height:37px}
+ .mixer .cap{width:27px;height:27px}
+ .branding small{display:none}
+ .teach-button{max-width:83px;font-size:8px}
+ .pad-modes button{font-size:8px}
+ .jog-note span{display:none}
+}

@@ -59,6 +59,28 @@ function meterDb(analyser, arr) {
   return rms > .00001 ? 20 * Math.log10(rms) : -Infinity;
 }
 const dbToMeter = db => Number.isFinite(db) ? clamp((db + 45) / 42, 0, 1) : 0;
+let vinylModulePromise = null;
+function ensureVinylModule() {
+  if (!ctx.audioWorklet) return Promise.reject(new Error('AudioWorklet 미지원'));
+  if (!vinylModulePromise) vinylModulePromise=ctx.audioWorklet.addModule('./scratch-worklet.js').catch(e=>{vinylModulePromise=null;throw e;});
+  return vinylModulePromise;
+}
+// Preload the worklet to avoid a long first touch; playback still requires a user gesture.
+void ensureVinylModule().catch(()=>{});
+let reverbImpulse=null;
+function makeReverbImpulse() {
+  if(reverbImpulse) return reverbImpulse;
+  const len=Math.floor(ctx.sampleRate*1.7);
+  reverbImpulse=ctx.createBuffer(2,len,ctx.sampleRate);
+  let state=93827;
+  const rand=()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};
+  for(let ch=0;ch<2;ch++) {
+    const pcm=reverbImpulse.getChannelData(ch);
+    for(let i=0;i<len;i++)pcm[i]=(rand()*2-1)*Math.pow(1-i/len,2.65)*.42;
+  }
+  return reverbImpulse;
+}
+
 
 class Deck {
   constructor(id) {
@@ -78,7 +100,21 @@ class Deck {
     this.cueHolding = false;
     this.cuePreviewToken = 0;
     this.taps = [];
-    this.hot = [null, null, null, null];
+    this.hot = Array(8).fill(null);
+    this.padMode='hot';
+    this.samples=[];
+    this.scratchVinyl=true;
+    this.scratching=false;
+    this.scratchTime=0;
+    this.scratchSequence=0;
+    this.scratchWindowStart=0;
+    this.scratchWindowEnd=0;
+    this.scratchNode=null;
+    this.fxType='echo';
+    this.fxTime=1;
+    this.fxMix=.35;
+    this.fxActive=false;
+    this.fxCleanup=[];
     this.loopBeats = 0;
     this.loopIn = 0;
     this.loopOut = 0;
@@ -95,6 +131,9 @@ class Deck {
     this.filter = ctx.createBiquadFilter();
     this.filter.type = 'lowpass'; this.filter.frequency.value = 19000;
     this.trimGain = ctx.createGain();
+    this.dryGain = ctx.createGain();
+    this.fxSend = ctx.createGain();this.fxSend.gain.value=0;
+    this.fxWet = ctx.createGain();this.fxWet.gain.value=.35;
     this.channelGain = ctx.createGain(); this.channelGain.gain.value = .86;
     this.analyser = ctx.createAnalyser(); this.analyser.fftSize = 512;
     this.crossGain = ctx.createGain(); this.crossGain.gain.value = Math.SQRT1_2;
@@ -102,14 +141,19 @@ class Deck {
     this.mid.connect(this.high);
     this.high.connect(this.filter);
     this.filter.connect(this.trimGain);
-    this.trimGain.connect(this.channelGain);
+    this.trimGain.connect(this.dryGain);
+    this.dryGain.connect(this.channelGain);
+    this.trimGain.connect(this.fxSend);
+    this.fxWet.connect(this.channelGain);
     this.channelGain.connect(this.analyser);
     this.analyser.connect(this.crossGain);
     this.crossGain.connect(compressor);
     this.meterData = new Float32Array(this.analyser.fftSize);
+    this.buildEffect();
   }
   get position() {
     if (!this.buffer) return 0;
+    if (this.scratching) return this.scratchTime;
     let value = this.playing ? this.offset + (ctx.currentTime - this.startedAt) * this.rate : this.offset;
     if (this.loopBeats > 0 && value >= this.loopOut) {
       const len = this.loopOut - this.loopIn;
@@ -118,6 +162,107 @@ class Deck {
       value %= this.buffer.duration;
     }
     return clamp(value, 0, this.buffer.duration);
+  }
+  effectDelaySeconds() {
+    return clamp((60/(this.bpm*this.rate||120))*this.fxTime,.045,1.6);
+  }
+  buildEffect() {
+    try{this.fxSend.disconnect();}catch(_){/* initial */}
+    for(const node of this.fxCleanup){try{node.stop?.();}catch(_){}try{node.disconnect();}catch(_){}}
+    this.fxCleanup=[];
+    const remember=node=>{this.fxCleanup.push(node);return node;};
+    const type=this.fxType;
+    if (['echo','dub','delay'].includes(type)) {
+      const delay=remember(ctx.createDelay(2));
+      delay.delayTime.value=this.effectDelaySeconds();
+      const feedback=remember(ctx.createGain());
+      feedback.gain.value=type==='dub'?.58:type==='echo'?.43:.24;
+      const feedbackFilter=remember(ctx.createBiquadFilter());
+      feedbackFilter.type='lowpass';feedbackFilter.frequency.value=type==='dub'?1800:7500;
+      this.fxSend.connect(delay);
+      delay.connect(this.fxWet);
+      delay.connect(feedback);
+      feedback.connect(feedbackFilter);feedbackFilter.connect(delay);
+      this.fxDelay=delay;
+    } else if(type==='reverb') {
+      const conv=remember(ctx.createConvolver());conv.buffer=makeReverbImpulse();
+      this.fxSend.connect(conv);conv.connect(this.fxWet);
+      this.fxDelay=null;
+    } else if(type==='flanger') {
+      const delay=remember(ctx.createDelay(.05));delay.delayTime.value=.003;
+      const fb=remember(ctx.createGain());fb.gain.value=.25;
+      const osc=remember(ctx.createOscillator());osc.frequency.value=.34;
+      const depth=remember(ctx.createGain());depth.gain.value=.0025;
+      osc.connect(depth);depth.connect(delay.delayTime);osc.start();
+      this.fxSend.connect(delay);delay.connect(fb);fb.connect(delay);delay.connect(this.fxWet);
+      this.fxDelay=null;
+    } else if(type==='phaser') {
+      const filters=Array.from({length:3},()=>{const f=remember(ctx.createBiquadFilter());f.type='allpass';f.frequency.value=750;f.Q.value=.8;return f;});
+      const osc=remember(ctx.createOscillator());osc.frequency.value=.35;
+      const depth=remember(ctx.createGain());depth.gain.value=550;
+      osc.connect(depth);for(const f of filters)depth.connect(f.frequency);osc.start();
+      this.fxSend.connect(filters[0]);filters[0].connect(filters[1]);filters[1].connect(filters[2]);filters[2].connect(this.fxWet);
+      this.fxDelay=null;
+    }
+    this.fxSend.gain.setTargetAtTime(this.fxActive?1:0,ctx.currentTime,.02);
+    this.fxWet.gain.setTargetAtTime(this.fxMix,ctx.currentTime,.02);
+  }
+  refreshEffectTime() {
+    if(this.fxDelay)this.fxDelay.delayTime.setTargetAtTime(this.effectDelaySeconds(),ctx.currentTime,.025);
+  }
+  async beginScratch() {
+    if(!this.buffer || this.scratching)return;
+    this.scratchWasPlaying=this.playing;
+    this.pause();
+    this.scratching=true;
+    this.scratchTime=this.offset;
+    const ticket=++this.scratchSequence;
+    renderControls(this);
+    try {
+      await ctx.resume();
+      await ensureVinylModule();
+      if(ticket!==this.scratchSequence || !this.scratching)return;
+      if(!this.scratchNode){
+        this.scratchNode=new AudioWorkletNode(ctx,'vinyl-touch-processor',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2]});
+        this.scratchNode.connect(this.low);
+      }
+      this.loadScratchWindow();
+    }catch(error){
+      this.scratchFailed=true;
+      notice('스크래치 오디오 엔진을 시작할 수 없습니다: '+error.message);
+    }
+  }
+  loadScratchWindow() {
+    if(!this.buffer || !this.scratchNode)return;
+    const rate=this.buffer.sampleRate;
+    const size=Math.min(this.buffer.duration,8);
+    const begin=clamp(this.scratchTime-size/2,0,Math.max(0,this.buffer.duration-size));
+    const from=Math.floor(begin*rate);
+    const to=Math.min(this.buffer.length,from+Math.ceil(size*rate));
+    const left=this.buffer.getChannelData(0).slice(from,to);
+    const right=this.buffer.getChannelData(Math.min(1,this.buffer.numberOfChannels-1)).slice(from,to);
+    this.scratchWindowStart=from/rate;
+    this.scratchWindowEnd=to/rate;
+    this.scratchNode.port.postMessage({type:'load',left:left.buffer,right:right.buffer,head:(this.scratchTime-this.scratchWindowStart)*rate},[left.buffer,right.buffer]);
+  }
+  moveScratch(radians) {
+    if(!this.scratching||!this.buffer)return;
+    const seconds=radians/(Math.PI*2)*1.55;
+    this.scratchTime=clamp(this.scratchTime+seconds,0,Math.max(0,this.buffer.duration-.005));
+    if(this.scratchNode&&!this.scratchFailed){
+      if(this.scratchTime<this.scratchWindowStart+.25 || this.scratchTime>this.scratchWindowEnd-.25) this.loadScratchWindow();
+      this.scratchNode.port.postMessage({type:'move',head:(this.scratchTime-this.scratchWindowStart)*this.buffer.sampleRate});
+    }
+  }
+  endScratch(resume=true) {
+    if(!this.scratching)return;
+    ++this.scratchSequence;
+    this.scratchNode?.port.postMessage({type:'stop'});
+    const shouldPlay=this.scratchWasPlaying && resume;
+    this.scratching=false;
+    this.offset=this.scratchTime;
+    renderControls(this);
+    if(shouldPlay)void this.play();
   }
   updateLoopSource() {
     if (!this.source || !this.buffer) return;
@@ -198,6 +343,7 @@ class Deck {
     this.tempo = next;
     this.rate = 1 + next / 100;
     if (this.source) this.source.playbackRate.setValueAtTime(this.rate, ctx.currentTime);
+    this.refreshEffectTime();
     el('pitch-' + this.id).value = String(next);
     renderControls(this);
   }
@@ -257,6 +403,32 @@ class Deck {
     renderControls(this);
     notice('DECK ' + this.id.toUpperCase() + ' HOT CUE ' + (i + 1) + ' 삭제');
   }
+  playSample(i) {
+    const buffer=this.samples[i]||stockSamples[i];
+    if(!buffer)return;
+    void ctx.resume();
+    const sound=ctx.createBufferSource();sound.buffer=buffer;
+    const level=ctx.createGain();level.gain.value=.79;
+    sound.connect(level);level.connect(this.low);
+    sound.onended=()=>{sound.disconnect();level.disconnect();};
+    sound.start();
+  }
+  beatJump(beats) {if(this.buffer)this.seek(this.position+beats*60/(this.bpm*this.rate));}
+  startRoll(beats) {
+    if(!this.buffer||this.rolling)return;
+    this.rollStart={position:this.position,time:ctx.currentTime,rate:this.rate,wasPlaying:this.playing};
+    this.rolling=true;
+    this.setLoop(beats);
+    if(!this.playing)void this.play();
+  }
+  stopRoll(){
+    if(!this.rolling)return;
+    const roll=this.rollStart;
+    this.rolling=false;
+    this.setLoop(0);
+    this.seek(roll.position+Math.max(0,ctx.currentTime-roll.time)*roll.rate);
+    if(!roll.wasPlaying)this.pause();
+  }
   setLoop(beats) {
     if (!this.buffer) return;
     if (beats === 0 || (beats === this.loopBeats)) {
@@ -280,6 +452,8 @@ class Deck {
     renderControls(this);
   }
   setBuffer(audioBuffer, title, bpm, repeat) {
+    this.endScratch(false);
+    this.scratchNode?.port.postMessage({type:'stop'});
     this.pause();
     this.stopSource();
     this.buffer = audioBuffer;
@@ -292,11 +466,12 @@ class Deck {
     this.taps = [];
     this.demoRepeat = Boolean(repeat);
     this.cue = 0;
-    this.hot = [null, null, null, null];
+    this.hot = Array(8).fill(null);
     this.loopBeats = 0;
     this.loopIn = 0;
     this.loopOut = 0;
     this.peaks = computePeaks(audioBuffer);
+    this.refreshEffectTime();
     el('track-' + this.id).textContent = title;
     el('bpm-' + this.id).value = String(bpm);
     el('bpm-source-' + this.id).textContent = repeat ? 'DEMO' : 'ANALYZING';
@@ -306,6 +481,57 @@ class Deck {
   }
 }
 const decks = {a:new Deck('a'), b:new Deck('b')};
+function makeStockSamples() {
+  const rate=ctx.sampleRate;
+  const kinds=['KICK','SNARE','CLAP','HAT','OPEN','TOM','RIM','RISER'];
+  let seed=918273;
+  const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296*2-1;};
+  return kinds.map((kind,k)=>{
+    const dur=[.6,.32,.32,.14,.6,.54,.22,1.15][k];
+    const b=ctx.createBuffer(1,Math.floor(rate*dur),rate);
+    const data=b.getChannelData(0);
+    for(let n=0;n<data.length;n++){
+      const t=n/rate,noise=rand();let x=0;
+      if(k===0) x=Math.sin(2*Math.PI*(53*t+100*(1-Math.exp(-t*27))/27))*Math.exp(-t*17)*.88;
+      if(k===1) x=(noise*.59+Math.sin(2*Math.PI*180*t)*.35)*Math.exp(-t*23);
+      if(k===2) x=noise*.55*(Math.exp(-t*60)+.9*Math.exp(-Math.max(0,t-.045)*70)*(t>.045)+.65*Math.exp(-Math.max(0,t-.09)*76)*(t>.09));
+      if(k===3) x=noise*.42*Math.exp(-t*65);
+      if(k===4) x=noise*.42*Math.exp(-t*8);
+      if(k===5) x=Math.sin(2*Math.PI*(110*t+40*(1-Math.exp(-t*17))/17))*Math.exp(-t*12)*.63;
+      if(k===6) x=(Math.sin(2*Math.PI*570*t)*.36+noise*.22)*Math.exp(-t*31);
+      if(k===7) x=noise*.32*Math.sin(2*Math.PI*(350*t+900*t*t))*Math.pow(t/dur,.6)*Math.exp(-t*2);
+      data[n]=Math.tanh(x);
+    }
+    return b;
+  });
+}
+const stockSamples=makeStockSamples();
+for (const deck of Object.values(decks))deck.samples=stockSamples.slice();
+const samplerNames=['KICK','SNARE','CLAP','HAT','OPEN','TOM','RIM','RISER'];
+const rollBeats=[.125,.25,.5,1,2,4,8,16];
+const beatJumps=[-8,-4,-2,-1,1,2,4,8];
+function renderPads(deck){
+  const id=deck.id;
+  document.querySelectorAll('.pad-modes button[data-deck="'+id+'"]').forEach(b=>b.classList.toggle('selected',b.dataset.padMode===deck.padMode));
+  const hints={hot:'HOT CUE: 첫 탭 저장 · 재탭 재생 · 길게 눌러 삭제',sampler:'SAMPLER: 8개의 드럼 소리 재생 · 샘플 불러오기로 교체',roll:'BEAT ROLL: 누르는 동안 루프 · 떼면 원래 타임라인 복귀',jump:'BEAT JUMP: 패드를 누르면 지정 비트만큼 이동'};
+  el('pad-hint-'+id).textContent=hints[deck.padMode];
+  el('sample-assign-'+id).hidden=deck.padMode!=='sampler';
+  document.querySelectorAll('.hotpad[data-deck="'+id+'"]').forEach(button=>{
+    const i=Number(button.dataset.pad),mode=deck.padMode;
+    let label='';
+    if(mode==='hot')label=String(i+1);
+    else if(mode==='sampler')label=deck.sampleLabels?.[i]||samplerNames[i];
+    else if(mode==='roll')label=(rollBeats[i]<1?'1/'+Math.round(1/rollBeats[i]):rollBeats[i])+' B';
+    else label=(beatJumps[i]>0?'+':'')+beatJumps[i];
+    button.textContent=label;
+    button.classList.toggle('is-set',mode==='hot'&&deck.hot[i]!==null);
+    button.classList.toggle('is-sampler',mode==='sampler');
+    button.dataset.mode=mode;
+    button.title=mode==='hot'?(deck.hot[i]===null?'누르기: CUE 저장':'누르기: CUE 재생, 길게: 삭제'):mode==='sampler'?'샘플 트리거':mode==='roll'?'누르는 동안 롤':'비트 점프';
+    button.setAttribute('aria-label',id.toUpperCase()+' '+mode+' 패드 '+label);
+  });
+}
+
 function computePeaks(buffer) {
   const pcm = buffer.getChannelData(0);
   const count = 600;
@@ -328,7 +554,7 @@ function renderControls(deck) {
   el('play-label-' + id).textContent = played ? 'PAUSE' : 'PLAY';
   el('play-' + id).classList.toggle('is-playing', played);
   el('state-' + id).textContent = !deck.buffer ? 'READY' : played ? 'PLAYING' : 'PAUSED';
-  el('jog-state-' + id).textContent = !deck.buffer ? 'READY' : played ? 'PLAY' : 'CUE';
+  el('jog-state-' + id).textContent = deck.scratching ? 'SCRATCH' : !deck.buffer ? 'READY' : played ? 'PLAY' : 'CUE';
   el('pitch-display-' + id).textContent = (deck.tempo > 0 ? '+' : '') + number(deck.tempo) + '%';
   el('pitch-value-' + id).textContent = (deck.tempo > 0 ? '+' : '') + number(deck.tempo) + '%';
   el('live-bpm-' + id).textContent = deck.buffer ? number(deck.bpm * deck.rate) + ' BPM' : '--.- BPM';
@@ -339,11 +565,7 @@ function renderControls(deck) {
   document.querySelectorAll('[data-loop][data-deck="' + id + '"]').forEach(button => {
     button.classList.toggle('active', Number(button.dataset.loop) > 0 && Number(button.dataset.loop) === deck.loopBeats);
   });
-  document.querySelectorAll('.hotpad[data-deck="' + id + '"]').forEach(button => {
-    const index = Number(button.dataset.pad);
-    button.classList.toggle('is-set', deck.hot[index] !== null);
-    button.title = deck.hot[index] === null ? '탭: HOT CUE 위치 저장' : '탭: 이동 / 길게 누르기: 삭제';
-  });
+  renderPads(deck);
   updateTime(deck);
 }
 function updateTime(deck) {
@@ -409,6 +631,7 @@ function setCrossfader(value) {
   el('crossfader').value = String(Math.round(x*100));
   el('crossfader-mobile').value = String(Math.round(x*100));
   el('mini-cross-value').textContent = 'A ' + Math.round((1-x)*100) + ' : B ' + Math.round(x*100);
+  noteCrossfaderMove(x);
 }
 function applyKnob(deck, key, value) {
   switch (key) {
@@ -454,15 +677,17 @@ function wireKnobs() {
       if (e.button !== 0 && e.pointerType === 'mouse') return;
       e.preventDefault();
       face.setPointerCapture(e.pointerId);
-      drag = {y:e.clientY, value};
+      if(drag)return;
+      drag = {y:e.clientY, value, pointer:e.pointerId};
     });
     face.addEventListener('pointermove', e => {
-      if (!drag) return;
+      if (!drag || drag.pointer!==e.pointerId) return;
       set(drag.value + (drag.y - e.clientY) * (high-low) / 160);
     });
-    const done = () => {drag=null;};
+    const done = e => {if(drag?.pointer===e.pointerId)drag=null;};
     face.addEventListener('pointerup',done);
     face.addEventListener('pointercancel',done);
+    face.addEventListener('lostpointercapture',done);
     face.addEventListener('dblclick',()=>set(initial));
     face.addEventListener('keydown',e => {
       const delta = e.key === 'ArrowUp' || e.key === 'ArrowRight' ? step : e.key === 'ArrowDown' || e.key === 'ArrowLeft' ? -step : 0;
@@ -474,40 +699,54 @@ function wireKnobs() {
   });
 }
 function wireJog(deck) {
-  const jog = el('jog-'+deck.id);
-  let motion = null;
+  const jog=el('jog-'+deck.id);
+  let motion=null;
   const angle = event => {
-    const r = jog.getBoundingClientRect();
+    const r=jog.getBoundingClientRect();
     return Math.atan2(event.clientY-r.top-r.height/2,event.clientX-r.left-r.width/2);
   };
-  jog.addEventListener('pointerdown', e => {
-    if (!deck.buffer || (e.pointerType==='mouse' && e.button!==0)) return;
+  jog.addEventListener('pointerdown',e=>{
+    if (!deck.buffer || motion || (e.pointerType==='mouse' && e.button!==0))return;
     e.preventDefault();
     jog.setPointerCapture(e.pointerId);
-    motion = {old:angle(e),wasPlaying:deck.playing};
-    if (deck.playing) deck.pause();
+    motion={pointer:e.pointerId,old:angle(e)};
+    if(deck.scratchVinyl)void deck.beginScratch();
   });
-  jog.addEventListener('pointermove', e => {
-    if (!motion || !deck.buffer) return;
-    const next = angle(e);
-    let delta = next-motion.old;
-    if (delta>Math.PI) delta-=Math.PI*2;
-    if (delta<-Math.PI) delta+=Math.PI*2;
-    deck.seek(deck.position + delta/(Math.PI*2)*3.5);
+  jog.addEventListener('pointermove',e=>{
+    if(!motion||e.pointerId!==motion.pointer||!deck.buffer)return;
+    const next=angle(e);let delta=next-motion.old;
+    if(delta>Math.PI)delta-=Math.PI*2;
+    if(delta< -Math.PI)delta+=Math.PI*2;
+    if(Math.abs(delta)>.0015){
+      if(deck.scratchVinyl){deck.moveScratch(delta);noteScratchMovement(deck.id,delta);}
+      else deck.seek(deck.position+delta/(Math.PI*2)*2.5);
+    }
     motion.old=next;
   });
-  const finish = () => {
-    if (!motion) return;
-    const wasPlaying=motion.wasPlaying;
+  const finish=e=>{
+    if(!motion || e.pointerId!==motion.pointer)return;
     motion=null;
-    if (wasPlaying) void deck.play();
+    if(deck.scratchVinyl)deck.endScratch();
+    noteScratchEnd(deck.id);
   };
   jog.addEventListener('pointerup',finish);
   jog.addEventListener('pointercancel',finish);
-  jog.addEventListener('keydown', e => {
-    if (e.key==='ArrowLeft'||e.key==='ArrowRight') {
-      e.preventDefault();deck.seek(deck.position+(e.key==='ArrowRight'?1:-1));
+  jog.addEventListener('lostpointercapture',finish);
+  jog.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
+      e.preventDefault();
+      if(deck.scratchVinyl){void deck.beginScratch();deck.moveScratch(e.key==='ArrowRight'?.16:-.16);noteScratchMovement(deck.id,e.key==='ArrowRight'?.16:-.16);setTimeout(()=>deck.endScratch(),120);}
+      else deck.seek(deck.position+(e.key==='ArrowRight'?1:-1));
     }
+  });
+  const modeButton=el('vinyl-'+deck.id);
+  modeButton.addEventListener('click',()=>{
+    if(deck.scratching)deck.endScratch();
+    deck.scratchVinyl=!deck.scratchVinyl;
+    modeButton.setAttribute('aria-pressed',String(deck.scratchVinyl));
+    modeButton.textContent=deck.scratchVinyl?'● VINYL ON':'○ SEEK MODE';
+    el('scratch-status-'+deck.id).textContent=deck.scratchVinyl?'위쪽을 잡고 앞뒤로 스크래치':'조그로 트랙 위치 탐색';
+    notice(deck.scratchVinyl?'VINYL 모드: 손가락 이동에 따라 앞뒤로 소리 재생':'SEEK 모드: 조그로 곡 위치 탐색');
   });
 }
 function generateDemo(bpm, variant) {
@@ -674,17 +913,84 @@ function wireDeck(deck) {
   player.addEventListener('dragleave',()=>player.classList.remove('is-dragover'));
   player.addEventListener('drop',e=>{e.preventDefault();player.classList.remove('is-dragover');const f=e.dataTransfer?.files?.[0];if(f){const dt=new DataTransfer();dt.items.add(f);input.files=dt.files;input.dispatchEvent(new Event('change'));}});
   document.querySelectorAll('[data-loop][data-deck="'+id+'"]').forEach(button=>button.addEventListener('click',()=>deck.setLoop(Number(button.dataset.loop))));
+  document.querySelectorAll('.pad-modes button[data-deck="'+id+'"]').forEach(button=>button.addEventListener('click',()=>{
+    deck.stopRoll();
+    deck.padMode=button.dataset.padMode;
+    renderPads(deck);
+  }));
+  el('sample-assign-'+id).addEventListener('click',()=>{
+    deck.waitingSample=true;
+    notice('DECK '+id.toUpperCase()+': 교체할 샘플 패드(1~8)를 누르세요.');
+  });
+  const sampleInput=el('sample-file-'+id);
+  sampleInput.addEventListener('change',async e=>{
+    const file=e.target.files?.[0],index=deck.pendingSample;
+    if(!file||!Number.isInteger(index))return;
+    try {
+      const raw=await file.arrayBuffer();
+      const pcm=await ctx.decodeAudioData(raw);
+      deck.samples[index]=pcm;
+      if(!deck.sampleLabels)deck.sampleLabels={};
+      deck.sampleLabels[index]=file.name.length>10?file.name.slice(0,9)+'…':file.name;
+      renderPads(deck);
+      notice('DECK '+id.toUpperCase()+' 샘플 '+(index+1)+' 교체 완료: '+file.name);
+    }catch(error){notice('샘플 파일을 열지 못했습니다: '+error.message);}
+    finally{sampleInput.value='';deck.pendingSample=null;}
+  });
   document.querySelectorAll('.hotpad[data-deck="'+id+'"]').forEach(button=>{
     const index=Number(button.dataset.pad);
-    let pressTimer=null,held=false;
-    button.addEventListener('pointerdown',()=>{held=false;pressTimer=setTimeout(()=>{held=true;deck.clearHot(index);},650);});
-    const cancel=()=>{if(pressTimer!==null){clearTimeout(pressTimer);pressTimer=null;}};
-    button.addEventListener('pointerup',cancel);
-    button.addEventListener('pointercancel',cancel);
-    button.addEventListener('pointerleave',cancel);
-    button.addEventListener('click',()=>{if(!held)deck.hotAction(index);held=false;});
-    button.addEventListener('contextmenu',e=>{e.preventDefault();cancel();held=true;deck.clearHot(index);});
+    let pointer=null,longTimer=null,longDone=false,pressedMode=null;
+    const release=()=>{
+      if(pointer===null)return;
+      if(longTimer!==null){clearTimeout(longTimer);longTimer=null;}
+      const mode=pressedMode;
+      if(mode==='roll')deck.stopRoll();
+      if(mode==='hot'&&!longDone)deck.hotAction(index);
+      button.classList.remove('is-pressed');
+      pointer=null;pressedMode=null;
+    };
+    button.addEventListener('pointerdown',e=>{
+      if(e.pointerType==='mouse'&&e.button!==0)return;
+      e.preventDefault();
+      if(pointer!==null)return;
+      button.setPointerCapture(e.pointerId);
+      pointer=e.pointerId;longDone=false;pressedMode=deck.padMode;
+      button.classList.add('is-pressed');
+      void ctx.resume();
+      if(deck.padMode==='hot'){
+        longTimer=setTimeout(()=>{longDone=true;deck.clearHot(index);},700);
+      }else if(deck.padMode==='sampler'){
+        if(deck.waitingSample){
+          deck.waitingSample=false;
+          deck.pendingSample=index;
+          sampleInput.click();
+        }else deck.playSample(index);
+      }else if(deck.padMode==='roll')deck.startRoll(rollBeats[index]);
+      else if(deck.padMode==='jump')deck.beatJump(beatJumps[index]);
+    });
+    button.addEventListener('pointerup',e=>{if(e.pointerId===pointer)release();});
+    button.addEventListener('pointercancel',e=>{if(e.pointerId===pointer){longDone=true;release();}});
+    button.addEventListener('lostpointercapture',e=>{if(e.pointerId===pointer){longDone=true;release();}});
+    button.addEventListener('click',e=>{
+      if(e.detail!==0)return; // keyboard action only, pointer input is processed by pointer events
+      if(deck.padMode==='hot')deck.hotAction(index);
+      else if(deck.padMode==='sampler')deck.playSample(index);
+      else if(deck.padMode==='jump')deck.beatJump(beatJumps[index]);
+      else {deck.startRoll(rollBeats[index]);setTimeout(()=>deck.stopRoll(),220);}
+    });
+    button.addEventListener('contextmenu',e=>{e.preventDefault();if(deck.padMode==='hot')deck.clearHot(index);});
   });
+  // Independent channel Beat FX: send, effect, feedback and wet/dry mixing.
+  const fxButton=el('fx-on-'+id),fxKind=el('fx-type-'+id),fxTime=el('fx-time-'+id),fxMix=el('fx-mix-'+id);
+  fxButton.addEventListener('click',()=>{
+    deck.fxActive=!deck.fxActive;
+    deck.fxSend.gain.setTargetAtTime(deck.fxActive?1:0,ctx.currentTime,.015);
+    fxButton.setAttribute('aria-pressed',String(deck.fxActive));
+    fxButton.textContent=deck.fxActive?'FX ON':'FX OFF';
+  });
+  fxKind.addEventListener('change',()=>{deck.fxType=fxKind.value;deck.buildEffect();notice('DECK '+id.toUpperCase()+' FX: '+fxKind.options[fxKind.selectedIndex].text);});
+  fxTime.addEventListener('change',()=>{deck.fxTime=Number(fxTime.value);deck.refreshEffectTime();});
+  fxMix.addEventListener('input',()=>{deck.fxMix=Number(fxMix.value)/100;deck.fxWet.gain.setTargetAtTime(deck.fxMix,ctx.currentTime,.01);});
   wireJog(deck);
   renderControls(deck);
 }
@@ -736,6 +1042,86 @@ function animate() {
   };
   requestAnimationFrame(frame);
 }
+// Guided scratch practice. Counts gestures from the real touch controls, not a fake animation.
+const lessons=[
+ {title:'01 · Baby Scratch',help:'조그휠을 앞으로 밀고, 같은 위치까지 뒤로 당겨 보세요. 음악을 앞뒤로 문지르는 가장 기본적인 연습입니다.',tip:'VINYL ON · 왼쪽 DECK A에서 앞→뒤 방향 전환 4회',goal:4},
+ {title:'02 · Forward Scratch',help:'조그를 앞으로 밀어 소리를 내고, 뒤로 돌아올 때 크로스페이더를 B 쪽으로 닫아 보세요.',tip:'앞쪽 스트로크를 3회 연습하세요. 되감는 동안 소리를 닫으면 더 정확합니다.',goal:3},
+ {title:'03 · Transformer Scratch',help:'조그를 움직이는 동안 크로스페이더를 A와 B 사이로 빠르게 이동해 소리를 짧게 끊으세요.',tip:'한 손은 조그, 다른 손은 크로스페이더 · 멀티터치 4회',goal:4},
+ {title:'04 · Chirp Scratch',help:'앞으로 밀 때 크로스페이더를 열고, 뒤로 당길 때 닫아 짧고 날카로운 소리를 만드세요.',tip:'앞뒤 방향 전환과 페이더 조작을 조합해 4회 연습합니다.',goal:4}
+];
+const training={active:false,step:0,count:0,lastDirection:0,arc:0,strokes:0,forwardActive:false,xfaderSide:null,lastDirectionChange:0};
+function showLesson(){
+ const step=lessons[training.step];
+ el('lesson-title').textContent=step.title;
+ el('lesson-help').textContent=step.help;
+ el('lesson-tip').textContent=step.tip;
+ el('lesson-number').textContent=(training.step+1)+' / '+lessons.length;
+ el('lesson-count').textContent=training.count+' / '+step.goal;
+ el('lesson-bar').style.width=(100*Math.min(1,training.count/step.goal))+'%';
+ el('lesson-feedback').textContent=training.count>=step.goal?'완료! 다음 단계로 진행할 수 있습니다.':'조그와 크로스페이더를 직접 움직이면 기록됩니다.';
+ el('lesson-prev').disabled=training.step===0;
+ el('lesson-next').textContent=training.step===lessons.length-1?'처음으로 ↺':'다음 단계 →';
+}
+function resetLesson(){training.count=0;training.lastDirection=0;training.arc=0;training.forwardActive=false;training.xfaderSide=null;showLesson();}
+function addPractice(count=1){
+ if(!training.active)return;
+ const max=lessons[training.step].goal;
+ training.count=Math.min(max,training.count+count);
+ showLesson();
+}
+function noteScratchMovement(id,angle){
+ if(!training.active||id!=='a'||Math.abs(angle)<.008)return;
+ const sign=Math.sign(angle);
+ if(sign!==training.lastDirection){
+   if(training.arc>.13){
+     if(training.step===0)addPractice();
+     else if(training.step===1 && training.lastDirection>0)addPractice();
+     else if(training.step===3&&training.xfaderSide!==null)addPractice();
+   }
+   training.lastDirection=sign;training.arc=0;
+ }
+ training.arc+=Math.abs(angle);
+}
+function noteScratchEnd(id){
+ if(!training.active||id!=='a')return;
+ if(training.step===1&&training.lastDirection>0&&training.arc>.15)addPractice();
+ training.lastDirection=0;training.arc=0;
+}
+function noteCrossfaderMove(value){
+ if(!training.active||!(decks?.a?.scratching))return;
+ if(training.step!==2&&training.step!==3)return;
+ const side=value<.28?'a':value>.72?'b':null;
+ if(side&&side!==training.xfaderSide){
+   if(training.xfaderSide!==null)addPractice();
+   training.xfaderSide=side;
+ }
+}
+function wireTutorial(){
+ const panel=el('training');
+ const open=()=>{
+   training.active=true;panel.hidden=false;
+   el('open-tutorial').setAttribute('aria-expanded','true');
+   el('lesson-title').scrollIntoView({block:'nearest',behavior:'smooth'});
+   resetLesson();
+   notice('스크래치 연습실 시작 · DECK A에서 VINYL ON으로 연습하세요.');
+ };
+ const close=()=>{training.active=false;panel.hidden=true;el('open-tutorial').setAttribute('aria-expanded','false');};
+ el('open-tutorial').addEventListener('click',()=>training.active?close():open());
+ el('lesson-close').addEventListener('click',close);
+ el('lesson-demo').addEventListener('click',()=>{
+   const deck=decks.a;
+   ++deck.generation;
+   deck.setBuffer(generateDemo(122,'a'),'SCRATCH PRACTICE BEAT',122,true);
+   deck.scratchVinyl=true;
+   el('vinyl-a').setAttribute('aria-pressed','true');el('vinyl-a').textContent='● VINYL ON';
+   el('scratch-status-a').textContent='위쪽을 잡고 앞뒤로 스크래치';
+   setCrossfader(0);
+   notice('연습 비트가 DECK A에 준비되었습니다. PLAY 또는 조그 터치로 시작하세요.');
+ });
+ el('lesson-prev').addEventListener('click',()=>{training.step=Math.max(0,training.step-1);resetLesson();});
+ el('lesson-next').addEventListener('click',()=>{training.step=(training.step+1)%lessons.length;resetLesson();});
+ showLesson();
+}
 initMeters();
 wireKnobs();
 Object.values(decks).forEach(wireDeck);
@@ -765,4 +1151,5 @@ el('fullscreen').addEventListener('click',async()=>{
   }catch(error){notice('전체 화면을 시작할 수 없습니다: '+error.message);}
 });
 wireRecord();
+wireTutorial();
 animate();

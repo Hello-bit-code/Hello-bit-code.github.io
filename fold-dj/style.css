@@ -225,3 +225,4 @@ button:hover{filter:brightness(1.06)}
  .loop-strip b{flex-basis:100%}
 }
 @media (prefers-reduced-motion:reduce){.record-button.is-recording{animation:none}}
+

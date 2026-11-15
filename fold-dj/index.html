@@ -1,82 +1,96 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#101317">
-  <meta name="description" content="폴더블 전용 2데크 DJ 믹서. 음원은 기기에서 직접 선택하며 서버에 업로드하지 않습니다.">
-  <title>FOLD//MIX — DJ Console</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="bpm-engine.js" defer></script>
-  <script src="app.js" defer></script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#101317" name="theme-color"/>
+<meta content="폴더블 전용 2데크 DJ 믹서. 음원은 기기에서 직접 선택하며 서버에 업로드하지 않습니다." name="description"/>
+<title>FOLD//MIX PRO — Touch DJ Console</title>
+<link href="style.css" rel="stylesheet"/>
+<link href="style-pro.css" rel="stylesheet"/>
+<script defer="" src="bpm-engine.js"></script>
+<script defer="" src="app.js"></script>
 </head>
 <body>
 <div class="shell">
 <header class="masthead">
- <div class="branding"><div class="logo-symbol">F<span>//</span>M</div><div><strong>FOLD<span class="accent">//</span>MIX</strong><small>PRO PERFORMANCE CONSOLE <b>01</b></small></div></div>
- <div class="header-end"><span class="privacy"><i></i> LOCAL AUDIO · NO UPLOAD</span><button class="header-button" id="fullscreen" type="button">⛶ <span>전체 화면</span></button><button class="header-button danger" id="stop-all" type="button">■ <span>전체 정지</span></button></div>
+<div class="branding"><div class="logo-symbol">F<span>//</span>M</div><div><strong>FOLD<span class="accent">//</span>MIX</strong><small>PRO PERFORMANCE CONSOLE <b>01</b></small></div></div>
+<div class="header-end"><span class="privacy"><i></i> LOCAL AUDIO · NO UPLOAD</span><button aria-controls="training" aria-expanded="false" class="header-button teach-button" id="open-tutorial" type="button">🎓 스크래치 배우기</button><button class="header-button" id="fullscreen" type="button">⛶ <span>전체 화면</span></button><button class="header-button danger" id="stop-all" type="button">■ <span>전체 정지</span></button></div>
 </header>
-<div class="info-line"><div><span class="eyebrow">FOLDABLE PERFORMANCE MIXER</span><strong>DUAL DECK / 2 CHANNEL MIXER</strong></div><span id="status" role="status" aria-live="polite">A / B의 음악 파일을 각각 선택해 시작하세요.</span></div>
-<nav class="mobile-tabs" aria-label="휴대전화 DJ 화면 전환">
- <button class="selected" type="button" data-view="a">◉ DECK A</button><button type="button" data-view="mixer">☷ MIXER</button><button type="button" data-view="b">◉ DECK B</button>
+<div class="info-line"><div><span class="eyebrow">VINYL SCRATCH · PERFORMANCE PADS · LIVE FX</span><strong>DUAL DECK / 2 CHANNEL MIXER</strong></div><span aria-live="polite" id="status" role="status">A / B의 음악 파일을 각각 선택해 시작하세요.</span></div>
+<section aria-label="스크래치 연습실" class="training" hidden="" id="training">
+<div class="training-top"><div><small>LIVE PRACTICE · SCRATCH LAB</small><strong>스크래치 튜토리얼 <span id="lesson-number">1 / 4</span></strong></div><button aria-label="연습실 닫기" id="lesson-close" type="button">✕ 닫기</button></div>
+<div class="training-content"><div class="training-instructions"><b id="lesson-title">01 · Baby Scratch</b><p id="lesson-help">조그휠을 앞으로 밀고 뒤로 당겨 보세요.</p><small id="lesson-tip">한 손가락을 조그휠에 올려 움직입니다.</small></div><div class="training-progress"><div id="lesson-count">0 / 4</div><div class="training-progress-track"><i id="lesson-bar"></i></div><span id="lesson-feedback" role="status">조그휠을 움직이면 횟수가 기록됩니다.</span></div></div>
+<div class="training-actions"><button id="lesson-demo" type="button">▶ 연습 비트 불러오기</button><button id="lesson-prev" type="button">이전</button><button id="lesson-next" type="button">다음 단계 →</button><span>연습 데크: <b>A</b> · 크로스페이더를 함께 움직여 보세요</span></div>
+</section><nav aria-label="휴대전화 DJ 화면 전환" class="mobile-tabs">
+<button class="selected" data-view="a" type="button">◉ DECK A</button><button data-view="mixer" type="button">☷ MIXER</button><button data-view="b" type="button">◉ DECK B</button>
 </nav>
-<main class="console" data-view="a" aria-label="DJ 믹싱 콘솔">
- <section class="player player-a" id="deck-a" aria-label="왼쪽 A 데크">
-  <div class="unit-top"><div class="unit-name"><small>PLAYER 01</small><strong>DECK <em>A</em></strong></div><div class="load-actions"><label class="load-button" for="file-a">＋ 음원 선택</label><button class="demo-button" type="button" data-demo="a">DEMO</button></div></div>
-  <input id="file-a" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac" hidden aria-label="A 데크 음원 선택">
-  <div class="display"><div class="display-head"><div class="display-track"><span>TRACK TITLE</span><strong id="track-a">NO TRACK LOADED</strong></div><div class="tempo-read"><small>BPM · <span id="bpm-source-a">NO TRACK</span></small><input type="number" id="bpm-a" min="50" max="220" step="0.1" value="120" aria-label="A 데크 원곡 BPM"><button class="tap-button" id="tap-a" type="button" title="박자에 맞춰 4번 이상 탭">TAP</button></div></div>
-   <div class="waveframe"><canvas class="waveform" id="wave-a" aria-label="A 트랙 파형. 눌러서 탐색" tabindex="0"></canvas><div class="wave-guide"><span>OVERALL WAVEFORM</span><span id="loop-indicator-a">LOOP OFF</span></div></div>
-   <div class="display-bottom"><div class="time-value" id="elapsed-a">00:00.0</div><div class="play-info"><span class="live-bpm" id="live-bpm-a">--.- BPM</span><span id="pitch-display-a">±0.0%</span><span id="state-a">STOP</span></div><div class="remain-value" id="remain-a">−00:00</div></div>
-  </div>
-  <div class="mechanics"><div class="jog-area"><div class="jog" id="jog-a" role="slider" tabindex="0" aria-label="A 데크 조그휠로 재생 위치 이동" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="jog-ring"><div class="jog-plate"><div class="jog-title">FOLD//MIX</div><b id="jog-state-a">READY</b><small>JOG SEEK</small></div></div></div><div class="jog-note">VINYL STYLE · 위치 탐색</div></div>
-   <div class="pitch-area"><div class="pitch-top">TEMPO <b id="pitch-value-a">0.0%</b></div><input class="pitch-slider" id="pitch-a" type="range" min="-25" max="25" step="0.1" value="0" aria-label="A 재생 속도 조절"><div class="pitch-range">+25<br>±0<br>−25</div><button class="reset-pitch" id="pitch-reset-a" type="button">RESET</button></div>
-  </div>
-  <div class="transport"><button class="cue-btn" id="cue-a" type="button">CUE <span class="cue-dot" aria-hidden="true"></span></button><button class="play-btn" id="play-a" type="button"><span id="play-icon-a">▶</span> <b id="play-label-a">PLAY</b></button><button class="sync-btn" id="sync-a" type="button">BEAT SYNC</button></div>
-  <div class="pad-group"><div class="control-caption"><b>HOT CUE</b><span>처음 누르면 설정 / 호출 · 길게 눌러 삭제</span></div><div class="pads"><button type="button" class="hotpad" data-deck="a" data-pad="0">1</button><button type="button" class="hotpad" data-deck="a" data-pad="1">2</button><button type="button" class="hotpad" data-deck="a" data-pad="2">3</button><button type="button" class="hotpad" data-deck="a" data-pad="3">4</button></div></div>
-  <div class="loop-strip"><b>BEAT LOOP</b><button type="button" data-loop="4" data-deck="a">4 BEAT</button><button type="button" data-loop="8" data-deck="a">8 BEAT</button><button type="button" data-loop="0" data-deck="a" class="loop-off">EXIT</button></div>
- </section>
- <section class="mixer" aria-label="중앙 2채널 DJ 믹서">
-  <div class="mixer-brand"><small>2-CHANNEL PROFESSIONAL MIXER</small><strong>F<span>//</span>M MIXER</strong><div class="master-head"><b>MASTER</b><span id="master-db">−∞ dB</span></div><div class="master-meter" id="master-meter" aria-label="마스터 출력 레벨"></div></div>
-  <div class="channel-strips">
-   <section class="channel channel-a" aria-label="A 채널 믹서"><div class="ch-head">CH <b>1</b></div>
-    <div class="knob-control" data-deck="a" data-param="trim" data-min="-12" data-max="12" data-default="0" data-step="1"><div class="knob" tabindex="0" role="slider" aria-label="A 채널 TRIM"><div class="cap"></div></div><small>TRIM</small></div>
-    <div class="knob-divider">EQUALIZER</div>
-    <div class="knob-control" data-deck="a" data-param="hi" data-min="-18" data-max="6" data-default="0" data-step="1"><div class="knob" tabindex="0" role="slider" aria-label="A 채널 HIGH EQ"><div class="cap"></div></div><small>HI</small></div>
-    <div class="knob-control" data-deck="a" data-param="mid" data-min="-18" data-max="6" data-default="0" data-step="1"><div class="knob" tabindex="0" role="slider" aria-label="A 채널 MID EQ"><div class="cap"></div></div><small>MID</small></div>
-    <div class="knob-control" data-deck="a" data-param="low" data-min="-18" data-max="6" data-default="0" data-step="1"><div class="knob" tabindex="0" role="slider" aria-label="A 채널 LOW EQ"><div class="cap"></div></div><small>LOW</small></div>
-    <div class="knob-divider">SOUND COLOR</div><div class="knob-control filter-control" data-deck="a" data-param="filter" data-min="-100" data-max="100" data-default="0" data-step="2"><div class="knob" tabindex="0" role="slider" aria-label="A 채널 양방향 필터"><div class="cap"></div></div><small>FILTER</small></div>
-    <div class="meter-and-fader"><div class="vu" id="vu-a"></div><input type="range" class="channel-fader" id="level-a" min="0" max="100" step="1" value="86" aria-label="A 채널 볼륨 페이더"></div><small class="fader-label">CH FADER</small>
-   </section>
-   <section class="channel channel-b" aria-label="B 채널 믹서"><div class="ch-head">CH <b>2</b></div>
-    <div class="knob-control" data-deck="b" data-param="trim" data-min="-12" data-max="12" data-default="0" data-step="1"><div class="knob" tabindex="0" role="slider" aria-label="B 채널 TRIM"><div class="cap"></div></div><small>TRIM</small></div>
-    <div class="knob-divider">EQUALIZER</div>
-    <div class="knob-control" data-deck="b" data-param="hi" data-min="-18" data-max="6" data-default="0" data-step="1"><div class="knob" tabindex="0" role="slider" aria-label="B 채널 HIGH EQ"><div class="cap"></div></div><small>HI</small></div>
-    <div class="knob-control" data-deck="b" data-param="mid" data-min="-18" data-max="6" data-default="0" data-step="1"><div class="knob" tabindex="0" role="slider" aria-label="B 채널 MID EQ"><div class="cap"></div></div><small>MID</small></div>
-    <div class="knob-control" data-deck="b" data-param="low" data-min="-18" data-max="6" data-default="0" data-step="1"><div class="knob" tabindex="0" role="slider" aria-label="B 채널 LOW EQ"><div class="cap"></div></div><small>LOW</small></div>
-    <div class="knob-divider">SOUND COLOR</div><div class="knob-control filter-control" data-deck="b" data-param="filter" data-min="-100" data-max="100" data-default="0" data-step="2"><div class="knob" tabindex="0" role="slider" aria-label="B 채널 양방향 필터"><div class="cap"></div></div><small>FILTER</small></div>
-    <div class="meter-and-fader"><div class="vu" id="vu-b"></div><input type="range" class="channel-fader" id="level-b" min="0" max="100" step="1" value="86" aria-label="B 채널 볼륨 페이더"></div><small class="fader-label">CH FADER</small>
-   </section>
-  </div>
-  <div class="cross-section"><div class="section-name">CROSSFADER</div><div class="cross-labels"><b>A</b><span>◂───────▸</span><b>B</b></div><input type="range" id="crossfader" min="0" max="100" step="1" value="50" aria-label="크로스페이더 A에서 B"><span class="cross-caption" id="cross-caption">A 50% : B 50%</span></div>
-  <div class="record-section"><button id="record" class="record-button" type="button"><span class="record-dot"></span> REC MIX</button><span class="record-note">믹스 녹음 (WebM)</span></div>
- </section>
- <section class="player player-b" id="deck-b" aria-label="오른쪽 B 데크">
-  <div class="unit-top"><div class="unit-name"><small>PLAYER 02</small><strong>DECK <em>B</em></strong></div><div class="load-actions"><label class="load-button" for="file-b">＋ 음원 선택</label><button class="demo-button" type="button" data-demo="b">DEMO</button></div></div>
-  <input id="file-b" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac" hidden aria-label="B 데크 음원 선택">
-  <div class="display"><div class="display-head"><div class="display-track"><span>TRACK TITLE</span><strong id="track-b">NO TRACK LOADED</strong></div><div class="tempo-read"><small>BPM · <span id="bpm-source-b">NO TRACK</span></small><input type="number" id="bpm-b" min="50" max="220" step="0.1" value="120" aria-label="B 데크 원곡 BPM"><button class="tap-button" id="tap-b" type="button" title="박자에 맞춰 4번 이상 탭">TAP</button></div></div>
-   <div class="waveframe"><canvas class="waveform" id="wave-b" aria-label="B 트랙 파형. 눌러서 탐색" tabindex="0"></canvas><div class="wave-guide"><span>OVERALL WAVEFORM</span><span id="loop-indicator-b">LOOP OFF</span></div></div>
-   <div class="display-bottom"><div class="time-value" id="elapsed-b">00:00.0</div><div class="play-info"><span class="live-bpm" id="live-bpm-b">--.- BPM</span><span id="pitch-display-b">±0.0%</span><span id="state-b">STOP</span></div><div class="remain-value" id="remain-b">−00:00</div></div>
-  </div>
-  <div class="mechanics"><div class="jog-area"><div class="jog" id="jog-b" role="slider" tabindex="0" aria-label="B 데크 조그휠로 재생 위치 이동" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="jog-ring"><div class="jog-plate"><div class="jog-title">FOLD//MIX</div><b id="jog-state-b">READY</b><small>JOG SEEK</small></div></div></div><div class="jog-note">VINYL STYLE · 위치 탐색</div></div>
-   <div class="pitch-area"><div class="pitch-top">TEMPO <b id="pitch-value-b">0.0%</b></div><input class="pitch-slider" id="pitch-b" type="range" min="-25" max="25" step="0.1" value="0" aria-label="B 재생 속도 조절"><div class="pitch-range">+25<br>±0<br>−25</div><button class="reset-pitch" id="pitch-reset-b" type="button">RESET</button></div>
-  </div>
-  <div class="transport"><button class="cue-btn" id="cue-b" type="button">CUE <span class="cue-dot" aria-hidden="true"></span></button><button class="play-btn" id="play-b" type="button"><span id="play-icon-b">▶</span> <b id="play-label-b">PLAY</b></button><button class="sync-btn" id="sync-b" type="button">BEAT SYNC</button></div>
-  <div class="pad-group"><div class="control-caption"><b>HOT CUE</b><span>처음 누르면 설정 / 호출 · 길게 눌러 삭제</span></div><div class="pads"><button type="button" class="hotpad" data-deck="b" data-pad="0">1</button><button type="button" class="hotpad" data-deck="b" data-pad="1">2</button><button type="button" class="hotpad" data-deck="b" data-pad="2">3</button><button type="button" class="hotpad" data-deck="b" data-pad="3">4</button></div></div>
-  <div class="loop-strip"><b>BEAT LOOP</b><button type="button" data-loop="4" data-deck="b">4 BEAT</button><button type="button" data-loop="8" data-deck="b">8 BEAT</button><button type="button" data-loop="0" data-deck="b" class="loop-off">EXIT</button></div>
- </section>
+<main aria-label="DJ 믹싱 콘솔" class="console" data-view="a">
+<section aria-label="왼쪽 A 데크" class="player player-a" id="deck-a">
+<div class="unit-top"><div class="unit-name"><small>PLAYER 01</small><strong>DECK <em>A</em></strong></div><div class="load-actions"><label class="load-button" for="file-a">＋ 음원 선택</label><button class="demo-button" data-demo="a" type="button">DEMO</button></div></div>
+<input accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac" aria-label="A 데크 음원 선택" hidden="" id="file-a" type="file"/>
+<div class="display"><div class="display-head"><div class="display-track"><span>TRACK TITLE</span><strong id="track-a">NO TRACK LOADED</strong></div><div class="tempo-read"><small>BPM · <span id="bpm-source-a">NO TRACK</span></small><input aria-label="A 데크 원곡 BPM" id="bpm-a" max="220" min="50" step="0.1" type="number" value="120"/><button class="tap-button" id="tap-a" title="박자에 맞춰 4번 이상 탭" type="button">TAP</button></div></div>
+<div class="waveframe"><canvas aria-label="A 트랙 파형. 눌러서 탐색" class="waveform" id="wave-a" tabindex="0"></canvas><div class="wave-guide"><span>OVERALL WAVEFORM</span><span id="loop-indicator-a">LOOP OFF</span></div></div>
+<div class="display-bottom"><div class="time-value" id="elapsed-a">00:00.0</div><div class="play-info"><span class="live-bpm" id="live-bpm-a">--.- BPM</span><span id="pitch-display-a">±0.0%</span><span id="state-a">STOP</span></div><div class="remain-value" id="remain-a">−00:00</div></div>
+</div>
+<div class="mechanics"><div class="jog-area"><div aria-label="A 데크 조그휠. VINYL 모드에서 터치 앞뒤 스크래치" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" class="jog" id="jog-a" role="slider" tabindex="0"><div class="jog-ring"><div class="jog-plate"><div class="jog-title">FOLD//MIX</div><b id="jog-state-a">READY</b><small>VINYL SCRATCH</small></div></div></div><div class="jog-note"><button aria-pressed="true" class="vinyl-mode" id="vinyl-a" type="button">● VINYL ON</button><span id="scratch-status-a">상단 조그를 앞뒤로 돌려 스크래치</span></div></div>
+<div class="pitch-area"><div class="pitch-top">TEMPO <b id="pitch-value-a">0.0%</b></div><input aria-label="A 재생 속도 조절" class="pitch-slider" id="pitch-a" max="25" min="-25" step="0.1" type="range" value="0"/><div class="pitch-range">+25<br/>±0<br/>−25</div><button class="reset-pitch" id="pitch-reset-a" type="button">RESET</button></div>
+</div>
+<div class="transport"><button class="cue-btn" id="cue-a" type="button">CUE <span aria-hidden="true" class="cue-dot"></span></button><button class="play-btn" id="play-a" type="button"><span id="play-icon-a">▶</span> <b id="play-label-a">PLAY</b></button><button class="sync-btn" id="sync-a" type="button">BEAT SYNC</button></div>
+<div class="pad-group"><div class="control-caption"><b>PERFORMANCE PADS · 8</b><span>실제 장비형 모드 전환 / 멀티터치</span></div>
+<div aria-label="A 데크 패드 모드" class="pad-modes">
+<button class="selected" data-deck="a" data-pad-mode="hot" type="button">HOT CUE</button>
+<button data-deck="a" data-pad-mode="sampler" type="button">SAMPLER</button>
+<button data-deck="a" data-pad-mode="roll" type="button">BEAT ROLL</button>
+<button data-deck="a" data-pad-mode="jump" type="button">BEAT JUMP</button>
+</div>
+<div aria-label="A 데크 8개 패드" class="pads"><button aria-label="패드 1" class="hotpad pad-color-0" data-deck="a" data-pad="0" type="button">1</button><button aria-label="패드 2" class="hotpad pad-color-1" data-deck="a" data-pad="1" type="button">2</button><button aria-label="패드 3" class="hotpad pad-color-2" data-deck="a" data-pad="2" type="button">3</button><button aria-label="패드 4" class="hotpad pad-color-3" data-deck="a" data-pad="3" type="button">4</button><button aria-label="패드 5" class="hotpad pad-color-4" data-deck="a" data-pad="4" type="button">5</button><button aria-label="패드 6" class="hotpad pad-color-5" data-deck="a" data-pad="5" type="button">6</button><button aria-label="패드 7" class="hotpad pad-color-6" data-deck="a" data-pad="6" type="button">7</button><button aria-label="패드 8" class="hotpad pad-color-7" data-deck="a" data-pad="7" type="button">8</button></div>
+<div class="pad-hint"><span id="pad-hint-a">HOT CUE: 빈 패드는 저장 / 다시 누르면 호출 / 길게 누르면 삭제</span><button class="sample-assign" hidden="" id="sample-assign-a" type="button">＋ 샘플 불러오기</button></div>
+<input accept="audio/*,.mp3,.wav,.ogg,.flac,.m4a" aria-label="샘플러 음원 지정" hidden="" id="sample-file-a" type="file"/></div>
+<div class="loop-strip"><b>BEAT LOOP</b><button data-deck="a" data-loop="4" type="button">4 BEAT</button><button data-deck="a" data-loop="8" type="button">8 BEAT</button><button class="loop-off" data-deck="a" data-loop="0" type="button">EXIT</button></div>
+</section>
+<section aria-label="중앙 2채널 DJ 믹서" class="mixer">
+<div class="mixer-brand"><small>2-CHANNEL PROFESSIONAL MIXER</small><strong>F<span>//</span>M MIXER</strong><div class="master-head"><b>MASTER</b><span id="master-db">−∞ dB</span></div><div aria-label="마스터 출력 레벨" class="master-meter" id="master-meter"></div></div>
+<div class="channel-strips">
+<section aria-label="A 채널 믹서" class="channel channel-a"><div class="ch-head">CH <b>1</b></div><div class="knob-rack"><div class="rack-heading">TRIM / 3-BAND EQ / COLOR</div><div class="knob-grid"><div class="knob-control" data-deck="a" data-default="0" data-max="12" data-min="-12" data-param="trim" data-step="1"><div aria-label="A TRIM 노브" class="knob" role="slider" tabindex="0"><div class="cap"></div></div><small>TRIM</small></div><div class="knob-control" data-deck="a" data-default="0" data-max="6" data-min="-18" data-param="hi" data-step="1"><div aria-label="A HI 노브" class="knob" role="slider" tabindex="0"><div class="cap"></div></div><small>HI</small></div><div class="knob-control" data-deck="a" data-default="0" data-max="6" data-min="-18" data-param="mid" data-step="1"><div aria-label="A MID 노브" class="knob" role="slider" tabindex="0"><div class="cap"></div></div><small>MID</small></div><div class="knob-control" data-deck="a" data-default="0" data-max="6" data-min="-18" data-param="low" data-step="1"><div aria-label="A LOW 노브" class="knob" role="slider" tabindex="0"><div class="cap"></div></div><small>LOW</small></div><div class="knob-control filter-control" data-deck="a" data-default="0" data-max="100" data-min="-100" data-param="filter" data-step="2"><div aria-label="A COLOR 노브" class="knob" role="slider" tabindex="0"><div class="cap"></div></div><small>COLOR</small></div></div></div><div aria-label="A 채널 FX" class="fx-panel"><div class="fx-head"><b>BEAT FX</b><button aria-pressed="false" class="fx-on" id="fx-on-a" type="button">FX OFF</button></div>
+<select aria-label="A FX 종류" id="fx-type-a"><option value="echo">ECHO</option><option value="dub">DUB ECHO</option><option value="delay">DELAY</option><option value="reverb">REVERB</option><option value="flanger">FLANGER</option><option value="phaser">PHASER</option></select>
+<div class="fx-controls"><label>TIME <select aria-label="A FX 비트 길이" id="fx-time-a"><option value="0.25">1/4</option><option value="0.5">1/2</option><option selected="" value="1">1 BEAT</option><option value="2">2 BEATS</option></select></label><label>LEVEL <input aria-label="A FX 레벨" id="fx-mix-a" max="100" min="0" type="range" value="35"/></label></div>
+</div><div class="meter-and-fader"><div class="vu" id="vu-a"></div><input aria-label="A 채널 볼륨 페이더" class="channel-fader" id="level-a" max="100" min="0" step="1" type="range" value="86"/></div><small class="fader-label">CH FADER</small></section>
+<section aria-label="B 채널 믹서" class="channel channel-b"><div class="ch-head">CH <b>2</b></div><div class="knob-rack"><div class="rack-heading">TRIM / 3-BAND EQ / COLOR</div><div class="knob-grid"><div class="knob-control" data-deck="b" data-default="0" data-max="12" data-min="-12" data-param="trim" data-step="1"><div aria-label="B TRIM 노브" class="knob" role="slider" tabindex="0"><div class="cap"></div></div><small>TRIM</small></div><div class="knob-control" data-deck="b" data-default="0" data-max="6" data-min="-18" data-param="hi" data-step="1"><div aria-label="B HI 노브" class="knob" role="slider" tabindex="0"><div class="cap"></div></div><small>HI</small></div><div class="knob-control" data-deck="b" data-default="0" data-max="6" data-min="-18" data-param="mid" data-step="1"><div aria-label="B MID 노브" class="knob" role="slider" tabindex="0"><div class="cap"></div></div><small>MID</small></div><div class="knob-control" data-deck="b" data-default="0" data-max="6" data-min="-18" data-param="low" data-step="1"><div aria-label="B LOW 노브" class="knob" role="slider" tabindex="0"><div class="cap"></div></div><small>LOW</small></div><div class="knob-control filter-control" data-deck="b" data-default="0" data-max="100" data-min="-100" data-param="filter" data-step="2"><div aria-label="B COLOR 노브" class="knob" role="slider" tabindex="0"><div class="cap"></div></div><small>COLOR</small></div></div></div><div aria-label="B 채널 FX" class="fx-panel"><div class="fx-head"><b>BEAT FX</b><button aria-pressed="false" class="fx-on" id="fx-on-b" type="button">FX OFF</button></div>
+<select aria-label="B FX 종류" id="fx-type-b"><option value="echo">ECHO</option><option value="dub">DUB ECHO</option><option value="delay">DELAY</option><option value="reverb">REVERB</option><option value="flanger">FLANGER</option><option value="phaser">PHASER</option></select>
+<div class="fx-controls"><label>TIME <select aria-label="B FX 비트 길이" id="fx-time-b"><option value="0.25">1/4</option><option value="0.5">1/2</option><option selected="" value="1">1 BEAT</option><option value="2">2 BEATS</option></select></label><label>LEVEL <input aria-label="B FX 레벨" id="fx-mix-b" max="100" min="0" type="range" value="35"/></label></div>
+</div><div class="meter-and-fader"><div class="vu" id="vu-b"></div><input aria-label="B 채널 볼륨 페이더" class="channel-fader" id="level-b" max="100" min="0" step="1" type="range" value="86"/></div><small class="fader-label">CH FADER</small></section>
+</div>
+<div class="cross-section"><div class="section-name">CROSSFADER</div><div class="cross-labels"><b>A</b><span>◂───────▸</span><b>B</b></div><input aria-label="크로스페이더 A에서 B" id="crossfader" max="100" min="0" step="1" type="range" value="50"/><span class="cross-caption" id="cross-caption">A 50% : B 50%</span></div>
+<div class="record-section"><button class="record-button" id="record" type="button"><span class="record-dot"></span> REC MIX</button><span class="record-note">믹스 녹음 (WebM)</span></div>
+</section>
+<section aria-label="오른쪽 B 데크" class="player player-b" id="deck-b">
+<div class="unit-top"><div class="unit-name"><small>PLAYER 02</small><strong>DECK <em>B</em></strong></div><div class="load-actions"><label class="load-button" for="file-b">＋ 음원 선택</label><button class="demo-button" data-demo="b" type="button">DEMO</button></div></div>
+<input accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac" aria-label="B 데크 음원 선택" hidden="" id="file-b" type="file"/>
+<div class="display"><div class="display-head"><div class="display-track"><span>TRACK TITLE</span><strong id="track-b">NO TRACK LOADED</strong></div><div class="tempo-read"><small>BPM · <span id="bpm-source-b">NO TRACK</span></small><input aria-label="B 데크 원곡 BPM" id="bpm-b" max="220" min="50" step="0.1" type="number" value="120"/><button class="tap-button" id="tap-b" title="박자에 맞춰 4번 이상 탭" type="button">TAP</button></div></div>
+<div class="waveframe"><canvas aria-label="B 트랙 파형. 눌러서 탐색" class="waveform" id="wave-b" tabindex="0"></canvas><div class="wave-guide"><span>OVERALL WAVEFORM</span><span id="loop-indicator-b">LOOP OFF</span></div></div>
+<div class="display-bottom"><div class="time-value" id="elapsed-b">00:00.0</div><div class="play-info"><span class="live-bpm" id="live-bpm-b">--.- BPM</span><span id="pitch-display-b">±0.0%</span><span id="state-b">STOP</span></div><div class="remain-value" id="remain-b">−00:00</div></div>
+</div>
+<div class="mechanics"><div class="jog-area"><div aria-label="B 데크 조그휠. VINYL 모드에서 터치 앞뒤 스크래치" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" class="jog" id="jog-b" role="slider" tabindex="0"><div class="jog-ring"><div class="jog-plate"><div class="jog-title">FOLD//MIX</div><b id="jog-state-b">READY</b><small>VINYL SCRATCH</small></div></div></div><div class="jog-note"><button aria-pressed="true" class="vinyl-mode" id="vinyl-b" type="button">● VINYL ON</button><span id="scratch-status-b">상단 조그를 앞뒤로 돌려 스크래치</span></div></div>
+<div class="pitch-area"><div class="pitch-top">TEMPO <b id="pitch-value-b">0.0%</b></div><input aria-label="B 재생 속도 조절" class="pitch-slider" id="pitch-b" max="25" min="-25" step="0.1" type="range" value="0"/><div class="pitch-range">+25<br/>±0<br/>−25</div><button class="reset-pitch" id="pitch-reset-b" type="button">RESET</button></div>
+</div>
+<div class="transport"><button class="cue-btn" id="cue-b" type="button">CUE <span aria-hidden="true" class="cue-dot"></span></button><button class="play-btn" id="play-b" type="button"><span id="play-icon-b">▶</span> <b id="play-label-b">PLAY</b></button><button class="sync-btn" id="sync-b" type="button">BEAT SYNC</button></div>
+<div class="pad-group"><div class="control-caption"><b>PERFORMANCE PADS · 8</b><span>실제 장비형 모드 전환 / 멀티터치</span></div>
+<div aria-label="B 데크 패드 모드" class="pad-modes">
+<button class="selected" data-deck="b" data-pad-mode="hot" type="button">HOT CUE</button>
+<button data-deck="b" data-pad-mode="sampler" type="button">SAMPLER</button>
+<button data-deck="b" data-pad-mode="roll" type="button">BEAT ROLL</button>
+<button data-deck="b" data-pad-mode="jump" type="button">BEAT JUMP</button>
+</div>
+<div aria-label="B 데크 8개 패드" class="pads"><button aria-label="패드 1" class="hotpad pad-color-0" data-deck="b" data-pad="0" type="button">1</button><button aria-label="패드 2" class="hotpad pad-color-1" data-deck="b" data-pad="1" type="button">2</button><button aria-label="패드 3" class="hotpad pad-color-2" data-deck="b" data-pad="2" type="button">3</button><button aria-label="패드 4" class="hotpad pad-color-3" data-deck="b" data-pad="3" type="button">4</button><button aria-label="패드 5" class="hotpad pad-color-4" data-deck="b" data-pad="4" type="button">5</button><button aria-label="패드 6" class="hotpad pad-color-5" data-deck="b" data-pad="5" type="button">6</button><button aria-label="패드 7" class="hotpad pad-color-6" data-deck="b" data-pad="6" type="button">7</button><button aria-label="패드 8" class="hotpad pad-color-7" data-deck="b" data-pad="7" type="button">8</button></div>
+<div class="pad-hint"><span id="pad-hint-b">HOT CUE: 빈 패드는 저장 / 다시 누르면 호출 / 길게 누르면 삭제</span><button class="sample-assign" hidden="" id="sample-assign-b" type="button">＋ 샘플 불러오기</button></div>
+<input accept="audio/*,.mp3,.wav,.ogg,.flac,.m4a" aria-label="샘플러 음원 지정" hidden="" id="sample-file-b" type="file"/></div>
+<div class="loop-strip"><b>BEAT LOOP</b><button data-deck="b" data-loop="4" type="button">4 BEAT</button><button data-deck="b" data-loop="8" type="button">8 BEAT</button><button class="loop-off" data-deck="b" data-loop="0" type="button">EXIT</button></div>
+</section>
 </main>
-<div class="mobile-cross" aria-label="휴대전화용 빠른 크로스페이더"><div class="mobile-cross-heading"><span>CH 1 <b id="mini-bpm-a">--.-</b></span><strong>MASTER CROSSFADER</strong><span><b id="mini-bpm-b">--.-</b> CH 2</span></div><input id="crossfader-mobile" type="range" min="0" max="100" value="50" aria-label="빠른 크로스페이더 A B"><div class="mobile-cross-ends"><span>A</span><span id="mini-cross-value">A 50 : B 50</span><span>B</span></div></div>
-<footer class="footnote"><span>FOLD//MIX · TOUCH DJ CONSOLE</span><span>기기 내부에서만 음원 디코딩 · 자동 BPM 추정(TAP/수동 보정 가능) · 키락/진짜 스크래치 미지원 · 유튜브 뮤직 직접 연결 미지원 · 개인 테스트용 독립 UI</span></footer>
+<div aria-label="휴대전화용 빠른 크로스페이더" class="mobile-cross"><div class="mobile-cross-heading"><span>CH 1 <b id="mini-bpm-a">--.-</b></span><strong>MASTER CROSSFADER</strong><span><b id="mini-bpm-b">--.-</b> CH 2</span></div><input aria-label="빠른 크로스페이더 A B" id="crossfader-mobile" max="100" min="0" type="range" value="50"/><div class="mobile-cross-ends"><span>A</span><span id="mini-cross-value">A 50 : B 50</span><span>B</span></div></div>
+<footer class="footnote"><span>FOLD//MIX · TOUCH DJ CONSOLE</span><span>음원 로컬 로딩 · 2데크 / 8패드 / 스크래치 / FX / BPM 추정 · 브라우저 기반 실습용 · 다른 앱 스트리밍 음원 직접 믹싱 불가 · 전문 장비와 지연/키락 차이 있음</span></footer>
 </div>
 </body>
 </html>

@@ -71,7 +71,13 @@ class Deck {
     this.tempo = 0;
     this.rate = 1;
     this.bpm = 120;
+    this.bpmEstimated = false;
+    this.beatOffset = 0;
     this.cue = 0;
+    this.cueSet = false;
+    this.cueHolding = false;
+    this.cuePreviewToken = 0;
+    this.taps = [];
     this.hot = [null, null, null, null];
     this.loopBeats = 0;
     this.loopIn = 0;
@@ -184,7 +190,7 @@ class Deck {
     renderControls(this);
   }
   setPitch(percent) {
-    const next = clamp(Number(percent) || 0, -12, 12);
+    const next = clamp(Number(percent) || 0, -25, 25);
     if (this.playing) {
       this.offset = this.position;
       this.startedAt = ctx.currentTime;
@@ -195,16 +201,44 @@ class Deck {
     el('pitch-' + this.id).value = String(next);
     renderControls(this);
   }
-  cueAction() {
+  // CDJ-style CUE: playing -> pause and return; paused off-cue -> set;
+  // paused at cue -> momentary preview while pressed.
+  setCue() {
+    this.cue = this.position;
+    this.cueSet = true;
+    renderControls(this);
+    notice('DECK ' + this.id.toUpperCase() + ' CUE 설정: ' + timeLabel(this.cue, true));
+  }
+  returnToCue() {
     if (!this.buffer) return;
-    if (this.playing) {
-      this.pause();
-      this.seek(this.cue);
-      notice('DECK ' + this.id.toUpperCase() + ' CUE 지점으로 이동');
-    } else {
-      this.cue = this.position;
-      notice('DECK ' + this.id.toUpperCase() + ' CUE 저장: ' + timeLabel(this.cue));
+    this.cuePreviewToken++;
+    this.cueHolding = false;
+    this.pause();
+    this.seek(this.cueSet ? this.cue : 0);
+    renderControls(this);
+    notice('DECK ' + this.id.toUpperCase() + ' CUE 복귀');
+  }
+  pressCue() {
+    if (!this.buffer) { notice('먼저 음원을 선택하세요.'); return; }
+    if (this.playing) { this.returnToCue(); return; }
+    if (!this.cueSet || Math.abs(this.position - this.cue) > .075) {
+      this.setCue();
+      return;
     }
+    this.cueHolding = true;
+    const token = ++this.cuePreviewToken;
+    this.seek(this.cue);
+    el('cue-' + this.id).classList.add('is-preview');
+    void this.play().then(() => {
+      if (token !== this.cuePreviewToken || !this.cueHolding) this.returnToCue();
+    });
+  }
+  releaseCue() {
+    if (!this.cueHolding) return;
+    this.cueHolding = false;
+    this.cuePreviewToken++;
+    el('cue-' + this.id).classList.remove('is-preview');
+    this.returnToCue();
   }
   hotAction(i) {
     if (!this.buffer) return;
@@ -251,6 +285,11 @@ class Deck {
     this.buffer = audioBuffer;
     this.offset = 0;
     this.bpm = bpm;
+    this.bpmEstimated = false;
+    this.beatOffset = 0;
+    this.cueSet = true;
+    this.cueHolding = false;
+    this.taps = [];
     this.demoRepeat = Boolean(repeat);
     this.cue = 0;
     this.hot = [null, null, null, null];
@@ -260,6 +299,7 @@ class Deck {
     this.peaks = computePeaks(audioBuffer);
     el('track-' + this.id).textContent = title;
     el('bpm-' + this.id).value = String(bpm);
+    el('bpm-source-' + this.id).textContent = repeat ? 'DEMO' : 'ANALYZING';
     this.setPitch(0);
     renderControls(this);
     drawWave(this);
@@ -291,6 +331,10 @@ function renderControls(deck) {
   el('jog-state-' + id).textContent = !deck.buffer ? 'READY' : played ? 'PLAY' : 'CUE';
   el('pitch-display-' + id).textContent = (deck.tempo > 0 ? '+' : '') + number(deck.tempo) + '%';
   el('pitch-value-' + id).textContent = (deck.tempo > 0 ? '+' : '') + number(deck.tempo) + '%';
+  el('live-bpm-' + id).textContent = deck.buffer ? number(deck.bpm * deck.rate) + ' BPM' : '--.- BPM';
+  el('mini-bpm-' + id).textContent = deck.buffer ? number(deck.bpm * deck.rate) : '--.-';
+  el('cue-' + id).classList.toggle('is-cue', deck.cueSet);
+  el('cue-' + id).classList.toggle('is-preview', deck.cueHolding);
   el('loop-indicator-' + id).textContent = deck.loopBeats ? 'LOOP ' + deck.loopBeats + ' BEATS' : deck.demoRepeat ? 'DEMO REPEAT' : 'LOOP OFF';
   document.querySelectorAll('[data-loop][data-deck="' + id + '"]').forEach(button => {
     button.classList.toggle('active', Number(button.dataset.loop) > 0 && Number(button.dataset.loop) === deck.loopBeats);
@@ -322,12 +366,12 @@ function drawWave(deck) {
   p.setTransform(dpr, 0, 0, dpr, 0, 0);
   const w = rect.width, h = rect.height;
   p.clearRect(0, 0, w, h);
-  p.fillStyle = '#091621'; p.fillRect(0,0,w,h);
-  p.strokeStyle = '#1b3340'; p.lineWidth = 1;
+  p.fillStyle = '#090e12'; p.fillRect(0,0,w,h);
+  p.strokeStyle = '#273039'; p.lineWidth = 1;
   for (let i = 0; i < 17; i++) { const x = Math.floor(i * w / 16) + .5; p.beginPath(); p.moveTo(x,0);p.lineTo(x,h);p.stroke(); }
   p.beginPath(); p.moveTo(0,h/2+.5);p.lineTo(w,h/2+.5);p.stroke();
   if (!deck.buffer) {
-    p.fillStyle = '#4d6677'; p.font = 'bold 11px system-ui'; p.textAlign = 'center';
+    p.fillStyle = '#78828a'; p.font = 'bold 11px system-ui'; p.textAlign = 'center';
     p.fillText('LOAD TRACK   /   TAP DEMO', w/2, h/2+4);
     return;
   }
@@ -337,20 +381,20 @@ function drawWave(deck) {
     const x = i * w / peaks.length;
     const height = Math.max(2, peaks[i] * h * .44);
     const done = (i / peaks.length) <= progress;
-    p.fillStyle = deck.id === 'a' ? (done ? '#5ccefe' : '#265e82') : (done ? '#ff9c53' : '#83502c');
+    p.fillStyle = deck.id === 'a' ? (done ? '#9cabb5' : '#4e5962') : (done ? '#b49e82' : '#695f55');
     p.fillRect(x, h / 2 - height, Math.max(.8, w/peaks.length-.3), height*2);
   }
   if (deck.loopBeats) {
     const x = deck.loopIn / deck.buffer.duration * w;
     const end = deck.loopOut / deck.buffer.duration * w;
-    p.fillStyle = '#e8b46824'; p.fillRect(x,0,end-x,h);
-    p.strokeStyle = '#e7c37b'; p.beginPath();p.moveTo(x,0);p.lineTo(x,h);p.moveTo(end,0);p.lineTo(end,h);p.stroke();
+    p.fillStyle = '#b8a17724'; p.fillRect(x,0,end-x,h);
+    p.strokeStyle = '#b59b66'; p.beginPath();p.moveTo(x,0);p.lineTo(x,h);p.moveTo(end,0);p.lineTo(end,h);p.stroke();
   }
   for (let i = 0; i < deck.hot.length; i++) {
     const cue = deck.hot[i];
     if (cue === null) continue;
     const x = cue / deck.buffer.duration * w;
-    p.fillStyle = '#ff6594'; p.fillRect(x,0,2,14);
+    p.fillStyle = '#d16a50'; p.fillRect(x,0,2,14);
     p.font = 'bold 9px system-ui';p.fillText(String(i+1),x+3,10);
   }
   const x = clamp(progress, 0, 1) * w;
@@ -362,6 +406,9 @@ function setCrossfader(value) {
   decks.a.crossGain.gain.setTargetAtTime(Math.cos(x * Math.PI / 2),ctx.currentTime,.01);
   decks.b.crossGain.gain.setTargetAtTime(Math.sin(x * Math.PI / 2),ctx.currentTime,.01);
   el('cross-caption').textContent = 'A ' + Math.round((1-x)*100) + '% : B ' + Math.round(x*100) + '%';
+  el('crossfader').value = String(Math.round(x*100));
+  el('crossfader-mobile').value = String(Math.round(x*100));
+  el('mini-cross-value').textContent = 'A ' + Math.round((1-x)*100) + ' : B ' + Math.round(x*100);
 }
 function applyKnob(deck, key, value) {
   switch (key) {
@@ -518,33 +565,101 @@ function wireDeck(deck) {
       const decoded=await ctx.decodeAudioData(raw);
       if(ticket!==deck.generation) return;
       deck.setBuffer(decoded,file.name,120,false);
-      notice('DECK '+id.toUpperCase()+' 로딩 완료 · BPM은 실제 곡에 맞게 수동 입력하세요.');
+      el('bpm-source-'+id).textContent = 'ANALYZING';
+      // Yield so the load status appears before the local analysis starts.
+      await new Promise(resolve=>setTimeout(resolve,30));
+      if (ticket !== deck.generation) return;
+      const result = window.FoldTempoAnalyzer?.detect(decoded);
+      if (ticket !== deck.generation) return;
+      if (result) {
+        deck.bpm = result.bpm;
+        deck.beatOffset = result.offset;
+        deck.bpmEstimated = true;
+        el('bpm-'+id).value = number(result.bpm);
+        el('bpm-source-'+id).textContent = 'AUTO EST.';
+        notice('DECK '+id.toUpperCase()+' BPM 추정 '+number(result.bpm)+' · 틀리면 BPM 직접 수정 또는 TAP 4회 이상 입력');
+      } else {
+        deck.bpmEstimated = false;
+        el('bpm-source-'+id).textContent = 'MANUAL / TAP';
+        notice('BPM 분석이 불확실합니다. 원곡 BPM을 입력하거나 TAP을 4회 이상 누르세요.');
+      }
+      renderControls(deck);
     } catch(error) {
       notice('음원 파일을 열 수 없습니다. MP3/WAV 등 지원 형식을 사용하세요: '+error.message);
     } finally { input.value=''; }
   });
   el('play-'+id).addEventListener('click',()=>void deck.toggle());
-  el('cue-'+id).addEventListener('click',()=>deck.cueAction());
+  const cueButton=el('cue-'+id);
+  cueButton.addEventListener('pointerdown', e=>{
+    if(e.pointerType==='mouse' && e.button!==0)return;
+    e.preventDefault();
+    cueButton.setPointerCapture(e.pointerId);
+    deck.pressCue();
+  });
+  cueButton.addEventListener('pointerup',()=>deck.releaseCue());
+  cueButton.addEventListener('pointercancel',()=>deck.releaseCue());
+  cueButton.addEventListener('lostpointercapture',()=>deck.releaseCue());
+  cueButton.addEventListener('click',e=>{
+    if(e.detail===0) { deck.pressCue(); deck.releaseCue(); }
+  });
   el('bpm-'+id).addEventListener('change',e=>{
-    deck.bpm=clamp(Math.round(Number(e.target.value)||120),50,220);
+    deck.bpm=clamp(Math.round((Number(e.target.value)||120)*10)/10,50,220);
+    deck.bpmEstimated = false;
+    deck.beatOffset = 0;
+    el('bpm-source-'+id).textContent = 'MANUAL';
     e.target.value=String(deck.bpm);
     if(deck.loopBeats) deck.setLoop(0);
-    notice('DECK '+id.toUpperCase()+' 기본 BPM을 '+deck.bpm+'으로 설정했습니다.');
+    renderControls(deck);
+    notice('DECK '+id.toUpperCase()+' BPM을 '+deck.bpm+'으로 수동 보정했습니다.');
   });
   el('pitch-'+id).addEventListener('input',e=>deck.setPitch(e.target.value));
   el('pitch-reset-'+id).addEventListener('click',()=>deck.setPitch(0));
   el('level-'+id).addEventListener('input',e=>deck.channelGain.gain.setTargetAtTime(Number(e.target.value)/100,ctx.currentTime,.012));
+  el('tap-'+id).addEventListener('click',()=>{
+    const now = performance.now();
+    deck.taps = deck.taps.filter(t => now - t < 3800);
+    if (deck.taps.length && now - deck.taps.at(-1) > 2100) deck.taps = [];
+    deck.taps.push(now);
+    if(deck.taps.length < 4) {notice('DECK '+id.toUpperCase()+' TAP BPM: '+deck.taps.length+' / 4회 이상 박자에 맞춰 누르세요.');return;}
+    const intervals = [];
+    for (let i=1; i<deck.taps.length; i++) intervals.push(deck.taps[i]-deck.taps[i-1]);
+    intervals.sort((a,b)=>a-b);
+    const interval=intervals[Math.floor(intervals.length/2)];
+    if(!interval)return;
+    deck.bpm=clamp(Math.round((60000/interval)*10)/10,50,220);
+    deck.bpmEstimated = false;
+    deck.beatOffset = (deck.position % (60/deck.bpm));
+    el('bpm-'+id).value=String(deck.bpm);
+    el('bpm-source-'+id).textContent='TAP';
+    if(deck.loopBeats)deck.setLoop(0);
+    renderControls(deck);
+    notice('DECK '+id.toUpperCase()+' TAP BPM '+number(deck.bpm)+' 설정 완료');
+  });
   el('sync-'+id).addEventListener('click',()=>{
-    if(!deck.buffer) return;
+    if(!deck.buffer) {notice('DECK '+id.toUpperCase()+' 음원을 먼저 선택하세요.');return;}
     const other=decks[id==='a'?'b':'a'];
-    if(!other.buffer) {notice('BPM MATCH: 양쪽 데크에 모두 음원을 불러오세요.');return;}
+    if(!other.buffer) {notice('SYNC: 양쪽 데크에 음원을 불러오세요.');return;}
     const target=other.bpm*other.rate;
     const pct=(target/deck.bpm-1)*100;
-    if(pct < -12 || pct > 12) {
-      notice('BPM MATCH 범위를 초과했습니다. 두 곡의 BPM을 확인하세요 (±12%).');return;
+    if(!Number.isFinite(pct)||pct < -25 || pct > 25) {
+      notice('SYNC 불가: BPM 차이가 ±25%를 넘습니다. 실제 BPM 또는 하프/더블타임 값을 확인하세요.');return;
     }
     deck.setPitch(pct);
-    notice('DECK '+id.toUpperCase()+' BPM을 '+number(target)+'에 맞췄습니다. 박자 위상은 자동 정렬되지 않습니다.');
+    let aligned = false;
+    if(deck.playing && other.playing) {
+      const beatSeconds=60/target;
+      const mod = (x,m)=>((x%m)+m)%m;
+      const otherPhase=mod(other.position-other.beatOffset,beatSeconds);
+      const deckPhase=mod(deck.position-deck.beatOffset,beatSeconds);
+      let delta=otherPhase-deckPhase;
+      if(delta>beatSeconds/2)delta-=beatSeconds;
+      if(delta< -beatSeconds/2)delta+=beatSeconds;
+      const at=clamp(deck.position+delta,0,deck.buffer.duration-.02);
+      deck.seek(at);
+      aligned=true;
+    }
+    renderControls(deck);
+    notice('DECK '+id.toUpperCase()+' '+number(target)+' BPM 동기화'+(aligned?' · 추정 비트그리드 위상 맞춤':' · 박자 위치는 두 데크 재생 중에 다시 SYNC하세요.')+' (키락 미지원)');
   });
   el('wave-'+id).addEventListener('pointerdown',e=>{
     if(!deck.buffer)return;
@@ -626,6 +741,13 @@ wireKnobs();
 Object.values(decks).forEach(wireDeck);
 setCrossfader(50);
 el('crossfader').addEventListener('input',e=>setCrossfader(e.target.value));
+el('crossfader-mobile').addEventListener('input',e=>setCrossfader(e.target.value));
+document.querySelectorAll('.mobile-tabs button').forEach(button=>button.addEventListener('click',()=>{
+  const view = button.dataset.view;
+  document.querySelector('.console').dataset.view = view;
+  document.querySelectorAll('.mobile-tabs button').forEach(b => b.classList.toggle('selected', b.dataset.view === view));
+  if(view!=='mixer')requestAnimationFrame(()=>drawWave(decks[view]));
+}));
 document.querySelectorAll('[data-demo]').forEach(button=>button.addEventListener('click',()=>{
   const id=button.dataset.demo;
   const deck=decks[id];

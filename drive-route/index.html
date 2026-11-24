@@ -43,8 +43,22 @@ el('planner').onsubmit=async e=>{e.preventDefault();invalidate();el('controls').
  const strong=make('strong');strong.textContent=(round?'왕복':'편도')+' · '+(distance/1000).toFixed(1)+' km · 약 '+duration(time);const details=make('details'),summary=make('summary'),list=make('ol');summary.textContent='구간별 거리와 시간';legs.forEach((leg,i)=>{const li=make('li');li.textContent=names[i]+' → '+names[i+1]+' · '+(leg.distance/1000).toFixed(1)+' km · '+duration(leg.duration);list.append(li)});details.append(summary,list);el('result').append(strong,details);el('status').textContent='실시간 교통을 반영하지 않은 예상 시간입니다.';facilities()
  }catch(err){el('status').textContent=err instanceof TypeError?'검색 서비스 연결에 실패했습니다. 인터넷 연결을 확인하고 다시 시도하세요.':err.message}finally{el('controls').disabled=false}};
 function thin(line){const kept=[line[0]];for(const p of line.slice(1,-1)){const a=kept.at(-1);if(Math.hypot((a[0]-p[0])*111000,(a[1]-p[1])*111000*Math.cos(p[0]*Math.PI/180))>=65)kept.push(p)}kept.push(line.at(-1));return kept}
+function nearRoad(lat,lon,line){
+ const scale=111200*Math.cos(lat*Math.PI/180);
+ for(let j=1;j<line.length;j++){
+  const [a,b]=line[j-1],[c,d]=line[j];
+  const x=(b-lon)*scale,y=(a-lat)*111200,dx=(d-b)*scale,dy=(c-a)*111200;
+  const f=Math.min(1,Math.max(0,-(x*dx+y*dy)/(dx*dx+dy*dy||1)));
+  if(Math.hypot(x+f*dx,y+f*dy)<=500)return true;
+ }
+ return false;
+}
 async function facilities(){const token=++facilityRun;const target=el('places');target.replaceChildren();facilityLayer?.clearLayers();const selected=[...el('filters').querySelectorAll(':checked')].map(i=>types[+i.value]);if(!selected.length||!current)return;
- target.textContent='경로 주변 시설 검색 중…';const pts=thin(current.line),seen=new Set(),items=[];try{for(let i=0;i<pts.length-1;i+=400){const coords=pts.slice(i,i+401).flatMap(p=>p.map(n=>n.toFixed(5))).join(',');const clauses=selected.map(([,key,val])=>'nwr["'+key+'"~"^('+val+')$"](around:500,'+coords+');').join('');const data=await json('https://overpass-api.de/api/interpreter',{method:'POST',body:new URLSearchParams({data:'[out:json][timeout:30];('+clauses+');out center;'})});if(token!==facilityRun)return;if(data.remark)throw Error('요청 시간 초과');for(const v of data.elements){const id=v.type+v.id;if(seen.has(id))continue;seen.add(id);const p=v.center||v;const t=selected.find(([,k,val])=>val.split('|').includes(v.tags?.[k]));if(t&&Number.isFinite(p.lat))items.push({p:[p.lat,p.lon],t,name:v.tags['name:ko']||v.tags.name||t[0]})}}
+ target.textContent='경로 주변 시설 검색 중…';const pts=thin(current.line),seen=new Set(),items=[];try{for(let i=0;i<pts.length-1;i+=400){const segment=pts.slice(i,i+401), lat=segment.map(p=>p[0]),lon=segment.map(p=>p[1]);
+ const box=[Math.min(...lat)-.005,Math.min(...lon)-.007,Math.max(...lat)+.005,Math.max(...lon)+.007].map(x=>x.toFixed(5)).join(',');
+ const clauses=selected.map(([,key,val])=>'nwr["'+key+'"~"^('+val+')$"]('+box+');').join('');
+ const query='[out:json][timeout:30];('+clauses+');out center;';
+ const data=await json('https://overpass-api.de/api/interpreter?'+new URLSearchParams({data:query}));if(token!==facilityRun)return;if(data.remark)throw Error('요청 시간 초과');for(const v of data.elements){const id=v.type+v.id;if(seen.has(id))continue;const p=v.center||v;if(!nearRoad(p.lat,p.lon,segment))continue;seen.add(id);const t=selected.find(([,k,val])=>val.split('|').includes(v.tags?.[k]));if(t&&Number.isFinite(p.lat))items.push({p:[p.lat,p.lon],t,name:v.tags['name:ko']||v.tags.name||t[0]})}}
  target.replaceChildren();const head=make('h2');head.textContent='주변 시설 '+items.length+'곳';target.append(head);if(!items.length)target.append('등록된 시설을 찾지 못했습니다.');const list=make('details'),summary=make('summary');summary.textContent='시설 목록';list.append(summary);if(items.length)target.append(list);
  for(const {p,t,name} of items){const label=make('span');label.textContent=t[0]+' · '+name;const marker=map?L.circleMarker(p,{radius:7,color:'#fff',weight:2,fillColor:t[3],fillOpacity:1}).addTo(facilityLayer).bindPopup(label):null;const b=make('button');b.textContent=label.textContent;b.onclick=()=>{if(marker){map.setView(p,16);marker.openPopup();el('map').scrollIntoView({block:'nearest'})}};list.append(b)}
  }catch{if(token!==facilityRun)return;target.textContent='시설 조회에 실패했습니다. ';const retry=make('button');retry.textContent='시설 다시 찾기';retry.onclick=facilities;target.append(retry)}}
